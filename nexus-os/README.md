@@ -4,11 +4,21 @@ Independently hosted web app at `https://dexter-nexus-os.onrender.com`.
 
 This is a browser/PWA application using local-device CPU and GPU (when applicable). **It is not an iOS native IPA, an Android APK runner or a full Android emulator.** It has its own manifest, icon, standalone presentation, service worker and install instructions.
 
+## Bundled media — latest version
+
+A starter library ships **two genuine Game Boy ROMs**: `roms/pong.gb` and `roms/minesweep.gb` (32 KiB each). They come from Maximilien Dagois's [Game Boy Coding Adventure](https://github.com/mdagois/gca) repository, specifically `prebuilt/games/pong/pong.gb` and `prebuilt/games/minesweep/minesweep.gb`. That author's README identifies the games as CC0 1.0 Universal; the corresponding license is included at `roms/CC0-LICENSE.txt`. Note that the source repository documents exceptions for certain unrelated third-party art assets; review those restrictions before adding more games.
+
+The NEXUS **PC FreeDOS** tab bundles the real `freedos722.img` floppy image and v86 assets from the already integrated `windows-mobile/assets/v86/` demo. All are served from the same origin under `assets/pc/`. This is FreeDOS emulated on a PC x86 CPU, **not Windows 7/10 or Android**. It is an experimental compatibility mode in Safari, and will report an error if startup fails.
+
+Android Lab offers built-in web games and a future cloud Android roadmap; it does **not** include an Android OS image, Android system services, Google Play, or an APK execution engine. Bundling commercial ROMs, Windows ISO/firmware, Android apps without permission, or claiming an unsupported OS runs is out of scope.
+
+The homebrew media is provisioned by `.github/workflows/bundle-nexus-roms.yml`. This workflow checks the GB cartridge header and the WebAssembly signature before committing the assets. `nexus-os/sw.js` caches the included assets for later offline usage if browser storage permits; EmulatorJS core assets are external and not precached.
+
 ## Working features
 
 - 3 original HTML5 games with iPhone touch controls: Neon Snake (swipe/arrows), Orbit Dodge (drag), Quantum Pairs (taps).
 - Scores and notes saved in browser localStorage. Export/import the `dexter-nexus-save.json` backup file. No collection or transmission of user notes/scores.
-- EmulatorJS **Stable CDN** loaded only on demand for user-provided `.gb`, `.gbc`, `.gba` and `.nes` files. Retro emulation may require network and device compatibility and must be validated by a real iPhone test. No ROMs are distributed.
+- EmulatorJS **Stable CDN** loaded only on demand for the two included GB homebrew ROMs or user-provided `.gb`, `.gbc`, `.gba` and `.nes` files. Retro emulation may require network and device compatibility and must be validated by a real iPhone test. No ROMs are distributed.
 - Browser FPS benchmark, WebGPU detection, logical CPU count; not a hardware benchmark comparable to Android native execution.
 - Offline cache of app shell (games run offline after install; EmulatorJS core must have been downloaded separately and is not precached).
 - Unconfigured Android Cloud explanation, intentionally no simulated APK execution.
