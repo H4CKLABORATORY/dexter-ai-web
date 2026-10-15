@@ -39,10 +39,14 @@
 <div class="gamebox" id="memoryBox"><div class="controls"><button class="alt" id="memoryBack">← Juegos</button><button class="act" id="memoryStart">Mezclar / reiniciar</button><b id="memoryScore">Parejas: 0/8</b></div><div class="memory-grid" id="memoryGrid"></div><div class="status" id="memoryStatus">Selecciona dos cartas.</div></div>
 </section>
 <section class="view" id="retro"><div class="eyebrow">NEXUS / EMULATION</div><h1>Retro Core</h1><div class="panel"><h2>Biblioteca de ROM integrada</h2>
-<p>Dos juegos Game Boy homebrew incluidos con licencia CC0. Se ejecutan en EmulatorJS directamente en tu teléfono, sin buscar archivos externos. El motor se descarga la primera vez.</p>
+<p>Biblioteca homebrew con cartuchos NES y Game Boy de distribución autorizada. Prioridad: plataformas y aventuras. Los juegos se ejecutan en tu teléfono mediante EmulatorJS; la primera vez hay que descargar el núcleo del emulador. <strong>Los juegos oficiales de Mario requieren licencia y no vienen incluidos.</strong></p>
+<a class="tile" href="./jump/" style="text-decoration:none;min-height:120px;margin:12px 0 16px;background:linear-gradient(115deg,#145a72,#234279)"><span class="glyph">🪐</span><span class="arrow">↗</span><strong>NEXUS JUMP — AVENTURA DE PLATAFORMAS</strong><small>Juego original para iPhone · 3 mundos · controles táctiles · sin ROM ni descarga adicional</small></a>
 <div class="game-menu" id="builtInGames" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:10px 0 18px">
 <button type="button" data-rom="pong"><span>🏓</span><b>GB PONG</b><small>Incluido · Game Boy · CC0</small></button>
 <button type="button" data-rom="minesweep"><span>💣</span><b>GB MINESWEEP</b><small>Incluido · Game Boy · CC0</small></button>
+<button type="button" data-rom="dabg"><span>🎮</span><b>DOUBLE ACTION BLASTER GUYS</b><small>NES · plataformas · Zlib</small></button>
+<button type="button" data-rom="falling"><span>🌠</span><b>FALLING</b><small>NES · arcade · MIT</small></button>
+<button type="button" data-rom="tabletennis"><span>🏓</span><b>8-BIT TABLE TENNIS</b><small>NES · deportes · MIT</small></button>
 </div>
 <h3>También puedes cargar tus juegos</h3>
 <p>EmulatorJS admite ROM compatibles de Game Boy (.gb/.gbc), Game Boy Advance (.gba) y NES (.nes). Usa únicamente archivos propios o con autorización de distribución.</p><label for="romFile" class="hint">Seleccionar ROM propia</label><input id="romFile" class="field" type="file" accept=".gb,.gbc,.gba,.nes"><div class="controls"><button class="act" id="runRom">Ejecutar ROM</button><button class="alt" id="clearRom">Cerrar</button></div><div class="status" id="retroStatus">Selecciona uno de los juegos incluidos para comenzar.</div><div class="console"><div id="game"></div></div><p class="hint">Los juegos de consola suelen incluir controles táctiles de EmulatorJS. Si Safari no admite un núcleo o un archivo, el experimento puede fallar. No cargues archivos con datos personales.</p></div></section>
