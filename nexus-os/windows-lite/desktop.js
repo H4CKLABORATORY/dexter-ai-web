@@ -81,7 +81,7 @@ function openApp(id){
  if(!appInfo[id])return;closeStart();
  if(windows.has(id)){focusApp(id);return}
  const win=mk('section',undefined,'os-window');
- win.setAttribute('role','dialog');win.setAttribute('aria-label',appInfo[id][1]);
+ win.setAttribute('role','dialog');win.setAttribute('aria-label',appInfo[id][1]);win.dataset.app=id;
  win.style.top=(8+windows.size*4)+'%';
  if(innerWidth>650)win.style.left='calc(50% - 285px + '+windows.size*18+'px)';
  const head=mk('header',undefined,'titlebar'),title=mk('span',appInfo[id][0]+' '+appInfo[id][1],'win-title');
