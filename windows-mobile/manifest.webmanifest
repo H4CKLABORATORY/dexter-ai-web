@@ -1,0 +1,24 @@
+{
+  "name": "DEXTER Mobile OS",
+  "short_name": "DEXTER OS",
+  "description": "Escritorio móvil experimental con emulador x86 y una IA local cuando WebGPU esté disponible.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090e22",
+  "theme_color": "#0c1532",
+  "orientation": "any",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
