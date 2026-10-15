@@ -7,6 +7,9 @@ on:
       - 'nexus-os/index.html'
       - 'nexus-os/app.js'
       - 'nexus-os/sw.js'
+      - 'nexus-os/media-smoke.cjs'
+      - 'nexus-os/roms/**'
+      - 'nexus-os/assets/pc/**'
       - '.github/workflows/windows-lite-smoke.yml'
   workflow_dispatch:
 jobs:
@@ -34,3 +37,4 @@ jobs:
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           node nexus-os/windows-lite/smoke.cjs
+          node nexus-os/media-smoke.cjs
