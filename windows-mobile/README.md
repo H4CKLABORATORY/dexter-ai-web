@@ -22,3 +22,16 @@ Para alojar este sitio con dominio independiente, crear un sitio estático en Re
 - publish directory: `windows-mobile`.
 
 **Repositorio GitHub:** sigue compartiendo el repositorio fuente `dexter-ai-web`. Para separar además el código en un repositorio propio, crear el repositorio nuevo en GitHub y copiar esta carpeta; la conexión actual de GitHub no permite crear repositorios.
+
+## iPhone: app instalada y emulador (actualización octubre 2026)
+
+El sitio incluye `manifest.webmanifest`, `sw.js`, icono SVG y opción visual «⇧ App».
+En Safari: **Compartir → Añadir a pantalla de inicio → Abrir como app** (si aparece).
+La PWA conserva el motor WebKit: no desbloquea más RAM/CPU ni permite ejecutar Windows nativo u Ollama 8B en iPhone. Su beneficio es el modo pantalla completa y el acceso desde inicio.
+
+El emulador ahora usa archivos **del mismo dominio** en `windows-mobile/assets/v86/` (v86 JS, WASM, BIOS y disquete FreeDOS), previamente descargados desde fuentes oficiales mediante la tarea GitHub Actions «Bundle emulator assets for mobile». Se conservó la licencia del runtime en `assets/v86/LICENSE`. El avisador de arranque espera 75 segundos y muestra estados de descarga reales, sin declarar fracaso por tardar 15 segundos.
+
+### Verificación
+GitHub Actions `Validate application` valida JavaScript, manifest y formato/tamaños de los archivos locales. Esta prueba **no sustituye** un arranque FreeDOS en el iPhone del usuario, que sigue pendiente.
+
+Si el emulador no abre en iOS, prueba la [demo upstream](https://copy.sh/v86/?profile=freedos): si tampoco arranca, puede ser una restricción de compatibilidad de Safari/v86 y no un problema de instalación web.
