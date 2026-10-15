@@ -33,6 +33,7 @@ function nav(id){
  document.querySelectorAll('[data-nav]').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
  activeView=id;scrollTo({top:0,behavior:'instant'});
  if(id!=='arcade')stopGames();
+ if(id!=='windows' && typeof winOff==='function')winOff();
  if(id==='system')loadDeviceDetails();
  if(id==='vault')refreshStats();
 }
@@ -279,3 +280,37 @@ $('clearData').onclick=()=>{
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&snakeLoop){clearInterval(snakeLoop);snakeLoop=null;$('snakeStatus').textContent='Pausado al salir de la app. Pulsa Jugar para reiniciar.'}if(document.hidden&&dodgeFrame){cancelAnimationFrame(dodgeFrame);dodgeFrame=null;dodgeState=null;$('dodgeStatus').textContent='Pausado al salir. Pulsa Jugar para reiniciar.'}});
 paintSnake([],null);paintDodge({player:{x:180,y:296},blocks:[]});
+
+
+/* Independent on-demand Windows Lite browser desktops. Each edition uses a distinct localStorage profile. */
+let activeWindows=null;
+function winOff(){
+ const frame=$('winFrame');
+ if(activeWindows!==null){frame.src='about:blank';frame.removeAttribute('src');activeWindows=null}
+ $('winSession').hidden=true;$('winBootPanel').hidden=false;
+}
+function winOn(mode){
+ const requested=mode==='10'?'10':'7';
+ if(activeWindows===requested){$('winSession').hidden=false;$('winBootPanel').hidden=true;return}
+ winOff();activeWindows=requested;
+ $('winSessionName').textContent='Windows '+requested+' Lite · edición web';
+ $('winBootPanel').hidden=true;$('winSession').hidden=false;
+ $('winFrame').src='./windows-lite/?mode='+requested;
+}
+$('win7Start').onclick=()=>winOn('7');
+$('win10Start').onclick=()=>winOn('10');
+$('winShutdown').onclick=winOff;
+$('winSwitch').onclick=winOff;
+$('winOpenNew').onclick=()=>{
+ if(activeWindows===null)return;
+ const path=new URL('./windows-lite/?mode='+activeWindows,location.href);
+ const opened=window.open(path.href,'_blank','noopener,noreferrer');
+ if(!opened && !matchMedia('(display-mode: standalone)').matches)alert('Tu navegador bloqueó la nueva pestaña; mantén pulsado el enlace de Windows para abrirlo aparte.');
+};
+window.addEventListener('message',e=>{
+ if(e.origin!==location.origin || e.source!==$('winFrame').contentWindow)return;
+ if(e.data?.type!=='NEXUS_NAV'||!['home','arcade','windows'].includes(e.data.view))return;
+ nav(e.data.view);
+});
+const initialHash=location.hash.slice(1);
+if(['windows','arcade','android','system','vault'].includes(initialHash))nav(initialHash);
