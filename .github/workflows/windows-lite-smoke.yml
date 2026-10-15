@@ -8,6 +8,8 @@ on:
       - 'nexus-os/app.js'
       - 'nexus-os/sw.js'
       - 'nexus-os/media-smoke.cjs'
+      - 'nexus-os/expanded-games-smoke.cjs'
+      - 'nexus-os/jump/**'
       - 'nexus-os/roms/**'
       - 'nexus-os/assets/pc/**'
       - '.github/workflows/windows-lite-smoke.yml'
@@ -38,3 +40,4 @@ jobs:
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           node nexus-os/windows-lite/smoke.cjs
           node nexus-os/media-smoke.cjs
+          node nexus-os/expanded-games-smoke.cjs
