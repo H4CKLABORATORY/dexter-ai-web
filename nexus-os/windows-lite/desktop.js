@@ -12,7 +12,7 @@ $('watermark').textContent='NEXUS · EDICIÓN WEB / NO ES WINDOWS '+edition+' RE
 document.title=label+' — DEXTER NEXUS';
 const storageKey='nexus-lite-'+edition+'-v2';
 const appInfo={
- files:['📁','Explorador de archivos'],notes:['📝','Bloc de notas'],calc:['⌗','Calculadora'],
+ files:['📁','Explorador de archivos'],notes:['📝','Bloc de notas'],calc:['⌗','Calculadora'],paint:['🎨','Paint Lite'],
  terminal:['▣','Consola web'],performance:['◫','Rendimiento'],settings:['⚙','Configuración'],
  about:['ⓘ','Acerca de']
 };
@@ -179,6 +179,39 @@ function renderCalc(body){
  display.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();try{display.value=arithmetic(display.value)}catch(err){toast(err.message)}}};
  para(body,'Motor matemático local, sin eval ni ejecución de código.','hint');
 }
+function renderPaint(body){
+ body.replaceChildren();
+ para(body,'Dibuja con el dedo o con el ratón. Canvas usa el motor gráfico del navegador del teléfono.');
+ const barElement=row(body);
+ const color=document.createElement('input');color.type='color';color.value='#24c9c1';
+ color.setAttribute('aria-label','Color del pincel');color.style.cssText='width:58px;height:40px;padding:3px';
+ const size=document.createElement('input');size.type='range';size.min='2';size.max='26';size.value='5';
+ size.setAttribute('aria-label','Grosor de pincel');size.style.cssText='width:110px;min-height:40px';
+ barElement.append(color,size);
+ const canvas=document.createElement('canvas');canvas.width=640;canvas.height=400;
+ canvas.style.cssText='display:block;width:100%;height:auto;max-height:360px;aspect-ratio:8/5;background:#fff;border:1px solid #6eb8d0;border-radius:9px;touch-action:none;cursor:crosshair';
+ canvas.setAttribute('aria-label','Lienzo Paint Lite');body.append(canvas);
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+ ctx.lineCap='round';ctx.lineJoin='round';
+ let drawing=false;
+ function pos(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
+ canvas.addEventListener('pointerdown',e=>{
+  drawing=true;canvas.setPointerCapture(e.pointerId);
+  const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.strokeStyle=color.value;ctx.lineWidth=Number(size.value);
+  ctx.lineTo(p.x+.05,p.y+.05);ctx.stroke();
+ });
+ canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
+ for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>drawing=false);
+ const tools=row(body);
+ tools.append(btn('Limpiar lienzo',()=>{ctx.fillStyle='#ffffff';ctx.fillRect(0,0,640,400)}),
+ btn('Guardar PNG',()=>{
+  canvas.toBlob(blob=>{
+   if(!blob){toast('No se pudo exportar la imagen');return}
+   const u=URL.createObjectURL(blob),a=mk('a');a.href=u;a.download='nexus-paint-'+edition+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2500);
+  },'image/png');
+ }));
+ para(body,'Puedes guardarlo como PNG en Archivos. Las imágenes no se suben a Internet.','hint');
+}
 function renderTerminal(body){
  body.replaceChildren();para(body,'Comandos de demostración; esta consola no da acceso al sistema operativo de Apple.');
  const output=mk('div','NEXUS WINDOWS '+edition+' LITE WEB SHELL\nEscribe help para comandos disponibles.\n\n','terminal-output');body.append(output);
@@ -244,7 +277,7 @@ function renderAbout(body){
  row(body).append(btn('Ir a NEXUS Arcade',()=>jump('arcade')),btn('Salir al launcher',()=>jump('home')));
 }
 function renderApp(id,body){
- const funcs={files:renderFiles,notes:renderNotes,calc:renderCalc,terminal:renderTerminal,performance:renderPerformance,settings:renderSettings,about:renderAbout};
+ const funcs={files:renderFiles,notes:renderNotes,calc:renderCalc,paint:renderPaint,terminal:renderTerminal,performance:renderPerformance,settings:renderSettings,about:renderAbout};
  funcs[id](body);
 }
 $('filePicker').onchange=async()=>{
