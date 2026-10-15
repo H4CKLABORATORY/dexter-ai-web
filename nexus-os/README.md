@@ -22,6 +22,16 @@ Además se incluye **NEXUS JUMP**, un juego de plataformas web original con 3 mu
 
 **Super Mario Bros., Super Mario World y los demás juegos comerciales de Nintendo no se incluyen** porque sus ROM no están autorizadas para redistribución general. El emulador permite cargar archivos del usuario que tenga derecho a utilizar. La licencia MIT del repositorio de un emulador NO transfiere derechos sobre las ROM comerciales alojadas en otro lugar.
 
+## Biblioteca personal de ROM (iPhone)
+
+Retro Core incluye un módulo **privado y persistente en este dispositivo** (`rom-vault.js`). El usuario puede importar sus propios archivos de los formatos NES, GB, GBC y GBA. Los guarda IndexedDB del origen `dexter-nexus-os.onrender.com`. La lista, datos de archivos y contenido binario **no se envían** a Render, GitHub ni a una cuenta externa. Solo se descargarán los núcleos libres de EmulatorJS cuando se necesiten. El navegador sirve después el archivo local mediante un URL de objeto temporal.
+
+Se permite jugar un archivo seleccionado sin importarlo, o guardarlo y abrirlo en sesiones posteriores. La biblioteca permite eliminar un archivo local individualmente. Límites defensivos: 32 MB por ROM, 80 archivos y 200 MB en total (si el navegador permite dicha cuota). Safari puede borrar IndexedDB por presión de almacenamiento o por políticas de privacidad; conserva copias propias fuera del navegador. Instalar la PWA puede ayudar a la usabilidad, pero no garantiza persistencia perpetua ni amplía RAM/CPU.
+
+Este mecanismo **no proporciona** ROM de Super Mario, Nintendo comerciales ni garantiza que el usuario tenga licencia sobre un archivo. La disponibilidad pública de una ROM no concede derechos de redistribución. La aplicación y el repositorio permanecen públicos, pero las ROM importadas por cada usuario no se publican.
+
+Prueba automatizada `nexus-os/private-rom-smoke.cjs`: importar cartucho de prueba con licencia libre, persistencia tras refrescar, arranque de UI, borrado local.
+
 ## Bundled media — latest version
 
 A starter library ships **two genuine Game Boy ROMs**: `roms/pong.gb` and `roms/minesweep.gb` (32 KiB each). They come from Maximilien Dagois's [Game Boy Coding Adventure](https://github.com/mdagois/gca) repository, specifically `prebuilt/games/pong/pong.gb` and `prebuilt/games/minesweep/minesweep.gb`. That author's README identifies the games as CC0 1.0 Universal; the corresponding license is included at `roms/CC0-LICENSE.txt`. Note that the source repository documents exceptions for certain unrelated third-party art assets; review those restrictions before adding more games.
