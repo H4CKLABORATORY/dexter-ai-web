@@ -9,6 +9,8 @@ on:
       - 'nexus-os/sw.js'
       - 'nexus-os/media-smoke.cjs'
       - 'nexus-os/expanded-games-smoke.cjs'
+      - 'nexus-os/private-rom-smoke.cjs'
+      - 'nexus-os/rom-vault.js'
       - 'nexus-os/jump/**'
       - 'nexus-os/roms/**'
       - 'nexus-os/assets/pc/**'
@@ -41,3 +43,4 @@ jobs:
           node nexus-os/windows-lite/smoke.cjs
           node nexus-os/media-smoke.cjs
           node nexus-os/expanded-games-smoke.cjs
+          node nexus-os/private-rom-smoke.cjs
