@@ -1,10 +1,13 @@
 'use strict';
-const VERSION='nexus-shell-v2';
+const VERSION='nexus-shell-v3-rom-library';
 const SHELL=[
  './','./index.html','./app.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
  './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
- './windows-lite/win7.svg','./windows-lite/win10.svg'
+ './windows-lite/win7.svg','./windows-lite/win10.svg',
+ './roms/pong.gb','./roms/minesweep.gb',
+ './assets/pc/libv86.js','./assets/pc/v86.wasm','./assets/pc/seabios.bin',
+ './assets/pc/vgabios.bin','./assets/pc/freedos722.img'
 ];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
