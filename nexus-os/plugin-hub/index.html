@@ -27,11 +27,11 @@
  <div class="top"><div class="brand">⬡ DEXTER NEXUS OS / TOOL CENTER</div><a class="back" href="../">← Volver a NEXUS</a></div>
  <div class="hero"><div class="eyebrow">NEXUS / PLUGIN HUB 1.0</div>
  <h1>Una puerta a tus <span>herramientas.</span></h1>
- <p class="muted">Accede a un navegador de escritorio remoto desde tu teléfono y administra plugins de ChatGPT con los permisos normales de tu cuenta. Una PC remota no anula funciones exclusivas de la aplicación ChatGPT Desktop.</p></div>
+ <p class="muted">Gestiona plugins de ChatGPT desde tu teléfono. La computadora remota está preparada como proyecto Docker y requiere activar su propio servidor. Una PC remota no anula funciones exclusivas de la aplicación ChatGPT Desktop.</p></div>
  <div class="grid">
-  <section class="card"><div class="icon">▣</div><h2>Remote PC</h2><p class="muted">Chromium en Linux, transmitido a Safari mediante un escritorio remoto privado. Necesitas usuario y contraseña de NEXUS.</p>
-   <div class="status"><span class="dot"></span><span id="health">Comprobando disponibilidad del servidor…</span></div>
-   <div class="actions"><a class="button" id="openRemote" href="https://dexter-remote-pc.onrender.com/" target="_blank" rel="noopener noreferrer">Abrir computadora remota ↗</a></div>
+  <section class="card"><div class="icon">▣</div><h2>Remote PC</h2><p class="muted">Chromium en Linux, transmitido a Safari mediante un escritorio remoto privado. El código está listo; falta publicar el servidor. Requerirá usuario y contraseña.</p>
+   <div class="status"><span class="dot"></span><span id="health">Servidor remoto pendiente de despliegue.</span></div>
+   <div class="actions"><a class="button secondary" href="https://github.com/H4CKLABORATORY/dexter-ai-web/blob/main/remote-pc/README.md" target="_blank" rel="noopener noreferrer">Configurar Remote PC ↗</a></div>
   </section>
   <section class="card"><div class="icon">✳</div><h2>Plugins de ChatGPT</h2><p class="muted">Busca plugins, revisa los requisitos de dispositivo y conecta los servicios en tu cuenta. Algunas acciones requieren tu aprobación.</p>
    <div class="actions"><a class="button secondary" href="https://chatgpt.com/plugins" target="_blank" rel="noopener noreferrer">Abrir directorio de plugins ↗</a><a class="button secondary" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">Abrir ChatGPT ↗</a></div>
@@ -44,9 +44,4 @@
   <li><b>4</b><span>Utiliza Remote PC solo cuando te ayude trabajar en un navegador de escritorio.</span></li></ol></section>
  <div class="note"><strong>Limitación comprobada:</strong> un plugin marcado como <strong>Desktop only</strong> requiere la aplicación ChatGPT para escritorio; no basta con cambiar el agente de usuario ni abrir ChatGPT Web dentro de una PC virtual. Tampoco es posible instalar plugins silenciosamente desde esta página.</div>
 </div>
-<script>
-(async()=>{const status=document.getElementById('health');const url='https://dexter-remote-pc.onrender.com/health';
- try{const r=await fetch(url,{mode:'cors',signal:AbortSignal.timeout(9000),cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);status.textContent='Servidor web disponible; autenticación requerida para entrar.'}
- catch{status.textContent='Estado remoto no confirmado: el acceso puede requerir iniciar el servidor.'}
-})();
-</script></body></html>
+</body></html>
