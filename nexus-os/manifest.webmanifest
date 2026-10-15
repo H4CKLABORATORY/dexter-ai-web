@@ -1,0 +1,38 @@
+{
+  "id": "./",
+  "name": "DEXTER NEXUS OS",
+  "short_name": "NEXUS OS",
+  "description": "Launcher de juegos y emulación retro experimental, instalado como app web independiente.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070a1b",
+  "theme_color": "#070a1b",
+  "orientation": "any",
+  "lang": "es",
+  "categories": [
+    "games",
+    "entertainment",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./assets/nexus.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/nexus-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/nexus-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
