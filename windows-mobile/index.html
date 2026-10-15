@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1532"><meta name="description" content="DEXTER Mobile OS: escritorio móvil, IA local WebGPU y emulador x86 experimental."><title>DEXTER Mobile OS — laboratorio en el navegador</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f6f7ff;color-scheme:dark;background:#090e22}*{box-sizing:border-box}body{margin:0;overflow:hidden}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #86b6ff;outline-offset:2px}
+#desktop{height:100dvh;min-height:340px;position:relative;background:radial-gradient(ellipse at 80% 10%,#6056c4 0,transparent 40%),radial-gradient(ellipse at 14% 87%,#1269a0 0,transparent 55%),linear-gradient(135deg,#111a46 0%,#090e22 70%);overflow:hidden}
+.glow{position:absolute;width:40vw;height:40vw;border:1px solid #b6aeff23;transform:rotate(40deg);border-radius:80px;left:35%;top:5%;pointer-events:none;box-shadow:0 0 90px #a29aff18}.topbar{height:45px;background:#070d24a8;backdrop-filter:blur(22px);border-bottom:1px solid #ffffff17;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 17px;position:relative;z-index:3}.brand{font-size:13px;font-weight:900;letter-spacing:.11em}.brand b{color:#a99aff}.topbar span{font-size:12px;color:#b7c6e9}
+.desktop-icons{position:absolute;top:73px;left:16px;display:flex;flex-direction:column;gap:14px}.desktop-icon{border:0;background:transparent;color:#fff;width:100px;display:flex;align-items:center;flex-direction:column;gap:7px;text-align:center;text-shadow:0 2px 6px #000;line-height:1.2;font-size:12px;padding:8px;border-radius:10px}.desktop-icon:hover,.desktop-icon:focus-visible{background:#ffffff25}.tile{font-size:27px;width:51px;height:51px;border-radius:15px;display:grid;place-items:center;box-shadow:0 8px 25px #08091c85;background:linear-gradient(135deg,#7268fe,#3234ab)}
+#welcome{position:absolute;top:28%;left:50%;transform:translateX(-50%);text-align:center;max-width:570px;width:calc(100% - 160px);pointer-events:none}#welcome h1{font-size:clamp(25px,5vw,48px);margin:0 0 12px;letter-spacing:-.05em}#welcome p{margin:0;color:#c9d3ef;font-size:14px;line-height:1.65}
+.taskbar{position:absolute;bottom:0;left:0;right:0;min-height:68px;display:flex;align-items:center;justify-content:center;gap:10px;background:#080e25d9;backdrop-filter:blur(25px);border-top:1px solid #ffffff24;padding:10px 14px calc(10px + env(safe-area-inset-bottom))}.taskbar button{background:#242f53;border:1px solid #5b689b88;border-radius:13px;color:white;min-height:42px;min-width:48px;padding:6px 14px;font-weight:700}.taskbar button:hover{background:#3a4a80}.taskbar .start{background:linear-gradient(135deg,#6276f6,#6c33ba)}.taskbar .clock{font-size:12px;color:#d2d9f4;margin-left:4px}
+.window{position:absolute;z-index:4;top:11%;left:50%;transform:translateX(-50%);width:min(92vw,860px);height:min(76dvh,700px);display:none;flex-direction:column;background:#101a34f5;border:1px solid #7a88b080;border-radius:17px;overflow:hidden;box-shadow:0 18px 80px #000b}.window.open{display:flex}.window header{height:49px;min-height:49px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#202d4b;border-bottom:1px solid #6c7a9b4f;padding:0 12px 0 18px;font-size:14px;font-weight:800}.window header button{color:white;background:#36446a;border:0;border-radius:9px;width:34px;height:30px}.body{min-height:0;flex:1;overflow:auto;padding:18px}
+.info{border:1px solid #667ba34a;background:#21345788;border-radius:12px;padding:13px;font-size:13px;color:#d5dff9;line-height:1.55;margin-bottom:13px}.info strong{color:#fff}.controls{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}.primary,.secondary{border:0;border-radius:10px;padding:11px 15px;font-weight:750;color:white;background:#7059df}.secondary{background:#334368}.primary:disabled{opacity:.5}textarea,input[type=text]{background:#0e1731;border:1px solid #55688e;color:white;border-radius:10px;padding:12px;width:100%}textarea{resize:vertical;min-height:90px}.log{height:calc(100% - 215px);min-height:150px;overflow:auto;padding:8px;border-radius:10px;background:#080e20;border:1px solid #35476a}.msg{white-space:pre-wrap;overflow-wrap:anywhere;padding:9px 12px;margin:8px 0;border-radius:10px;line-height:1.55;font-size:14px}.msg.user{background:#283963}.msg.ai{background:#192a3e}.msg .role{font-weight:800;color:#baa8ff;margin-bottom:4px;font-size:11px;letter-spacing:.06em}.status{color:#a9bfea;font-size:12px;margin-top:8px;line-height:1.5}#screen_container{background:#02050a;height:300px;overflow:auto;border:1px solid #42597e;border-radius:10px;max-width:100%}#screen_container>div{font:14px monospace;white-space:pre;line-height:14px;transform-origin:top left}#screen_container canvas{max-width:100%;height:auto;image-rendering:pixelated}
+.mini{font-size:12px;color:#b3c5ec;line-height:1.7}.badge{display:inline-block;border:1px solid #8c9bc36a;padding:4px 9px;border-radius:999px;font-size:11px;color:#d3e5fc}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid .info{margin:0}
+@media(max-width:700px){.topbar{height:42px}.desktop-icons{top:56px;left:6px;gap:7px}.desktop-icon{width:85px;padding:7px 4px;font-size:11px}.tile{width:45px;height:45px;font-size:24px}#welcome{top:31%;left:calc(50% + 30px);width:calc(100% - 145px)}#welcome h1{font-size:26px}#welcome p{font-size:12px}.window{top:51px;width:calc(100% - 12px);height:calc(100dvh - 128px);border-radius:13px}.body{padding:12px}.taskbar{gap:6px;padding:9px 7px calc(9px + env(safe-area-inset-bottom))}.taskbar button{min-width:38px;padding:7px;font-size:12px}.taskbar .clock{display:none}.grid{grid-template-columns:1fr}.log{height:calc(100% - 235px)}}
+</style></head><body><div id="desktop"><div class="glow"></div><div class="topbar"><div class="brand">◈ DEXTER <b>MOBILE OS</b></div><span id="device">Detectando dispositivo…</span></div>
+<div class="desktop-icons">
+<button class="desktop-icon" data-open="aiWindow"><span class="tile">✦</span>IA del teléfono</button>
+<button class="desktop-icon" data-open="vmWindow"><span class="tile" style="background:linear-gradient(135deg,#3ba9bf,#17536b)">▣</span>Emulador x86</button>
+<button class="desktop-icon" data-open="systemWindow"><span class="tile" style="background:linear-gradient(135deg,#d9a746,#7b5431)">⚙</span>Mi dispositivo</button>
+<button class="desktop-icon" data-open="aboutWindow"><span class="tile" style="background:linear-gradient(135deg,#4387df,#49549b)">ⓘ</span>Acerca de</button>
+</div>
+<div id="welcome"><h1>Tu laboratorio, <span style="color:#bbacff">en tu móvil.</span></h1><p>Escritorio inspirado en Windows, emulación x86 experimental e inteligencia artificial local compatible con WebGPU. No necesita un servidor para el modo local.</p></div>
+<div class="window" id="aiWindow" role="dialog" aria-label="IA local"><header>✦ IA LOCAL · WebLLM <button data-close aria-label="Cerrar">×</button></header><div class="body" style="display:flex;flex-direction:column;gap:9px"><div class="info"><strong>Modelo local ligero: SmolLM2 360M.</strong> Se descarga a este navegador y usa WebGPU si está disponible. No es el modelo WormGPT de 8B; el modelo original sigue necesitando un servidor compatible. La primera carga descarga archivos y puede tardar varios minutos.</div><div class="controls" style="margin:0"><button class="primary" id="loadAI">Descargar y activar IA</button><button class="secondary" id="clearAI">Limpiar chat</button></div><div class="status" id="aiStatus" aria-live="polite">Esperando comprobación WebGPU…</div><div class="log" id="chatLog" aria-live="polite"></div><textarea id="message" placeholder="Escribe tu pregunta después de cargar el modelo..."></textarea><button class="primary" id="sendAI" disabled>Enviar a IA local</button></div></div>
+<div class="window" id="vmWindow" role="dialog" aria-label="Emulador x86"><header>▣ EMULADOR x86 · v86 <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info"><strong>Emulación real de PC en el navegador.</strong> Inicia FreeDOS como sistema libre de prueba. También puedes elegir una imagen de disco o ISO propia que tengas derecho a usar. Windows moderno y Ollama 8B no funcionarán aquí a velocidad nativa.</div><div class="controls"><button class="primary" id="bootFreedos">Iniciar FreeDOS</button><button class="secondary" id="chooseDisk">Elegir imagen propia</button><input type="file" id="diskFile" accept=".img,.iso,.bin" hidden><button class="secondary" id="stopVM">Detener</button></div><div class="status" id="vmStatus" aria-live="polite">Emulador sin iniciar. Descarga el motor v86 al arrancar.</div><div id="screen_container"><div></div><canvas style="display:none"></canvas></div><div class="controls"><input type="text" id="vmText" placeholder="Texto para emulador (opcional)" style="max-width:70%"><button class="secondary" id="typeVM">Enviar texto</button></div><p class="mini">Dependemos de los archivos públicos v86 y la imagen FreeDOS alojados por el proyecto original. Si el navegador bloquea las descargas cruzadas, prueba su <a href="https://copy.sh/v86/" target="_blank" rel="noopener" style="color:#a8ceff">demostración oficial</a>. La emulación consume CPU del teléfono y puede ser lenta.</p></div></div>
+<div class="window" id="systemWindow" role="dialog" aria-label="Sistema"><header>⚙ SISTEMA Y RECURSOS <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="grid"><div class="info"><strong>GPU del navegador</strong><div id="gpuInfo" class="mini">Comprobando…</div></div><div class="info"><strong>CPU lógica</strong><div id="cpuInfo" class="mini">Comprobando…</div></div><div class="info"><strong>WebAssembly</strong><div id="wasmInfo" class="mini"></div></div><div class="info"><strong>Memoria</strong><div class="mini">Safari no expone toda la RAM del dispositivo. No se pueden ampliar recursos mediante perfiles de configuración.</div></div></div><div class="controls"><button class="secondary" id="refreshCapabilities">Revisar compatibilidad</button></div></div></div>
+<div class="window" id="aboutWindow" role="dialog" aria-label="Acerca de"><header>ⓘ DEXTER MOBILE OS <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info">Este es un entorno web propio inspirado en un escritorio Windows: <strong>no es Windows instalado</strong>. Sus componentes principales son una interfaz original, WebLLM para IA local y v86 para PC x86 emulado. Cada uno es independiente.</div><p class="mini">La emulación de Windows antiguo requiere que aportes una imagen del sistema con la licencia correspondiente. No distribuimos Windows ni modificamos iOS. El modelo de IA predefinido es distinto del WormGPT original, por sus requisitos de memoria y formato.</p><p class="mini">Fuentes: <a href="https://github.com/copy/v86" target="_blank" rel="noopener" style="color:#a8ceff">v86</a> · <a href="https://github.com/mlc-ai/web-llm" target="_blank" rel="noopener" style="color:#a8ceff">WebLLM</a> · <a href="https://github.com/H4CKLABORATORY/dexter-ai-web" target="_blank" rel="noopener" style="color:#a8ceff">Repositorio principal</a></p><p><span class="badge">WebAssembly</span> <span class="badge">WebGPU cuando esté disponible</span> <span class="badge">iPhone / Android / PC</span></p></div></div>
+<div class="taskbar"><button class="start" data-open="aboutWindow">⊞ Inicio</button><button data-open="aiWindow">✦ IA</button><button data-open="vmWindow">▣ PC</button><button data-open="systemWindow">⚙</button><span class="clock" id="clock"></span></div></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+let aiEngine=null,aiLoading=false,aiMessages=[],vm=null,vmLoading=false,assetReady=false;
+function openApp(id){document.querySelectorAll('.window').forEach(x=>x.classList.toggle('open',x.id===id));}
+document.querySelectorAll('[data-open]').forEach(x=>x.addEventListener('click',()=>openApp(x.dataset.open)));
+document.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',()=>x.closest('.window').classList.remove('open')));
+function tick(){ $('clock').textContent=new Date().toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'}); }
+tick();setInterval(tick,30000);
+$('device').textContent=/iPhone|iPad|Android/i.test(navigator.userAgent)?'● Modo móvil':'● Navegador de escritorio';
+async function capabilities(){
+  $('gpuInfo').textContent=!!navigator.gpu?'WebGPU detectado. Falta probar el modelo.':'Sin WebGPU; IA local de este modo no disponible.';
+  $('cpuInfo').textContent=navigator.hardwareConcurrency?String(navigator.hardwareConcurrency)+' hilos lógicos visibles':'No informado por navegador';
+  $('wasmInfo').textContent=typeof WebAssembly==='object'?'WebAssembly disponible':'WebAssembly no disponible';
+  if(navigator.gpu){try{const adapter=await navigator.gpu.requestAdapter();$('gpuInfo').textContent=adapter?'Adaptador WebGPU disponible':'No se obtuvo un adaptador WebGPU';}catch(e){$('gpuInfo').textContent='WebGPU no disponible: '+e.message}}
+  $('aiStatus').textContent=navigator.gpu?'Disponible para intentar cargar un modelo pequeño.':'Tu navegador no ofrece WebGPU, necesario para IA local.';
+}
+$('refreshCapabilities').onclick=capabilities;capabilities();
+function addMessage(role,content){const x=document.createElement('div');x.className='msg '+(role==='user'?'user':'ai');const h=document.createElement('div');h.className='role';h.textContent=role==='user'?'TÚ':'IA LOCAL';const b=document.createElement('div');b.textContent=content;x.append(h,b);$('chatLog').append(x);$('chatLog').scrollTop=$('chatLog').scrollHeight}
+$('loadAI').onclick=async()=>{
+  if(aiEngine||aiLoading)return;
+  aiLoading=true;$('loadAI').disabled=true;$('aiStatus').textContent='Cargando biblioteca WebLLM…';
+  try{
+    if(!navigator.gpu)throw Error('WebGPU no compatible con este navegador. Puedes usar una IA remota desde DEXTER AI.');
+    const adapter=await navigator.gpu.requestAdapter();if(!adapter)throw Error('No existe un adaptador WebGPU disponible.');
+    const webllm=await import('https://esm.run/@mlc-ai/web-llm');
+    const model='SmolLM2-360M-Instruct-q4f32_1-MLC';
+    const found=webllm.prebuiltAppConfig.model_list.find(m=>m.model_id===model);
+    if(!found)throw Error('El modelo ligero no está en el catálogo de esta versión.');
+    aiEngine=await webllm.CreateMLCEngine(model,{initProgressCallback:(p)=>{$('aiStatus').textContent=p.text||'Descargando modelo…'}});
+    $('aiStatus').textContent='Modelo '+model+' activo en este dispositivo';$('loadAI').textContent='IA cargada';$('sendAI').disabled=false;
+  }catch(e){$('aiStatus').textContent='No se pudo iniciar IA local: '+e.message;$('loadAI').disabled=false}finally{aiLoading=false}
+};
+$('sendAI').onclick=async()=>{
+  const text=$('message').value.trim();if(!aiEngine||!text)return;
+  $('message').value='';$('sendAI').disabled=true;addMessage('user',text);aiMessages.push({role:'user',content:text});$('aiStatus').textContent='Generando respuesta en tu dispositivo…';
+  try{const answer=await aiEngine.chat.completions.create({messages:aiMessages.slice(-12),max_tokens:220,temperature:.7});const content=String(answer.choices?.[0]?.message?.content||'Respuesta vacía');aiMessages.push({role:'assistant',content});addMessage('assistant',content);$('aiStatus').textContent='Respuesta local completada';}
+  catch(e){$('aiStatus').textContent='Error de inferencia: '+e.message;addMessage('assistant','No se pudo generar respuesta: '+e.message)}
+  finally{$('sendAI').disabled=false}
+};
+$('clearAI').onclick=()=>{aiMessages=[];$('chatLog').replaceChildren();$('aiStatus').textContent=aiEngine?'Conversación reiniciada':'Inicia primero el modelo'};
+$('message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('sendAI').click()}});
+async function loadV86(){
+ if(assetReady)return;
+ $('vmStatus').textContent='Cargando emulador de PC v86…';
+ await new Promise((resolve,reject)=>{
+  const s=document.createElement('script');s.src='https://copy.sh/v86/build/libv86.js';s.onload=resolve;s.onerror=()=>reject(Error('No se pudo descargar libv86.js'));document.head.append(s);
+ });
+ if(typeof V86!=='function')throw Error('La biblioteca v86 no se inicializó');
+ assetReady=true;
+}
+async function startVM(type,file){
+ if(vmLoading)return;vmLoading=true;$('bootFreedos').disabled=true;
+ try{
+  if(vm){try{vm.stop()}catch{};try{vm.destroy()}catch{};vm=null}
+  $('screen_container').replaceChildren();const inner=document.createElement('div');const canvas=document.createElement('canvas');canvas.style.display='none';$('screen_container').append(inner,canvas);
+  await loadV86();$('vmStatus').textContent='Inicializando BIOS y disco…';
+  const opts={wasm_path:'https://copy.sh/v86/build/v86.wasm',memory_size:64*1024*1024,vga_memory_size:4*1024*1024,screen_container:$('screen_container'),bios:{url:'https://copy.sh/v86/bios/seabios.bin'},vga_bios:{url:'https://copy.sh/v86/bios/vgabios.bin'},autostart:true};
+  if(type==='freedos')opts.fda={url:'https://i.copy.sh/freedos722.img'};
+  if(type==='image'){const buff=await file.arrayBuffer();if(file.name.toLowerCase().endsWith('.iso'))opts.cdrom={buffer:buff};else opts.hda={buffer:buff}}
+  vm=new V86(opts);
+  vm.add_listener('emulator-ready',()=>{$('vmStatus').textContent='PC emulado iniciado. El arranque del sistema puede tardar.'});
+  vm.add_listener('emulator-stopped',()=>{$('vmStatus').textContent='Emulador detenido'});
+  setTimeout(()=>{if(vm && $('vmStatus').textContent.includes('Inicializando'))$('vmStatus').textContent='El arranque tarda demasiado; verifica la compatibilidad del navegador y el origen de archivos.'},15000);
+ }catch(e){$('vmStatus').textContent='Error del emulador: '+e.message+'. Puedes probar la demo oficial de v86.'}
+ finally{$('bootFreedos').disabled=false;vmLoading=false}
+}
+$('bootFreedos').onclick=()=>startVM('freedos');
+$('chooseDisk').onclick=()=>$('diskFile').click();
+$('diskFile').onchange=()=>{const f=$('diskFile').files?.[0];if(f)startVM('image',f)};
+$('stopVM').onclick=()=>{if(vm){try{vm.stop();vm.destroy()}catch{}vm=null;$('vmStatus').textContent='Emulador detenido'}};
+$('typeVM').onclick=()=>{if(vm && typeof vm.keyboard_send_text==='function')vm.keyboard_send_text($('vmText').value);else $('vmStatus').textContent='Teclado automático no disponible; toca la pantalla del emulador.'};
+</script></body></html>
