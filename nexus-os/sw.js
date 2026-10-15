@@ -1,11 +1,13 @@
 'use strict';
-const VERSION='nexus-shell-v3-rom-library';
+const VERSION='nexus-shell-v4-nes-platform';
 const SHELL=[
  './','./index.html','./app.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
  './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
  './windows-lite/win7.svg','./windows-lite/win10.svg',
  './roms/pong.gb','./roms/minesweep.gb',
+ './roms/dabg.nes','./roms/falling.nes','./roms/table-tennis.nes',
+ './jump/index.html','./jump/game.js',
  './assets/pc/libv86.js','./assets/pc/v86.wasm','./assets/pc/seabios.bin',
  './assets/pc/vgabios.bin','./assets/pc/freedos722.img'
 ];
