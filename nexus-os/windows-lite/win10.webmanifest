@@ -1,0 +1,21 @@
+{
+  "id": "./win10-lite",
+  "name": "NEXUS Windows 10 Lite — Web",
+  "short_name": "Win 10 Lite",
+  "description": "Escritorio web ligero inspirado en Windows 10; no es el sistema operativo Microsoft Windows.",
+  "start_url": "./?mode=10",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07152f",
+  "theme_color": "#256af1",
+  "orientation": "any",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "./win10.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
