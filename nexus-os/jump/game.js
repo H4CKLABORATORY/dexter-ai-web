@@ -94,5 +94,5 @@ document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','
  if(['ArrowUp',' ','w'].includes(e.key)&&!e.repeat)jump()});
 document.addEventListener('keyup',e=>{if(['ArrowLeft','a'].includes(e.key))keys.left=false;if(['ArrowRight','d'].includes(e.key))keys.right=false});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.left=false;keys.right=false;if(game?.active){game.active=false;message('PAUSA','La partida se ha pausado mientras estabas fuera de la app.','▶ Continuar')}}});
-window.__NEXUS_JUMP_STATUS=()=>({world:game?.n,score:game?.score,lives:game?.lives,active:game?.active,best:saved.best,unlocked:saved.unlocked});
+window.__NEXUS_JUMP_STATUS=()=>({world:game?.n,score:game?.score,lives:game?.lives,active:game?.active,x:game?.p?.x,best:saved.best,unlocked:saved.unlocked});
 boot(0);requestAnimationFrame(animate);
