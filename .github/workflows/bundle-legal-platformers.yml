@@ -25,7 +25,7 @@ jobs:
           curl -fLsS --retry 3 --max-time 90 -o nexus-os/roms/table-tennis.nes \
             https://github.com/mike42/8bit-table-tennis/releases/download/v1.0/table_tennis_v1.0.nes
           curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/DABG-LICENSE.txt \
-            https://raw.githubusercontent.com/NovaSquirrel/DABG/master/LICENSE
+            https://raw.githubusercontent.com/NovaSquirrel/DABG/master/LICENSE.txt
           curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/FALLING-LICENSE.txt \
             https://raw.githubusercontent.com/xram64/falling-nes/master/LICENSE
           curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/TABLE-TENNIS-LICENSE.txt \
