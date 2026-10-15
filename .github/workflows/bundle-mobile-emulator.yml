@@ -1,0 +1,40 @@
+name: Bundle emulator assets for mobile
+on:
+  push:
+    paths:
+      - '.github/workflows/bundle-mobile-emulator.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  vendor-v86:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download FreeDOS and v86 runtime from upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p windows-mobile/assets/v86
+          cd windows-mobile/assets/v86
+          curl --fail --location --retry 3 --max-time 120 --output libv86.js https://copy.sh/v86/build/libv86.js
+          curl --fail --location --retry 3 --max-time 120 --output v86.wasm https://copy.sh/v86/build/v86.wasm
+          curl --fail --location --retry 3 --max-time 120 --output seabios.bin https://copy.sh/v86/bios/seabios.bin
+          curl --fail --location --retry 3 --max-time 120 --output vgabios.bin https://copy.sh/v86/bios/vgabios.bin
+          curl --fail --location --retry 3 --max-time 120 --output freedos722.img https://i.copy.sh/freedos722.img
+          curl --fail --location --retry 3 --max-time 30 --output LICENSE https://raw.githubusercontent.com/copy/v86/master/LICENSE
+          test "$(wc -c < libv86.js)" -gt 10000
+          test "$(wc -c < v86.wasm)" -gt 100000
+          test "$(wc -c < freedos722.img)" -gt 100000
+          echo "Verifying emulator asset formats"
+          file libv86.js v86.wasm seabios.bin vgabios.bin freedos722.img
+      - name: Commit bundled assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add windows-mobile/assets/v86/
+          if ! git diff --cached --quiet; then
+            git commit -m "Bundle v86 and FreeDOS runtime for same-origin iPhone access"
+            git push
+          fi
