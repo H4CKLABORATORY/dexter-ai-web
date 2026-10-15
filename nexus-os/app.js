@@ -33,6 +33,7 @@ function nav(id){
  document.querySelectorAll('[data-nav]').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
  activeView=id;scrollTo({top:0,behavior:'instant'});
  if(id!=='arcade')stopGames();
+ if(id!=='pcdos')stopDos();
  if(id!=='windows' && typeof winOff==='function')winOff();
  if(id==='system')loadDeviceDetails();
  if(id==='vault')refreshStats();
@@ -192,25 +193,52 @@ function flipMemory(i){
 $('memoryStart').onclick=memoryStart;
 
 let retroUrl=null,retroStarted=false;
-$('runRom').onclick=async()=>{
- if(retroStarted){$('retroStatus').textContent='Una sesión retro ya está abierta. Recarga esta página para cargar otra ROM.';return}
+const BUILTIN_GB={
+ pong:{path:'./roms/pong.gb',name:'Pong — Game Boy'},
+ minesweep:{path:'./roms/minesweep.gb',name:'Minesweep — Game Boy'}
+};
+async function launchRetro(url,core,title,isLocal=false){
+ if(retroStarted){$('retroStatus').textContent='Ya hay una consola abierta. Para cambiar de juego, toca Cerrar y recarga la página.';return}
+ retroStarted=true;$('runRom').disabled=true;
+ document.querySelectorAll('[data-rom]').forEach(button=>button.disabled=true);
+ $('retroStatus').textContent='Preparando '+title+'…';
+ try{
+   const response=await fetch(url,{signal:AbortSignal.timeout(20000)});
+   if(!response.ok)throw Error('Archivo ROM no disponible (HTTP '+response.status+')');
+   const buffer=await response.arrayBuffer();
+   if(buffer.byteLength<16000||buffer.byteLength>32*1024*1024)throw Error('ROM inválida o demasiado grande');
+   if(isLocal&&core==='gb'&&(new Uint8Array(buffer)[0x104]!==0xce||new Uint8Array(buffer)[0x105]!==0xed))throw Error('La ROM incluida no tiene cabecera de Game Boy válida');
+   retroUrl=URL.createObjectURL(new Blob([buffer],{type:'application/octet-stream'}));
+   window.EJS_player='#game';window.EJS_gameUrl=retroUrl;
+   window.EJS_core=core;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';
+   window.EJS_startOnLoaded=true;
+   const script=document.createElement('script');script.src='https://cdn.emulatorjs.org/stable/data/loader.js';
+   script.onload=()=>{$('retroStatus').textContent=title+': motor EmulatorJS cargado. Prepara los controles táctiles.'};
+   script.onerror=()=>{$('retroStatus').textContent='Error al descargar EmulatorJS. Se requiere conexión para cargar el núcleo la primera vez.'};
+   document.head.append(script);
+ }catch(error){
+  $('retroStatus').textContent='No se pudo iniciar '+title+': '+error.message;
+  retroStarted=false;$('runRom').disabled=false;
+  document.querySelectorAll('[data-rom]').forEach(button=>button.disabled=false);
+ }
+}
+document.querySelectorAll('[data-rom]').forEach(button=>button.addEventListener('click',()=>{
+ const media=BUILTIN_GB[button.dataset.rom];if(media)launchRetro(media.path,'gb',media.name,true);
+}));
+$('runRom').onclick=()=>{
  const file=$('romFile').files?.[0];
- if(!file){$('retroStatus').textContent='Selecciona una ROM propia primero.';return}
+ if(!file){$('retroStatus').textContent='Selecciona una ROM o usa los juegos incluidos.';return}
  const ext=file.name.toLowerCase().split('.').pop();
  const core={gb:'gb',gbc:'gb',gba:'gba',nes:'nes'}[ext];
- if(!core){$('retroStatus').textContent='Formato no compatible. Se admiten .gb, .gbc, .gba y .nes.';return}
- if(file.size>32*1024*1024){$('retroStatus').textContent='Archivo demasiado grande para el experimento (máximo 32 MB).';return}
- retroUrl=URL.createObjectURL(file);retroStarted=true;$('runRom').disabled=true;
- $('retroStatus').textContent='Cargando núcleo '+core.toUpperCase()+' desde EmulatorJS. Espera unos momentos…';
- window.EJS_player='#game';window.EJS_gameUrl=retroUrl;window.EJS_core=core;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';
- window.EJS_startOnLoaded=true;
- const script=document.createElement('script');script.src='https://cdn.emulatorjs.org/stable/data/loader.js';
- script.onload=()=>{$('retroStatus').textContent='Biblioteca EmulatorJS cargada. Preparando consola…'};
- script.onerror=()=>{$('retroStatus').textContent='No se pudo cargar EmulatorJS. Revisa red o restricciones de Safari.';retroStarted=false;$('runRom').disabled=false;URL.revokeObjectURL(retroUrl);retroUrl=null};
- document.head.append(script);
+ if(!core){$('retroStatus').textContent='Formato no compatible (.gb, .gbc, .gba o .nes).';return}
+ if(file.size>32*1024*1024){$('retroStatus').textContent='Archivo mayor a 32 MB.';return}
+ const object=URL.createObjectURL(file);
+ launchRetro(object,core,file.name).finally(()=>URL.revokeObjectURL(object));
 };
-$('clearRom').onclick=()=>{if(retroUrl){URL.revokeObjectURL(retroUrl);retroUrl=null}
- $('retroStatus').textContent='Para liberar completamente el núcleo de emulación, recarga la página.';$('game').replaceChildren()};
+$('clearRom').onclick=()=>{if(retroUrl)URL.revokeObjectURL(retroUrl);retroUrl=null;
+ $('retroStatus').textContent='La sesión retro se cerrará al recargar. Los juegos incluidos seguirán disponibles.';
+ location.hash='retro';location.reload();
+};
 window.addEventListener('pagehide',()=>{if(retroUrl)URL.revokeObjectURL(retroUrl)});
 
 async function loadDeviceDetails(){
@@ -308,4 +336,55 @@ window.addEventListener('message',e=>{
  nav(e.data.view);
 });
 const initialHash=location.hash.slice(1);
-if(['windows','arcade','android','system','vault'].includes(initialHash))nav(initialHash);
+if(['retro','pcdos','windows','arcade','android','system','vault'].includes(initialHash))nav(initialHash);
+
+
+/* FreeDOS PC: truly emulates old x86 via v86 WebAssembly; not Windows or Android. */
+let dosVM=null,dosLoading=false,dosLibReady=false,dosTimer=null,dosGeneration=0;
+const DOS_ASSETS='./assets/pc/';
+function dosStatus(message){$('dosStatus').textContent=message}
+function stopDos(){
+ dosGeneration++;clearTimeout(dosTimer);
+ if(dosVM){try{dosVM.stop()}catch{}try{dosVM.destroy()}catch{}dosVM=null;}
+ dosLoading=false;$('dosBoot').disabled=false;dosStatus('Emulador apagado. La CPU virtual ya no se ejecuta.');
+}
+async function ensureDosLibrary(){
+ if(dosLibReady)return;
+ await new Promise((resolve,reject)=>{
+   const script=document.createElement('script');script.src=DOS_ASSETS+'libv86.js';
+   script.onload=resolve;script.onerror=()=>reject(Error('No se encontró el motor v86 preinstalado'));
+   document.head.append(script);
+ });
+ if(typeof V86!=='function')throw Error('El motor v86 no pudo inicializarse');
+ dosLibReady=true;
+}
+$('dosBoot').onclick=async()=>{
+ if(dosLoading||dosVM)return;dosLoading=true;$('dosBoot').disabled=true;
+ const generation=++dosGeneration;
+ try{
+   dosStatus('Verificando imagen FreeDOS y BIOS locales…');
+   const res=await fetch(DOS_ASSETS+'freedos722.img',{method:'HEAD',signal:AbortSignal.timeout(12000)});
+   if(!res.ok)throw Error('Disquete FreeDOS no disponible (HTTP '+res.status+')');
+   await ensureDosLibrary();
+   if(dosGeneration!==generation)return;
+   const screen=$('dosScreen');screen.replaceChildren();
+   const text=document.createElement('div');text.style.cssText='font:14px monospace;white-space:pre;line-height:14px';
+   const canvas=document.createElement('canvas');canvas.style.display='none';screen.append(text,canvas);
+   dosStatus('Inicializando PC x86…');
+   const instance=new V86({
+    wasm_path:DOS_ASSETS+'v86.wasm',
+    memory_size:32*1024*1024,vga_memory_size:2*1024*1024,
+    screen_container:screen,
+    bios:{url:DOS_ASSETS+'seabios.bin'},vga_bios:{url:DOS_ASSETS+'vgabios.bin'},
+    fda:{url:DOS_ASSETS+'freedos722.img'},autostart:true
+   });
+   dosVM=instance;
+   instance.add_listener('emulator-ready',()=>{if(dosVM===instance)dosStatus('PC preparado. FreeDOS iniciándose…')});
+   instance.add_listener('emulator-started',()=>{if(dosVM===instance){clearTimeout(dosTimer);dosStatus('PC encendido. Si la pantalla está negra, comprueba compatibilidad de Safari y BIOS.')}});
+   instance.add_listener('download-error',e=>{if(dosVM===instance)dosStatus('Error al descargar archivos x86: '+String(e?.message||e?.url||'origen no disponible'))});
+   dosTimer=setTimeout(()=>{if(dosVM===instance)dosStatus('Sin confirmación de arranque en 75 s. Esto puede ser una limitación de Safari o WebAssembly. No se ha arrancado Windows.')},75000);
+ }catch(error){if(dosGeneration===generation)dosStatus('Error del sistema FreeDOS: '+error.message)}
+ finally{dosLoading=false;$('dosBoot').disabled=Boolean(dosVM)}
+};
+$('dosStop').onclick=stopDos;
+$('dosType').onclick=()=>{if(dosVM&&typeof dosVM.keyboard_send_text==='function')dosVM.keyboard_send_text($('dosText').value);else dosStatus('No hay teclado DOS disponible. Toca la pantalla del emulador.')};
