@@ -304,8 +304,9 @@ $('winSwitch').onclick=winOff;
 $('winOpenNew').onclick=()=>{
  if(activeWindows===null)return;
  const path=new URL('./windows-lite/?mode='+activeWindows,location.href);
- const opened=window.open(path.href,'_blank','noopener,noreferrer');
- if(!opened && !matchMedia('(display-mode: standalone)').matches)alert('Tu navegador bloqueó la nueva pestaña; mantén pulsado el enlace de Windows para abrirlo aparte.');
+ const link=document.createElement('a');
+ link.href=path.href;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Abrir Windows Lite';
+ document.body.append(link);link.click();link.remove();
 };
 window.addEventListener('message',e=>{
  if(e.origin!==location.origin || e.source!==$('winFrame').contentWindow)return;
