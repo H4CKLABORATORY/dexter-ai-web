@@ -24,6 +24,7 @@ const {join}=require('node:path');
   await library.locator('.panel:has-text("Mi cartucho privado.gb")').waitFor();
   assert.equal(await library.locator('.panel').count(),1);
   await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('#home .tile[data-nav="retro"]').click();
   await page.locator('#privateRomList .panel:has-text("Mi cartucho privado.gb")').waitFor();
   await page.locator('#privateRomList .panel button:has-text("Jugar")').click();
   await page.waitForFunction(()=>window.__vaultEmulatorTest===true);
