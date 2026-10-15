@@ -14,14 +14,25 @@ const RUNPOD_ID = process.env.RUNPOD_ENDPOINT_ID || '';
 const RUNPOD_KEY = process.env.RUNPOD_API_KEY || '';
 const runpodReady = Boolean(RUNPOD_ID && RUNPOD_KEY);
 async function runpodChat(messages) {
-  const url='https://api.runpod.ai/v2/'+encodeURIComponent(RUNPOD_ID)+'/runsync';
-  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+RUNPOD_KEY},body:JSON.stringify({input:{model:REQUIRED_MODEL,messages}}),signal:AbortSignal.timeout(110000)});
-  const data=await r.json();
-  if (!r.ok) throw Error(data.error || 'Error Runpod HTTP '+r.status);
-  if(data.status!=='COMPLETED') throw Error('Runpod no terminó la inferencia: '+(data.status||'desconocido')+'. Usa workers activos o aumenta el timeout.');
-  if(data.output?.error)throw Error(data.output.error);
-  if(typeof data.output?.message?.content!=='string')throw Error('Respuesta Runpod inválida');
-  return data.output.message;
+  const base='https://api.runpod.ai/v2/'+encodeURIComponent(RUNPOD_ID);
+  const headers={'Content-Type':'application/json','Authorization':'Bearer '+RUNPOD_KEY};
+  const request=await fetch(base+'/run',{method:'POST',headers,body:JSON.stringify({input:{model:REQUIRED_MODEL,messages}}),signal:AbortSignal.timeout(15000)});
+  const job=await request.json();
+  if(!request.ok || !job.id)throw Error(job.error||'Runpod no aceptó el trabajo');
+  const deadline=Date.now()+105000;
+  while(Date.now()<deadline){
+    const statusResponse=await fetch(base+'/status/'+encodeURIComponent(job.id),{headers,signal:AbortSignal.timeout(15000)});
+    const data=await statusResponse.json();
+    if(!statusResponse.ok)throw Error(data.error||'No se pudo consultar Runpod');
+    if(data.status==='COMPLETED'){
+      if(data.output?.error)throw Error(data.output.error);
+      if(typeof data.output?.message?.content!=='string')throw Error('Respuesta de modelo inválida');
+      return data.output.message;
+    }
+    if(['FAILED','CANCELLED','TIMED_OUT'].includes(data.status))throw Error('Runpod: '+(data.error||data.status));
+    await new Promise(resolve=>setTimeout(resolve,2000));
+  }
+  throw Error('La GPU aún está iniciando o tardó demasiado. Reintenta la solicitud.');
 }
 const modelIsExact = n => typeof n==='string' && (n.toLowerCase()===REQUIRED_MODEL.toLowerCase() || n.toLowerCase()===REQUIRED_MODEL.toLowerCase()+':latest');
 const send = (res, status, data) => {
