@@ -1,7 +1,7 @@
 'use strict';
-const VERSION='nexus-shell-v4-nes-platform';
+const VERSION='nexus-shell-v5-private-roms';
 const SHELL=[
- './','./index.html','./app.js','./manifest.webmanifest','./assets/nexus.svg',
+ './','./index.html','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
  './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
  './windows-lite/win7.svg','./windows-lite/win10.svg',
