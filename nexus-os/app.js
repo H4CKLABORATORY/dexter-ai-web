@@ -335,8 +335,7 @@ window.addEventListener('message',e=>{
  if(e.data?.type!=='NEXUS_NAV'||!['home','arcade','windows'].includes(e.data.view))return;
  nav(e.data.view);
 });
-const initialHash=location.hash.slice(1);
-if(['retro','pcdos','windows','arcade','android','system','vault'].includes(initialHash))nav(initialHash);
+
 
 
 /* FreeDOS PC: truly emulates old x86 via v86 WebAssembly; not Windows or Android. */
@@ -388,3 +387,7 @@ $('dosBoot').onclick=async()=>{
 };
 $('dosStop').onclick=stopDos;
 $('dosType').onclick=()=>{if(dosVM&&typeof dosVM.keyboard_send_text==='function')dosVM.keyboard_send_text($('dosText').value);else dosStatus('No hay teclado DOS disponible. Toca la pantalla del emulador.')};
+
+// Restore navigation only after all lazy runtime state and handlers have initialized.
+const initialHash=location.hash.slice(1);
+if(['retro','pcdos','windows','arcade','android','system','vault'].includes(initialHash))nav(initialHash);
