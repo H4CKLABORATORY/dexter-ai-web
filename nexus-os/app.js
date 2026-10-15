@@ -294,6 +294,7 @@ function winOn(mode){
  if(activeWindows===requested){$('winSession').hidden=false;$('winBootPanel').hidden=true;return}
  winOff();activeWindows=requested;
  $('winSessionName').textContent='Windows '+requested+' Lite · edición web';
+ $('winOpenNew').href='./windows-lite/?mode='+requested;
  $('winBootPanel').hidden=true;$('winSession').hidden=false;
  $('winFrame').src='./windows-lite/?mode='+requested;
 }
@@ -301,13 +302,6 @@ $('win7Start').onclick=()=>winOn('7');
 $('win10Start').onclick=()=>winOn('10');
 $('winShutdown').onclick=winOff;
 $('winSwitch').onclick=winOff;
-$('winOpenNew').onclick=()=>{
- if(activeWindows===null)return;
- const path=new URL('./windows-lite/?mode='+activeWindows,location.href);
- const link=document.createElement('a');
- link.href=path.href;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Abrir Windows Lite';
- document.body.append(link);link.click();link.remove();
-};
 window.addEventListener('message',e=>{
  if(e.origin!==location.origin || e.source!==$('winFrame').contentWindow)return;
  if(e.data?.type!=='NEXUS_NAV'||!['home','arcade','windows'].includes(e.data.view))return;
