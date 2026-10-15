@@ -48,8 +48,18 @@
 <button type="button" data-rom="falling"><span>🌠</span><b>FALLING</b><small>NES · arcade · MIT</small></button>
 <button type="button" data-rom="tabletennis"><span>🏓</span><b>8-BIT TABLE TENNIS</b><small>NES · deportes · MIT</small></button>
 </div>
-<h3>También puedes cargar tus juegos</h3>
-<p>EmulatorJS admite ROM compatibles de Game Boy (.gb/.gbc), Game Boy Advance (.gba) y NES (.nes). Usa únicamente archivos propios o con autorización de distribución.</p><label for="romFile" class="hint">Seleccionar ROM propia</label><input id="romFile" class="field" type="file" accept=".gb,.gbc,.gba,.nes"><div class="controls"><button class="act" id="runRom">Ejecutar ROM</button><button class="alt" id="clearRom">Cerrar</button></div><div class="status" id="retroStatus">Selecciona uno de los juegos incluidos para comenzar.</div><div class="console"><div id="game"></div></div><p class="hint">Los juegos de consola suelen incluir controles táctiles de EmulatorJS. Si Safari no admite un núcleo o un archivo, el experimento puede fallar. No cargues archivos con datos personales.</p></div></section>
+<h3>Mis ROM privadas del iPhone</h3>
+<p>Importa las ROM que tengas derecho a utilizar y guárdalas en <strong>este dispositivo</strong>. Aparecerán aquí cuando regreses sin que tengas que seleccionarlas otra vez. No se suben al servidor, ni al repositorio de GitHub.</p>
+<label for="romFile" class="hint">Seleccionar archivos propios de Game Boy, GBA o NES</label>
+<input id="romFile" class="field" type="file" accept=".gb,.gbc,.gba,.nes" multiple>
+<div class="controls">
+<button class="act" id="saveRom">＋ Guardar en mi biblioteca</button>
+<button class="alt" id="runRom">▶ Jugar selección</button>
+<button class="alt" id="clearRom">Cerrar consola</button>
+</div>
+<div id="privateRomStatus" class="status" aria-live="polite">Tus archivos permanecen exclusivamente en el almacenamiento de Safari o de la app instalada.</div>
+<div id="privateRomList" class="game-menu" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:10px 0 20px" aria-label="Biblioteca privada de ROM"></div>
+<p class="hint">Safari puede eliminar datos locales si falta espacio. Conserva una copia de tus ROM originales en Archivos o en tu almacenamiento personal. La biblioteca no crea copias de seguridad online.</p><div class="status" id="retroStatus">Selecciona uno de los juegos incluidos para comenzar.</div><div class="console"><div id="game"></div></div><p class="hint">Los juegos de consola suelen incluir controles táctiles de EmulatorJS. Si Safari no admite un núcleo o un archivo, el experimento puede fallar. No cargues archivos con datos personales.</p></div></section>
 <section class="view" id="pcdos"><div class="eyebrow">NEXUS / PC RETRO</div><h1>FreeDOS PC</h1>
 <div class="panel"><h2>Sistema real de PC retro incluido</h2>
 <p>Una imagen FreeDOS distribuible y el motor x86 v86 ya forman parte de esta aplicación. Se emula un PC antiguo en el navegador; <strong>no es Windows 7 ni Windows 10 real</strong> y no ejecuta programas modernos.</p>
@@ -88,5 +98,6 @@
 </main>
 <nav class="tabbar" aria-label="Navegación"><button data-nav="home" class="active"><span>⬡</span>Inicio</button><button data-nav="arcade"><span>◈</span>Juegos</button><button data-nav="windows"><span>⊞</span>Windows</button><button data-nav="pcdos"><span>▣</span>DOS</button><button data-nav="android"><span>▣</span>Android</button><button data-nav="system"><span>⌁</span>Sistema</button><button data-nav="vault"><span>◇</span>Datos</button></nav>
 <div class="modal" id="installDialog" role="dialog" aria-label="Instalar app" aria-modal="true"><div><div class="eyebrow">DEXTER NEXUS / INSTALL</div><h2>Instalar en tu pantalla de inicio</h2><p class="muted">En iPhone abre esta web en Safari, toca Compartir y selecciona «Añadir a pantalla de inicio». Después, «Abrir como app» si aparece. Tendrá su propio icono y ventana. No necesita perfil especial ni una firma IPA.</p><div id="installMessage" class="status"></div><div class="controls"><button class="act" id="closeInstall">Entendido</button></div></div></div>
+<script src="./rom-vault.js" defer></script>
 <script src="./app.js" defer></script>
 </div></body></html>
