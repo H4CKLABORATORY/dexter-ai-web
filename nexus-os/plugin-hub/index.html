@@ -19,7 +19,17 @@
  .steps li{display:flex;gap:12px;align-items:flex-start;color:#c1d2e6}.steps b{display:grid;place-items:center;width:29px;height:29px;flex:0 0 29px;border-radius:9px;background:#26495a;color:var(--mint)}
  .note{font-size:13px;color:#bed0e5;border-left:3px solid #8be9d7;padding:12px 16px;background:#14243888;border-radius:0 12px 12px 0;margin:24px 0}
  .status{display:flex;align-items:center;gap:8px;font-size:13px;color:#c1d5f1}.dot{background:#eecb7f;width:8px;height:8px;border-radius:50%;display:inline-block}
- a:focus-visible,button:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+ a:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+ textarea{display:block;width:100%;border:1px solid #51698b;background:#0d152a;color:#f1f7ff;border-radius:12px;padding:14px;min-height:108px;resize:vertical;font:inherit;line-height:1.6}
+ textarea[hidden]{display:none}.button:disabled{opacity:.45;cursor:not-allowed}
+ .result{padding:14px 15px;border:1px solid #3b506d;border-radius:12px;margin:10px 0;background:#0b1629;font-size:15px;font-weight:800}
+ .result p{font-size:13px;font-weight:400;margin:8px 0 2px}.pill{display:inline-block;background:#183942;color:#9bffe8;font-size:10px;font-weight:700;padding:5px 9px;margin-left:12px;border-radius:20px}
+ .chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.chip{padding:8px 10px;background:#263659;color:#e4edff;border:1px solid #546c8e;border-radius:100px;cursor:pointer}
+ .history{padding:12px 0;border-top:1px solid #394f6b;overflow-wrap:anywhere;font-size:14px;font-weight:750}.history small{display:block;margin-top:5px;font-weight:400}
+ .history .button{min-height:38px;padding:8px 13px;font-size:13px}.history .actions{margin-top:8px}
+ .grid-aux{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin:18px 0}
+ @media(max-width:700px){.grid-aux{grid-template-columns:1fr}.pill{display:block;width:max-content;margin:9px 0 0}}
+
  @media(max-width:700px){.grid{grid-template-columns:1fr}.hero{padding-top:24px}.top{flex-wrap:wrap}}
  </style>
 </head>
@@ -28,7 +38,38 @@
  <div class="hero"><div class="eyebrow">NEXUS / PLUGIN HUB 1.0</div>
  <h1>Una puerta a tus <span>herramientas.</span></h1>
  <p class="muted">Gestiona plugins de ChatGPT desde tu teléfono. La computadora remota está preparada como proyecto Docker y requiere activar su propio servidor. Una PC remota no anula funciones exclusivas de la aplicación ChatGPT Desktop.</p></div>
- <div class="grid">
+ <div class="grid-aux">
+ <section class="card">
+  <div class="eyebrow">NEXUS / MOBILE AUTO MANAGER</div>
+  <h2>¿Qué herramienta necesitas?</h2>
+  <p class="muted">Analiza tu necesidad en este dispositivo, propone un plugin móvil o alternativa cloud y prepara una solicitud para el gestor de ChatGPT. No necesitas simular que el iPhone es una PC.</p>
+  <label for="need" style="display:block;font-size:13px;margin:12px 0 7px">Describe lo que quieres hacer</label>
+  <textarea maxlength="480" id="need" placeholder="Ejemplo: quiero instalar un plugin para manejar mis repositorios GitHub y desplegar en Render desde el iPhone"></textarea>
+  <div class="chips" aria-label="Ejemplos rápidos">
+   <button class="chip" data-example="Editar mi repositorio de GitHub desde el iPhone" type="button">GitHub</button>
+   <button class="chip" data-example="Procesar archivos con Python y Node sin una PC local" type="button">Python cloud</button>
+   <button class="chip" data-example="Conectar Gmail para leer y enviar correos con ChatGPT" type="button">Gmail</button>
+   <button class="chip" data-example="Usar una aplicación solo para Windows desde Safari" type="button">Windows</button>
+  </div>
+  <div class="actions"><button id="createPlan" class="button secondary" type="button">Analizar compatibilidad</button></div>
+  <div id="matches" aria-live="polite"></div>
+  <div class="actions">
+   <button id="copyRequest" class="button" type="button" disabled>Copiar orden para ChatGPT</button>
+   <a class="button secondary" href="https://chatgpt.com/" rel="noopener noreferrer" target="_blank">Abrir ChatGPT ↗</a>
+   <button id="saveRequest" class="button secondary" type="button" disabled>Guardar solicitud</button>
+  </div>
+  <textarea id="preparedPrompt" hidden readonly aria-label="Orden preparada para copiar manualmente"></textarea>
+  <p class="status" id="planStatus" role="status" aria-live="polite">Listo para analizar.</p>
+ </section>
+ <section class="card">
+  <div class="eyebrow">NEXUS / REQUESTS</div><h2>Mis solicitudes</h2>
+  <p class="muted">Preparaciones guardadas en Safari. No son instalaciones ni contienen contraseñas.</p>
+  <div id="savedJobs"></div>
+  <div class="actions"><button id="exportJobs" class="button secondary" type="button">Exportar JSON</button></div>
+  <p class="muted" style="font-size:12px">Las comprobaciones de qué plugins están instalados, disponibles o conectados deben hacerse desde ChatGPT con sus herramientas oficiales.</p>
+ </section>
+</div>
+<div class="grid">
   <section class="card"><div class="icon">▣</div><h2>Remote PC</h2><p class="muted">Chromium en Linux, transmitido a Safari mediante un escritorio remoto privado. El código está listo; falta publicar el servidor. Requerirá usuario y contraseña.</p>
    <div class="status"><span class="dot"></span><span id="health">Servidor remoto pendiente de despliegue.</span></div>
    <div class="actions"><a class="button secondary" href="https://github.com/H4CKLABORATORY/dexter-ai-web/blob/main/remote-pc/README.md" target="_blank" rel="noopener noreferrer">Configurar Remote PC ↗</a></div>
@@ -44,4 +85,6 @@
   <li><b>4</b><span>Utiliza Remote PC solo cuando te ayude trabajar en un navegador de escritorio.</span></li></ol></section>
  <div class="note"><strong>Limitación comprobada:</strong> un plugin marcado como <strong>Desktop only</strong> requiere la aplicación ChatGPT para escritorio; no basta con cambiar el agente de usuario ni abrir ChatGPT Web dentro de una PC virtual. Tampoco es posible instalar plugins silenciosamente desde esta página.</div>
 </div>
+<script src="./auto-engine.js" defer></script>
+<script src="./panel.js" defer></script>
 </body></html>
