@@ -28,7 +28,7 @@ const {join}=require('node:path');
   await page.locator('#privateRomList .panel button:has-text("Jugar")').click();
   await page.waitForFunction(()=>window.__vaultEmulatorTest===true);
   assert.equal(await page.evaluate(()=>window.EJS_core),'gb');
-  assert.equal((await page.evaluate(async()=>new Uint8Array(await (await fetch(window.EJS_gameUrl)).arrayBuffer()).then(b=>b.byteLength))),32768);
+  assert.equal(await page.evaluate(async()=>new Uint8Array(await (await fetch(window.EJS_gameUrl)).arrayBuffer()).byteLength),32768);
   page.once('dialog',dialog=>dialog.accept());
   await library.locator('.panel button:has-text("Eliminar")').click();
   await page.waitForFunction(async()=> (await window.NexusRomVault.list()).length===0);
