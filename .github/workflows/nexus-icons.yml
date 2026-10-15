@@ -1,0 +1,54 @@
+name: Generate NEXUS iOS and PWA icons
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/nexus-icons.yml'
+      - 'nexus-os/assets/nexus.svg'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  create-icons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image rendering dependency
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Create branded PNG assets
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageDraw
+          from pathlib import Path
+          from math import cos, sin, pi
+          dest=Path('nexus-os/assets')
+          for n,filename in [(180,'nexus-apple.png'),(192,'nexus-192.png'),(512,'nexus-512.png')]:
+              scale=4
+              s=n*scale
+              img=Image.new('RGB',(s,s),'#071024')
+              d=ImageDraw.Draw(img)
+              pad=int(.06*s)
+              d.rounded_rectangle([pad,pad,s-pad,s-pad],radius=int(.22*s),fill='#101e3c',outline='#68e9d9',width=int(.016*s))
+              center=s/2
+              radius=.34*s
+              hexagon=[(center+radius*cos(-pi/2+2*pi*i/6),center+radius*sin(-pi/2+2*pi*i/6)) for i in range(6)]
+              d.line(hexagon+[hexagon[0]],fill='#83eedb',width=max(3,int(.027*s)),joint='curve')
+              w=int(.039*s)
+              d.line([(s*.35,s*.69),(s*.35,s*.31),(s*.65,s*.69),(s*.65,s*.31)],fill='#e0faff',width=w,joint='curve')
+              d.ellipse((center-.02*s,center-.02*s,center+.02*s,center+.02*s),fill='#9982ff')
+              img.resize((n,n),Image.Resampling.LANCZOS).save(dest/filename,optimize=True)
+              print(filename,(dest/filename).stat().st_size)
+          PY
+      - name: Commit generated icons if needed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nexus-os/assets/nexus-apple.png nexus-os/assets/nexus-192.png nexus-os/assets/nexus-512.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate signed-style NEXUS branding PNG icons for installed PWA"
+            git push
+          fi
