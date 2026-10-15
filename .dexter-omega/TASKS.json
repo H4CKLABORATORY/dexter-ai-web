@@ -1,0 +1,55 @@
+{
+  "project": "DEXTER AI — WormGPT model",
+  "updated": "2026-10-14",
+  "acceptance": [
+    {
+      "id": "WEB",
+      "requirement": "Interfaz web disponible",
+      "status": "VERIFICADO",
+      "evidence": "Captura del usuario del sitio Pages y index.html en repo; GitHub Pages publicado."
+    },
+    {
+      "id": "API",
+      "requirement": "Backend Render desplegado",
+      "status": "VERIFICADO",
+      "evidence": "Render deploy dep-db83lsu0tbcc73e4os7g live, commit 29011016."
+    },
+    {
+      "id": "AUTH",
+      "requirement": "Clave de chat requerida cuando motor está configurado",
+      "status": "EN PRUEBAS",
+      "evidence": "Cambios en server.js y UI; pendiente suite Node real."
+    },
+    {
+      "id": "CI",
+      "requirement": "Pruebas automáticas de rutas y credenciales",
+      "status": "EN PRUEBAS",
+      "evidence": "test/server.test.cjs + GitHub Actions; JavaScript parseado, ejecución pendiente de confirmar."
+    },
+    {
+      "id": "RUNPOD_PLUGIN",
+      "requirement": "Runpod plugin autenticado",
+      "status": "BLOQUEADO",
+      "evidence": "Plugin privado 2.1 existe, pero no aparecen herramientas Runpod en este chat."
+    },
+    {
+      "id": "GPU",
+      "requirement": "Endpoint GPU ejecutando modelo exacto",
+      "status": "BLOQUEADO",
+      "evidence": "No hay Runpod autorizado ni GPU confirmada."
+    },
+    {
+      "id": "MODEL",
+      "requirement": "Prueba de respuesta real",
+      "status": "BLOQUEADO",
+      "evidence": "No hay backend GPU disponible para inferencia."
+    },
+    {
+      "id": "SECURITY",
+      "requirement": "Acceso y control de gastos producción",
+      "status": "EN DESARROLLO",
+      "evidence": "Token de chat obligatorio, cuotas locales; requiere límites persistentes antes de uso público con dinero."
+    }
+  ],
+  "next": "Comprobar CI y desplegar seguridad. Conectar Runpod y autorizar límites antes de crear GPU."
+}
