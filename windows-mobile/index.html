@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1532"><meta name="description" content="DEXTER Mobile OS: escritorio móvil, IA local WebGPU y emulador x86 experimental."><title>DEXTER Mobile OS — laboratorio en el navegador</title>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1532"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="DEXTER OS"><meta name="description" content="DEXTER Mobile OS: escritorio móvil, IA local WebGPU y emulador x86 experimental."><title>DEXTER Mobile OS — laboratorio en el navegador</title>
 <style>
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f6f7ff;color-scheme:dark;background:#090e22}*{box-sizing:border-box}body{margin:0;overflow:hidden}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #86b6ff;outline-offset:2px}
 #desktop{height:100dvh;min-height:340px;position:relative;background:radial-gradient(ellipse at 80% 10%,#6056c4 0,transparent 40%),radial-gradient(ellipse at 14% 87%,#1269a0 0,transparent 55%),linear-gradient(135deg,#111a46 0%,#090e22 70%);overflow:hidden}
@@ -20,19 +20,22 @@
 </div>
 <div id="welcome"><h1>Tu laboratorio, <span style="color:#bbacff">en tu móvil.</span></h1><p>Escritorio inspirado en Windows, emulación x86 experimental e inteligencia artificial local compatible con WebGPU. No necesita un servidor para el modo local.</p></div>
 <div class="window" id="aiWindow" role="dialog" aria-label="IA local"><header>✦ IA LOCAL · WebLLM <button data-close aria-label="Cerrar">×</button></header><div class="body" style="display:flex;flex-direction:column;gap:9px"><div class="info"><strong>Modelo local ligero: SmolLM2 360M.</strong> Se descarga a este navegador y usa WebGPU si está disponible. No es el modelo WormGPT de 8B; el modelo original sigue necesitando un servidor compatible. La primera carga descarga archivos y puede tardar varios minutos.</div><div class="controls" style="margin:0"><button class="primary" id="loadAI">Descargar y activar IA</button><button class="secondary" id="clearAI">Limpiar chat</button></div><div class="status" id="aiStatus" aria-live="polite">Esperando comprobación WebGPU…</div><div class="log" id="chatLog" aria-live="polite"></div><textarea id="message" placeholder="Escribe tu pregunta después de cargar el modelo..."></textarea><button class="primary" id="sendAI" disabled>Enviar a IA local</button></div></div>
-<div class="window" id="vmWindow" role="dialog" aria-label="Emulador x86"><header>▣ EMULADOR x86 · v86 <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info"><strong>Emulación real de PC en el navegador.</strong> Inicia FreeDOS como sistema libre de prueba. También puedes elegir una imagen de disco o ISO propia que tengas derecho a usar. Windows moderno y Ollama 8B no funcionarán aquí a velocidad nativa.</div><div class="controls"><button class="primary" id="bootFreedos">Iniciar FreeDOS</button><button class="secondary" id="chooseDisk">Elegir imagen propia</button><input type="file" id="diskFile" accept=".img,.iso,.bin" hidden><button class="secondary" id="stopVM">Detener</button></div><div class="status" id="vmStatus" aria-live="polite">Emulador sin iniciar. Descarga el motor v86 al arrancar.</div><div id="screen_container"><div></div><canvas style="display:none"></canvas></div><div class="controls"><input type="text" id="vmText" placeholder="Texto para emulador (opcional)" style="max-width:70%"><button class="secondary" id="typeVM">Enviar texto</button></div><p class="mini">Dependemos de los archivos públicos v86 y la imagen FreeDOS alojados por el proyecto original. Si el navegador bloquea las descargas cruzadas, prueba su <a href="https://copy.sh/v86/" target="_blank" rel="noopener" style="color:#a8ceff">demostración oficial</a>. La emulación consume CPU del teléfono y puede ser lenta.</p></div></div>
+<div class="window" id="vmWindow" role="dialog" aria-label="Emulador x86"><header>▣ EMULADOR x86 · v86 <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info"><strong>Emulación real de PC en el navegador.</strong> Inicia FreeDOS como sistema libre de prueba. También puedes elegir una imagen de disco o ISO propia que tengas derecho a usar. Windows moderno y Ollama 8B no funcionarán aquí a velocidad nativa.</div><div class="controls"><button class="primary" id="bootFreedos">Iniciar FreeDOS</button><button class="secondary" id="chooseDisk">Elegir imagen propia</button><input type="file" id="diskFile" accept=".img,.iso,.bin" hidden><button class="secondary" id="stopVM">Detener</button><a class="secondary" href="https://copy.sh/v86/?profile=freedos" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center">Probar demo oficial ↗</a></div><div class="status" id="vmStatus" aria-live="polite">Emulador sin iniciar. Comprobaremos los archivos antes del arranque.</div><div id="vmDetails" class="mini" role="status"></div><div id="screen_container"><div></div><canvas style="display:none"></canvas></div><div class="controls"><input type="text" id="vmText" placeholder="Texto para emulador (opcional)" style="max-width:70%"><button class="secondary" id="typeVM">Enviar texto</button></div><p class="mini">Dependemos de los archivos públicos v86 y la imagen FreeDOS alojados por el proyecto original. Si el navegador bloquea las descargas cruzadas, prueba su <a href="https://copy.sh/v86/" target="_blank" rel="noopener" style="color:#a8ceff">demostración oficial</a>. La emulación consume CPU del teléfono y puede ser lenta.</p></div></div>
 <div class="window" id="systemWindow" role="dialog" aria-label="Sistema"><header>⚙ SISTEMA Y RECURSOS <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="grid"><div class="info"><strong>GPU del navegador</strong><div id="gpuInfo" class="mini">Comprobando…</div></div><div class="info"><strong>CPU lógica</strong><div id="cpuInfo" class="mini">Comprobando…</div></div><div class="info"><strong>WebAssembly</strong><div id="wasmInfo" class="mini"></div></div><div class="info"><strong>Memoria</strong><div class="mini">Safari no expone toda la RAM del dispositivo. No se pueden ampliar recursos mediante perfiles de configuración.</div></div></div><div class="controls"><button class="secondary" id="refreshCapabilities">Revisar compatibilidad</button></div></div></div>
+<div class="window" id="installWindow" role="dialog" aria-label="Instalar aplicación"><header>⇧ INSTALAR DEXTER MOBILE OS <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info"><strong>Instalar gratis en iPhone.</strong> No necesitas App Store ni perfil personalizado de iOS. La app se abre en modo independiente, pero utiliza el mismo motor Safari/WebKit.</div><p>1. Abre esta página en <strong>Safari</strong>.</p><p>2. Toca el botón de <strong>Compartir</strong>.</p><p>3. Selecciona <strong>Añadir a pantalla de inicio</strong> y activa <strong>Abrir como app</strong> si aparece.</p><p>4. Confirma con <strong>Añadir</strong> y abre el icono de DEXTER.</p><div class="info">La instalación no aumenta la RAM ni la potencia del iPhone; tampoco puede convertir este escritorio web en Windows nativo. El emulador sigue siendo experimental.</div><div id="installStatus" class="status"></div></div></div>
 <div class="window" id="aboutWindow" role="dialog" aria-label="Acerca de"><header>ⓘ DEXTER MOBILE OS <button data-close aria-label="Cerrar">×</button></header><div class="body"><div class="info">Este es un entorno web propio inspirado en un escritorio Windows: <strong>no es Windows instalado</strong>. Sus componentes principales son una interfaz original, WebLLM para IA local y v86 para PC x86 emulado. Cada uno es independiente.</div><p class="mini">La emulación de Windows antiguo requiere que aportes una imagen del sistema con la licencia correspondiente. No distribuimos Windows ni modificamos iOS. El modelo de IA predefinido es distinto del WormGPT original, por sus requisitos de memoria y formato.</p><p class="mini">Fuentes: <a href="https://github.com/copy/v86" target="_blank" rel="noopener" style="color:#a8ceff">v86</a> · <a href="https://github.com/mlc-ai/web-llm" target="_blank" rel="noopener" style="color:#a8ceff">WebLLM</a> · <a href="https://github.com/H4CKLABORATORY/dexter-ai-web" target="_blank" rel="noopener" style="color:#a8ceff">Repositorio principal</a></p><p><span class="badge">WebAssembly</span> <span class="badge">WebGPU cuando esté disponible</span> <span class="badge">iPhone / Android / PC</span></p></div></div>
-<div class="taskbar"><button class="start" data-open="aboutWindow">⊞ Inicio</button><button data-open="aiWindow">✦ IA</button><button data-open="vmWindow">▣ PC</button><button data-open="systemWindow">⚙</button><span class="clock" id="clock"></span></div></div>
+<div class="taskbar"><button class="start" data-open="aboutWindow">⊞ Inicio</button><button data-open="aiWindow">✦ IA</button><button data-open="vmWindow">▣ PC</button><button data-open="systemWindow">⚙</button><button data-open="installWindow">⇧ App</button><span class="clock" id="clock"></span></div></div>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-let aiEngine=null,aiLoading=false,aiMessages=[],vm=null,vmLoading=false,assetReady=false;
+let aiEngine=null,aiLoading=false,aiMessages=[],vm=null,vmLoading=false,assetReady=false,vmTimeout=null,vmBundle=null;
 function openApp(id){document.querySelectorAll('.window').forEach(x=>x.classList.toggle('open',x.id===id));}
 document.querySelectorAll('[data-open]').forEach(x=>x.addEventListener('click',()=>openApp(x.dataset.open)));
 document.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',()=>x.closest('.window').classList.remove('open')));
 function tick(){ $('clock').textContent=new Date().toLocaleTimeString('es-US',{hour:'2-digit',minute:'2-digit'}); }
 tick();setInterval(tick,30000);
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>{console.info('Service worker no disponible:',e.message)}))}
+
 $('device').textContent=/iPhone|iPad|Android/i.test(navigator.userAgent)?'● Modo móvil':'● Navegador de escritorio';
 async function capabilities(){
   $('gpuInfo').textContent=!!navigator.gpu?'WebGPU detectado. Falta probar el modelo.':'Sin WebGPU; IA local de este modo no disponible.';
@@ -66,34 +69,105 @@ $('sendAI').onclick=async()=>{
 };
 $('clearAI').onclick=()=>{aiMessages=[];$('chatLog').replaceChildren();$('aiStatus').textContent=aiEngine?'Conversación reiniciada':'Inicia primero el modelo'};
 $('message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('sendAI').click()}});
-async function loadV86(){
+
+const VM_LOCAL='./assets/v86/';
+const VM_REMOTE='https://copy.sh/v86/';
+async function checkV86Bundle(){
+  const local=VM_LOCAL+'seabios.bin';
+  try{
+    const r=await fetch(local,{method:'HEAD',signal:AbortSignal.timeout(8000)});
+    if(r.ok){$('vmDetails').textContent='Archivos del emulador alojados junto a esta app (sin CORS).';return {root:VM_LOCAL,freedos:VM_LOCAL+'freedos722.img'}}
+  }catch(e){$('vmDetails').textContent='No se pudo comprobar el paquete local: '+e.message}
+  $('vmDetails').textContent='Archivos locales no publicados todavía; comprobando alternativa externa…';
+  try{
+    const r=await fetch(VM_REMOTE+'bios/seabios.bin',{mode:'cors',signal:AbortSignal.timeout(12000)});
+    if(!r.ok)throw Error('HTTP '+r.status);
+    $('vmDetails').textContent='Usando archivos externos. Si el navegador los bloquea, prueba la demo oficial.';
+    return {root:VM_REMOTE,freedos:'https://i.copy.sh/freedos722.img'};
+  }catch(e){
+    throw Error('Safari no pudo acceder a los archivos x86: '+e.message+'. El navegador puede bloquear recursos externos. Vuelve a intentar cuando el paquete local esté publicado.');
+  }
+}
+async function loadV86(bundle){
  if(assetReady)return;
- $('vmStatus').textContent='Cargando emulador de PC v86…';
+ $('vmStatus').textContent='Cargando motor x86 WebAssembly…';
  await new Promise((resolve,reject)=>{
-  const s=document.createElement('script');s.src='https://copy.sh/v86/build/libv86.js';s.onload=resolve;s.onerror=()=>reject(Error('No se pudo descargar libv86.js'));document.head.append(s);
+  const script=document.createElement('script');
+  script.src=bundle.root+(bundle.root===VM_LOCAL?'libv86.js':'build/libv86.js');
+  script.onload=resolve;
+  script.onerror=()=>reject(Error('No se pudo descargar el motor libv86.js'));
+  document.head.append(script);
  });
- if(typeof V86!=='function')throw Error('La biblioteca v86 no se inicializó');
+ if(typeof V86!=='function')throw Error('La biblioteca v86 no pudo inicializarse en Safari');
  assetReady=true;
 }
 async function startVM(type,file){
  if(vmLoading)return;vmLoading=true;$('bootFreedos').disabled=true;
+ clearTimeout(vmTimeout);vmTimeout=null;
  try{
-  if(vm){try{vm.stop()}catch{};try{vm.destroy()}catch{};vm=null}
-  $('screen_container').replaceChildren();const inner=document.createElement('div');const canvas=document.createElement('canvas');canvas.style.display='none';$('screen_container').append(inner,canvas);
-  await loadV86();$('vmStatus').textContent='Inicializando BIOS y disco…';
-  const opts={wasm_path:'https://copy.sh/v86/build/v86.wasm',memory_size:64*1024*1024,vga_memory_size:4*1024*1024,screen_container:$('screen_container'),bios:{url:'https://copy.sh/v86/bios/seabios.bin'},vga_bios:{url:'https://copy.sh/v86/bios/vgabios.bin'},autostart:true};
-  if(type==='freedos')opts.fda={url:'https://i.copy.sh/freedos722.img'};
-  if(type==='image'){const buff=await file.arrayBuffer();if(file.name.toLowerCase().endsWith('.iso'))opts.cdrom={buffer:buff};else opts.hda={buffer:buff}}
-  vm=new V86(opts);
-  vm.add_listener('emulator-ready',()=>{$('vmStatus').textContent='PC emulado iniciado. El arranque del sistema puede tardar.'});
-  vm.add_listener('emulator-stopped',()=>{$('vmStatus').textContent='Emulador detenido'});
-  setTimeout(()=>{if(vm && $('vmStatus').textContent.includes('Inicializando'))$('vmStatus').textContent='El arranque tarda demasiado; verifica la compatibilidad del navegador y el origen de archivos.'},15000);
- }catch(e){$('vmStatus').textContent='Error del emulador: '+e.message+'. Puedes probar la demo oficial de v86.'}
+  if(vm){try{vm.stop()}catch{}try{vm.destroy()}catch{}vm=null}
+  $('vmDetails').textContent='';
+  $('screen_container').replaceChildren();
+  const inner=document.createElement('div');
+  inner.style.cssText='font:14px monospace;white-space:pre;line-height:14px';
+  const canvas=document.createElement('canvas');canvas.style.display='none';
+  $('screen_container').append(inner,canvas);
+  vmBundle=await checkV86Bundle();
+  await loadV86(vmBundle);
+  $('vmStatus').textContent='Descargando BIOS y preparando PC virtual…';
+  const root=vmBundle.root, local=root===VM_LOCAL;
+  const opts={
+    wasm_path:root+(local?'v86.wasm':'build/v86.wasm'),
+    memory_size:32*1024*1024,
+    vga_memory_size:2*1024*1024,
+    screen_container:$('screen_container'),
+    bios:{url:root+(local?'seabios.bin':'bios/seabios.bin')},
+    vga_bios:{url:root+(local?'vgabios.bin':'bios/vgabios.bin')},
+    autostart:true
+  };
+  if(type==='freedos')opts.fda={url:vmBundle.freedos};
+  if(type==='image'){
+    if(!file || file.size>220*1024*1024)throw Error('Imagen demasiado grande para Safari. Límite de prueba: 220 MB.');
+    const buffer=await file.arrayBuffer();
+    if(file.name.toLowerCase().endsWith('.iso'))opts.cdrom={buffer};else opts.hda={buffer};
+  }
+  let ready=false;
+  const instance=new V86(opts);
+  vm=instance;
+  instance.add_listener('download-progress',e=>{
+    if(vm!==instance || ready)return;
+    const loaded=Number(e?.loaded||0),total=Number(e?.total||0);
+    $('vmStatus').textContent=total>0&&loaded>0?'Descargando archivos de arranque: '+Math.min(100,Math.round(loaded/total*100))+'%':'Descargando archivos del sistema…';
+  });
+  instance.add_listener('emulator-ready',()=>{
+    if(vm!==instance)return;
+    ready=true;clearTimeout(vmTimeout);
+    $('vmStatus').textContent='Emulador listo. Esperando que el sistema muestre su pantalla…';
+    $('vmDetails').textContent='PC x86 inicializado; el arranque del sistema invitado puede tardar unos segundos más.';
+  });
+  instance.add_listener('emulator-started',()=>{
+    if(vm!==instance)return;ready=true;clearTimeout(vmTimeout);
+    $('vmStatus').textContent='Emulación iniciada. Toca la pantalla negra para activar el teclado si es necesario.';
+  });
+  instance.add_listener('emulator-stopped',()=>{
+    if(vm===instance)$('vmStatus').textContent='Emulación detenida.';
+  });
+  instance.add_listener('download-error',e=>{
+    if(vm===instance){clearTimeout(vmTimeout);$('vmStatus').textContent='Falló la descarga de un archivo del emulador.';$('vmDetails').textContent=String(e?.message||e?.url||'Revisa la conectividad con el servidor de archivos.')}
+  });
+  vmTimeout=setTimeout(()=>{
+    if(vm===instance&&!ready){
+      $('vmStatus').textContent='Sin confirmación de arranque después de 75 segundos.';
+      $('vmDetails').textContent='No es un diagnóstico de Windows: revisa la red, la memoria del navegador y la compatibilidad de v86 con iOS. Puedes probar la demo oficial.';
+    }
+  },75000);
+ }catch(e){$('vmStatus').textContent='No se pudo iniciar el emulador.';$('vmDetails').textContent=e.message+'. Si falla también la demo oficial, puede ser una limitación de Safari.'}
  finally{$('bootFreedos').disabled=false;vmLoading=false}
 }
 $('bootFreedos').onclick=()=>startVM('freedos');
 $('chooseDisk').onclick=()=>$('diskFile').click();
 $('diskFile').onchange=()=>{const f=$('diskFile').files?.[0];if(f)startVM('image',f)};
-$('stopVM').onclick=()=>{if(vm){try{vm.stop();vm.destroy()}catch{}vm=null;$('vmStatus').textContent='Emulador detenido'}};
+$('stopVM').onclick=()=>{if(vm){try{vm.stop();vm.destroy()}catch{}vm=null;clearTimeout(vmTimeout);$('vmDetails').textContent='';$('vmStatus').textContent='Emulador detenido'}};
 $('typeVM').onclick=()=>{if(vm && typeof vm.keyboard_send_text==='function')vm.keyboard_send_text($('vmText').value);else $('vmStatus').textContent='Teclado automático no disponible; toca la pantalla del emulador.'};
+$('installStatus').textContent=window.matchMedia('(display-mode: standalone)').matches?'Ya está ejecutándose como aplicación instalada.':'Desde Safari, usa Compartir → Añadir a pantalla de inicio.';
 </script></body></html>
