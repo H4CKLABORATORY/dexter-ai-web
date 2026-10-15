@@ -3,6 +3,9 @@
 const $=id=>document.getElementById(id);
 const edition=new URLSearchParams(location.search).get('mode')==='10'?'10':'7';
 document.body.dataset.edition=edition;
+$('editionManifest').href='./win'+edition+'.webmanifest';
+document.querySelector('meta[name="apple-mobile-web-app-title"]').content='NEXUS Win '+edition;
+
 const label='Windows '+edition+' Lite · Web Edition';
 $('osLabel').textContent=label.toUpperCase();$('startTitle').textContent='Windows '+edition+' Lite';
 $('watermark').textContent='NEXUS · EDICIÓN WEB / NO ES WINDOWS '+edition+' REAL';
