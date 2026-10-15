@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<title>DEXTER Mobile OS</title>
+<defs><linearGradient id="bg" x1="0" x2="1" y2="1"><stop stop-color="#604bf0"/><stop offset="1" stop-color="#132653"/></linearGradient><linearGradient id="mark" x1="0" x2="1" y2="1"><stop stop-color="#e6e0ff"/><stop offset="1" stop-color="#8ad8ff"/></linearGradient></defs>
+<rect width="512" height="512" rx="113" fill="#09152e"/><rect x="24" y="24" width="464" height="464" rx="93" fill="url(#bg)"/>
+<rect x="69" y="86" width="374" height="340" rx="52" fill="#0c193a" opacity=".66" stroke="#bbaaff" stroke-opacity=".53" stroke-width="5"/>
+<path d="M143 152h87c81 0 139 45 139 104s-58 104-139 104h-87z" fill="none" stroke="url(#mark)" stroke-width="31" stroke-linejoin="round"/>
+<path d="M196 208l60 47-60 49M285 304h35" fill="none" stroke="#b7f0ff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
