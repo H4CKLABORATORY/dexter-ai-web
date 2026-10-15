@@ -1,0 +1,36 @@
+name: Test Windows Lite on mobile viewport
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'nexus-os/windows-lite/**'
+      - 'nexus-os/index.html'
+      - 'nexus-os/app.js'
+      - 'nexus-os/sw.js'
+      - '.github/workflows/windows-lite-smoke.yml'
+  workflow_dispatch:
+jobs:
+  test-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify desktop JavaScript
+        run: |
+          node --check nexus-os/windows-lite/desktop.js
+          node --check nexus-os/windows-lite/worker.js
+          node --check nexus-os/app.js
+          node --check nexus-os/sw.js
+      - name: Install browser test tools
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test UI in mobile Chromium viewport
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory nexus-os > /tmp/nexus-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          node nexus-os/windows-lite/smoke.cjs
