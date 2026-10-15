@@ -13,7 +13,8 @@ const path=require('node:path');
  assert.equal(readFileSync(path.join(base,'assets/pc/v86.wasm')).subarray(0,4).toString('hex'),'0061736d');
  assert.ok(statSync(path.join(base,'assets/pc/freedos722.img')).size>700000);
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
- const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,serviceWorkers:'block'});
+ const page=await context.newPage();
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  try{
   await page.route('https://cdn.emulatorjs.org/stable/data/loader.js',route=>route.fulfill({status:200,contentType:'application/javascript',body:'window.__retroLoaderTest=true'}));
