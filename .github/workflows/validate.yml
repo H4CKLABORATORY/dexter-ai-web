@@ -15,4 +15,11 @@ jobs:
         run: node --check server.js
       - name: Check embedded browser JavaScript
         run: |
-          node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('index.html','utf8');const js=[...html.matchAll(/<script[^>]*>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]);if(!js.length)throw Error('Script missing');js.forEach(x=>new vm.Script(x));"
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const match = html.match(/<script[^>]*>([\s\S]*?)<\/script>/);
+          if (!match) throw new Error('Browser script missing');
+          new vm.Script(match[1]);
+          NODE
