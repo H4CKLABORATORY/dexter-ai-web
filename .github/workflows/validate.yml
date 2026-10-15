@@ -29,3 +29,24 @@ jobs:
         run: python3 -m py_compile runpod/handler.py
       - name: Check startup script
         run: sh -n runpod/start.sh
+      - name: Check mobile desktop and PWA scripts
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const vm=require('node:vm');
+          const html=fs.readFileSync('windows-mobile/index.html','utf8');
+          const match=html.match(/<script>([\s\S]*?)<\/script>/);
+          if(!match)throw Error('Mobile OS script missing');
+          new vm.Script(match[1]);
+          new vm.Script(fs.readFileSync('windows-mobile/sw.js','utf8'));
+          const m=JSON.parse(fs.readFileSync('windows-mobile/manifest.webmanifest','utf8'));
+          if(m.display!=='standalone')throw Error('PWA must launch standalone');
+          if(!html.includes('manifest.webmanifest'))throw Error('PWA manifest link missing');
+          for(const [name,min] of Object.entries({'v86.wasm':100000,'libv86.js':10000,'freedos722.img':100000,'seabios.bin':10000,'vgabios.bin':10000})){
+            const p='windows-mobile/assets/v86/'+name;
+            if(fs.statSync(p).size<min)throw Error('Missing/corrupt '+name);
+          }
+          const wasm=fs.readFileSync('windows-mobile/assets/v86/v86.wasm');
+          if(wasm.toString('ascii',1,4)!=='asm')throw Error('Bad wasm magic');
+          console.log('Mobile PWA syntax, manifest and bundled emulator assets OK');
+          NODE
