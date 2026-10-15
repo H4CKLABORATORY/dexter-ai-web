@@ -1,6 +1,11 @@
 'use strict';
-const VERSION='nexus-shell-v1';
-const SHELL=['./','./index.html','./app.js','./manifest.webmanifest','./assets/nexus.svg'];
+const VERSION='nexus-shell-v2';
+const SHELL=[
+ './','./index.html','./app.js','./manifest.webmanifest','./assets/nexus.svg',
+ './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
+ './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
+ './windows-lite/win7.svg','./windows-lite/win10.svg'
+];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(VERSION).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
@@ -11,9 +16,15 @@ self.addEventListener('fetch',event=>{
  const u=new URL(event.request.url);
  if(event.request.method!=='GET'||u.origin!==self.location.origin)return;
  if(event.request.mode==='navigate'){
-  event.respondWith(fetch(event.request).then(res=>{const copy=res.clone();caches.open(VERSION).then(c=>c.put('./index.html',copy)).catch(()=>{});return res}).catch(()=>caches.match('./index.html')));
+  const fallback=u.pathname.includes('/windows-lite/')?'./windows-lite/index.html':'./index.html';
+  event.respondWith(fetch(event.request).catch(()=>caches.match(fallback)));
   return;
  }
- const local=SHELL.some(s=>new URL(s,self.registration.scope).pathname===u.pathname);
- if(local)event.respondWith(caches.match(event.request).then(hit=>hit||fetch(event.request)));
+ const isShell=SHELL.some(path=>new URL(path,self.registration.scope).pathname===u.pathname);
+ if(isShell)event.respondWith(
+  fetch(event.request).then(response=>{
+   if(response.ok){const copy=response.clone();caches.open(VERSION).then(cache=>cache.put(event.request,copy)).catch(()=>{});}
+   return response;
+  }).catch(()=>caches.match(event.request))
+ );
 });
