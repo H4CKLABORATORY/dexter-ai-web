@@ -1,0 +1,51 @@
+name: Bundle Free Retro and DOS Media
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bundle-nexus-roms.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download redistributable Game Boy homebrew
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p nexus-os/roms nexus-os/assets/pc
+          curl -fL --retry 3 --max-time 60 -o nexus-os/roms/pong.gb https://raw.githubusercontent.com/mdagois/gca/main/prebuilt/games/pong/pong.gb
+          curl -fL --retry 3 --max-time 60 -o nexus-os/roms/minesweep.gb https://raw.githubusercontent.com/mdagois/gca/main/prebuilt/games/minesweep/minesweep.gb
+          cp windows-mobile/assets/v86/libv86.js nexus-os/assets/pc/libv86.js
+          cp windows-mobile/assets/v86/v86.wasm nexus-os/assets/pc/v86.wasm
+          cp windows-mobile/assets/v86/seabios.bin nexus-os/assets/pc/seabios.bin
+          cp windows-mobile/assets/v86/vgabios.bin nexus-os/assets/pc/vgabios.bin
+          cp windows-mobile/assets/v86/freedos722.img nexus-os/assets/pc/freedos722.img
+          cp windows-mobile/assets/v86/LICENSE nexus-os/assets/pc/v86-LICENSE
+          curl -fL --retry 3 --max-time 60 -o nexus-os/roms/CC0-LICENSE.txt https://raw.githubusercontent.com/mdagois/gca/main/LICENSE.txt
+      - name: Check ROM and PC image formats
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('pong','minesweep'):
+              data=Path('nexus-os/roms/'+name+'.gb').read_bytes()
+              assert len(data)==32768, (name,len(data))
+              assert data[0x104:0x108] == bytes.fromhex('CE ED 66 66'), 'Unexpected Game Boy cartridge logo'
+              print('Verified GB ROM',name,len(data))
+          assert Path('nexus-os/assets/pc/v86.wasm').read_bytes()[:4]==b'\x00asm'
+          for name in ('libv86.js','seabios.bin','vgabios.bin','freedos722.img'):
+              assert Path('nexus-os/assets/pc/'+name).stat().st_size>10000, name
+          PY
+      - name: Commit assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nexus-os/roms/ nexus-os/assets/pc/
+          if ! git diff --cached --quiet; then
+            git commit -m "Bundle permissively licensed Game Boy games and FreeDOS PC runtime"
+            git push
+          fi
