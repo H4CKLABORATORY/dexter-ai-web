@@ -239,6 +239,60 @@ $('runRom').onclick=()=>{
  const object=URL.createObjectURL(file);
  launchRetro(object,core,file.name).finally(()=>URL.revokeObjectURL(object));
 };
+
+/* Personal ROMs: bytes stay in IndexedDB of this browser, never on Render/GitHub. */
+const vaultStatus=text=>$('privateRomStatus').textContent=text;
+async function updatePrivateRoms(){
+ const box=$('privateRomList');
+ box.replaceChildren();
+ if(!window.NexusRomVault){vaultStatus('Biblioteca local no disponible. Revisa si Safari permite almacenamiento.');return}
+ try{
+  const records=await window.NexusRomVault.list();
+  if(!records.length){
+   const empty=document.createElement('p');empty.className='hint';empty.textContent='Todavía no has guardado ROM en este iPhone.';box.append(empty);
+   return;
+  }
+  for(const item of records){
+   const card=document.createElement('div');card.className='panel';card.style.cssText='margin:0;padding:12px;min-width:0';
+   const title=document.createElement('strong');title.textContent=item.name;title.style.cssText='display:block;overflow-wrap:anywhere;line-height:1.4';
+   const details=document.createElement('p');details.className='hint';
+   details.textContent=item.core.toUpperCase()+' · '+(item.size/1024/1024).toFixed(2)+' MB · Solo en este dispositivo';
+   const controls=document.createElement('div');controls.className='controls';
+   const play=document.createElement('button');play.className='act';play.textContent='▶ Jugar';
+   play.addEventListener('click',async()=>{
+    try{
+     const stored=await window.NexusRomVault.load(item.id);
+     const localUrl=URL.createObjectURL(stored.blob);
+     try{await launchRetro(localUrl,stored.core,stored.name)}finally{URL.revokeObjectURL(localUrl)}
+    }catch(error){vaultStatus('No se pudo abrir la ROM privada: '+error.message)}
+   });
+   const remove=document.createElement('button');remove.className='alt';remove.textContent='Eliminar';
+   remove.addEventListener('click',async()=>{
+    if(!confirm('¿Eliminar '+item.name+' únicamente de esta biblioteca local?'))return;
+    try{await window.NexusRomVault.remove(item.id);vaultStatus('Archivo eliminado del navegador.');await updatePrivateRoms()}
+    catch(error){vaultStatus('Error al eliminar: '+error.message)}
+   });
+   controls.append(play,remove);card.append(title,details,controls);box.append(card);
+  }
+ }catch(error){vaultStatus('La biblioteca privada no está disponible: '+error.message)}
+}
+$('saveRom').onclick=async()=>{
+ const selected=Array.from($('romFile').files||[]);
+ if(!selected.length){vaultStatus('Selecciona uno o más archivos ROM desde Archivos.');return}
+ $('saveRom').disabled=true;
+ let count=0,failed=[];
+ try{
+  for(const file of selected){
+   try{await window.NexusRomVault.save(file);count++}
+   catch(error){failed.push(file.name+': '+error.message)}
+  }
+  $('romFile').value='';
+  await updatePrivateRoms();
+  vaultStatus(count+' ROM guardada(s) en este iPhone. '+(failed.length?'No se guardaron: '+failed.slice(0,2).join(' · '):'Ninguna se ha subido a Internet.'));
+ }finally{$('saveRom').disabled=false}
+};
+updatePrivateRoms();
+
 $('clearRom').onclick=()=>{if(retroUrl)URL.revokeObjectURL(retroUrl);retroUrl=null;
  $('retroStatus').textContent='La sesión retro se cerrará al recargar. Los juegos incluidos seguirán disponibles.';
  location.hash='retro';location.reload();
