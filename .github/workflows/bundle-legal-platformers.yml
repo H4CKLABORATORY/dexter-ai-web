@@ -1,0 +1,51 @@
+name: Bundle licensed NES homebrew
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bundle-legal-platformers.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve and verify freely redistributable NES cartridges
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p nexus-os/roms/legal-licenses
+          curl -fLsS --retry 3 --max-time 90 -o nexus-os/roms/dabg.nes \
+            https://github.com/NovaSquirrel/DABG/releases/download/v2/dabg.nes
+          curl -fLsS --retry 3 --max-time 90 -o nexus-os/roms/falling.nes \
+            https://raw.githubusercontent.com/xram64/falling-nes/master/falling.nes
+          curl -fLsS --retry 3 --max-time 90 -o nexus-os/roms/table-tennis.nes \
+            https://github.com/mike42/8bit-table-tennis/releases/download/v1.0/table_tennis_v1.0.nes
+          curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/DABG-LICENSE.txt \
+            https://raw.githubusercontent.com/NovaSquirrel/DABG/master/LICENSE
+          curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/FALLING-LICENSE.txt \
+            https://raw.githubusercontent.com/xram64/falling-nes/master/LICENSE
+          curl -fLsS --retry 3 --max-time 45 -o nexus-os/roms/legal-licenses/TABLE-TENNIS-LICENSE.txt \
+            https://raw.githubusercontent.com/mike42/8bit-table-tennis/main/LICENSE
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['dabg.nes','falling.nes','table-tennis.nes']:
+            rom=Path('nexus-os/roms',name).read_bytes()
+            assert len(rom)>=16384 and rom[:4]==b'NES\x1a', f'invalid iNES ROM: {name}'
+            print(name, len(rom))
+          for p in Path('nexus-os/roms/legal-licenses').glob('*.txt'):
+            assert p.stat().st_size>100
+          PY
+      - name: Commit cartridge library and licenses
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add nexus-os/roms/
+          if ! git diff --cached --quiet; then
+            git commit -m "Install three licensed NES homebrew ROMs with provenance"
+            git push
+          fi
