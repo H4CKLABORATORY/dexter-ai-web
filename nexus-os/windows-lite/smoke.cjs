@@ -27,6 +27,13 @@ const assert=require('node:assert/strict');
   await frame.locator('#startApps [data-app="performance"]').click();
   await frame.locator('.os-window[data-app="performance"] button:has-text("Probar CPU")').click();
   await frame.locator('.os-window[data-app="performance"] .metric:has-text("Worker CPU")').waitFor({timeout:12000});
+  await frame.locator('#startButton').click();
+  await frame.locator('#startApps [data-app="paint"]').click();
+  const paint=frame.locator('.os-window[data-app="paint"] canvas');
+  await paint.waitFor();
+  const png=await paint.evaluate(canvas=>canvas.toDataURL('image/png'));
+  assert.match(png,/^data:image\/png;base64,/);
+
   await page.locator('#winShutdown').click();
   assert.equal(await page.locator('#winSession').isVisible(),false);
 
