@@ -18,7 +18,7 @@ const path=require('node:path');
  try{
   await page.route('https://cdn.emulatorjs.org/stable/data/loader.js',route=>route.fulfill({status:200,contentType:'application/javascript',body:'window.__retroLoaderTest=true'}));
   await page.goto('http://127.0.0.1:8765/',{waitUntil:'domcontentloaded'});
-  await page.locator('.tile[data-nav="retro"]').click();
+  await page.locator('#home .tile[data-nav="retro"]').click();
   await page.locator('[data-rom="pong"]').click();
   await page.waitForFunction(()=>window.__retroLoaderTest===true);
   const data=await page.evaluate(async()=>{
