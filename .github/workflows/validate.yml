@@ -23,3 +23,9 @@ jobs:
           if (!match) throw new Error('Browser script missing');
           new vm.Script(match[1]);
           NODE
+      - name: Test API routes and authentication
+        run: node --test test/server.test.cjs
+      - name: Check Runpod worker source
+        run: python3 -m py_compile runpod/handler.py
+      - name: Check startup script
+        run: sh -n runpod/start.sh
