@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b2040"><title>NEXUS Windows Lite — Web Edition</title><link rel="stylesheet" href="./style.css"></head>
+<body data-edition="7"><main id="desktop" class="desktop" aria-label="Escritorio web ligero">
+<div class="wallpaper-grain"></div>
+<div class="system-caption" id="osLabel">WINDOWS 7 LITE · WEB EDITION</div>
+<div class="shortcuts" id="shortcuts" aria-label="Aplicaciones">
+<button class="shortcut" data-app="files"><span class="shortcut-icon">📁</span><span>Explorador</span></button>
+<button class="shortcut" data-app="notes"><span class="shortcut-icon">📝</span><span>Bloc de notas</span></button>
+<button class="shortcut" data-app="calc"><span class="shortcut-icon">⌗</span><span>Calculadora</span></button>
+<button class="shortcut" data-app="terminal"><span class="shortcut-icon">▣</span><span>Consola</span></button>
+<button class="shortcut" data-app="performance"><span class="shortcut-icon">◫</span><span>Rendimiento</span></button>
+<button class="shortcut" data-app="settings"><span class="shortcut-icon">⚙</span><span>Configuración</span></button>
+</div>
+<div class="watermark" id="watermark">NEXUS LAB / ENTORNO WEB · NO ES WINDOWS REAL</div>
+<div id="windows" class="window-layer" aria-live="polite"></div>
+<div class="start-menu" id="startMenu" hidden>
+  <div class="start-heading"><strong id="startTitle">Windows 7 Lite</strong><small>Powered by NEXUS · Web Edition</small></div>
+  <input type="search" id="appSearch" class="start-search" placeholder="Buscar aplicaciones..." aria-label="Buscar aplicaciones">
+  <div class="start-apps" id="startApps">
+    <button data-app="files">📁 <span>Explorador</span></button>
+    <button data-app="notes">📝 <span>Bloc de notas</span></button>
+    <button data-app="calc">⌗ <span>Calculadora</span></button>
+    <button data-app="terminal">▣ <span>Consola web</span></button>
+    <button data-app="performance">◫ <span>Rendimiento</span></button>
+    <button data-app="settings">⚙ <span>Configuración</span></button>
+    <button data-app="about">ⓘ <span>Acerca del sistema</span></button>
+    <button data-action="arcade">🎮 <span>Juegos NEXUS</span></button>
+  </div>
+  <div class="start-footer"><span>Sesión local · sin servidor</span><button id="exitOS">⏻ Salir</button></div>
+</div>
+<footer class="taskbar">
+<button class="start-button" id="startButton" aria-expanded="false" aria-controls="startMenu"><span>⊞</span> <strong id="startButtonText">Inicio</strong></button>
+<div class="task-apps" id="taskApps"><button title="Explorador" data-app="files">📁</button><button title="Notas" data-app="notes">📝</button><button title="Calculadora" data-app="calc">⌗</button></div>
+<div class="task-info"><span id="clock">--:--</span><span class="task-date" id="date"></span></div>
+</footer>
+<div id="toast" class="toast" aria-live="polite" hidden></div>
+<input type="file" id="filePicker" hidden accept=".txt,text/plain">
+<input type="file" id="backupPicker" hidden accept=".json,application/json">
+</main>
+<script src="./desktop.js" defer></script></body></html>
