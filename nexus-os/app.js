@@ -194,8 +194,11 @@ $('memoryStart').onclick=memoryStart;
 
 let retroUrl=null,retroStarted=false;
 const BUILTIN_GB={
- pong:{path:'./roms/pong.gb',name:'Pong — Game Boy'},
- minesweep:{path:'./roms/minesweep.gb',name:'Minesweep — Game Boy'}
+ pong:{path:'./roms/pong.gb',name:'Pong — Game Boy',core:'gb'},
+ minesweep:{path:'./roms/minesweep.gb',name:'Minesweep — Game Boy',core:'gb'},
+ dabg:{path:'./roms/dabg.nes',name:'Double Action Blaster Guys — NES',core:'nes'},
+ falling:{path:'./roms/falling.nes',name:'Falling — NES',core:'nes'},
+ tabletennis:{path:'./roms/table-tennis.nes',name:'8-Bit Table Tennis — NES',core:'nes'}
 };
 async function launchRetro(url,core,title,isLocal=false){
  if(retroStarted){$('retroStatus').textContent='Ya hay una consola abierta. Para cambiar de juego, toca Cerrar y recarga la página.';return}
@@ -208,6 +211,7 @@ async function launchRetro(url,core,title,isLocal=false){
    const buffer=await response.arrayBuffer();
    if(buffer.byteLength<16000||buffer.byteLength>32*1024*1024)throw Error('ROM inválida o demasiado grande');
    if(isLocal&&core==='gb'&&(new Uint8Array(buffer)[0x104]!==0xce||new Uint8Array(buffer)[0x105]!==0xed))throw Error('La ROM incluida no tiene cabecera de Game Boy válida');
+   if(isLocal&&core==='nes'&&!(new Uint8Array(buffer)[0]===0x4e&&new Uint8Array(buffer)[1]===0x45&&new Uint8Array(buffer)[2]===0x53&&new Uint8Array(buffer)[3]===0x1a))throw Error('La ROM NES incluida tiene cabecera inválida');
    retroUrl=URL.createObjectURL(new Blob([buffer],{type:'application/octet-stream'}));
    window.EJS_player='#game';window.EJS_gameUrl=retroUrl;
    window.EJS_core=core;window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';
@@ -223,7 +227,7 @@ async function launchRetro(url,core,title,isLocal=false){
  }
 }
 document.querySelectorAll('[data-rom]').forEach(button=>button.addEventListener('click',()=>{
- const media=BUILTIN_GB[button.dataset.rom];if(media)launchRetro(media.path,'gb',media.name,true);
+ const media=BUILTIN_GB[button.dataset.rom];if(media)launchRetro(media.path,media.core,media.name,true);
 }));
 $('runRom').onclick=()=>{
  const file=$('romFile').files?.[0];
