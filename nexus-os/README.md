@@ -4,6 +4,24 @@ Independently hosted web app at `https://dexter-nexus-os.onrender.com`.
 
 This is a browser/PWA application using local-device CPU and GPU (when applicable). **It is not an iOS native IPA, an Android APK runner or a full Android emulator.** It has its own manifest, icon, standalone presentation, service worker and install instructions.
 
+## Nuevos juegos de plataformas y NES (2026-10-15)
+
+La galería Retro Core incluye ROM de distribución autorizada:
+
+| Juego | Consola | Licencia | Fuente |
+|---|---|---|---|
+| Pong | Game Boy | CC0 | [Game Boy Coding Adventure](https://github.com/mdagois/gca) |
+| Minesweep | Game Boy | CC0 | [Game Boy Coding Adventure](https://github.com/mdagois/gca) |
+| Double Action Blaster Guys | NES | Zlib | [NovaSquirrel/DABG v2](https://github.com/NovaSquirrel/DABG/releases/tag/v2) |
+| Falling | NES | MIT | [xram64/falling-nes](https://github.com/xram64/falling-nes) |
+| 8-Bit Table Tennis | NES | MIT | [mike42/8bit-table-tennis v1.0](https://github.com/mike42/8bit-table-tennis/releases/tag/v1.0) |
+
+Las copias de las licencias se incluyen en `roms/CC0-LICENSE.txt` y `roms/legal-licenses/`. Los tres juegos NES se verifican al descargar mediante GitHub Actions comprobando cabecera iNES y tamaño del archivo.
+
+Además se incluye **NEXUS JUMP**, un juego de plataformas web original con 3 mundos, enemigos, monedas, portales, controles táctiles y récords locales, en `jump/`. No es una ROM de NES ni utiliza personajes ni gráficos de Nintendo.
+
+**Super Mario Bros., Super Mario World y los demás juegos comerciales de Nintendo no se incluyen** porque sus ROM no están autorizadas para redistribución general. El emulador permite cargar archivos del usuario que tenga derecho a utilizar. La licencia MIT del repositorio de un emulador NO transfiere derechos sobre las ROM comerciales alojadas en otro lugar.
+
 ## Bundled media — latest version
 
 A starter library ships **two genuine Game Boy ROMs**: `roms/pong.gb` and `roms/minesweep.gb` (32 KiB each). They come from Maximilien Dagois's [Game Boy Coding Adventure](https://github.com/mdagois/gca) repository, specifically `prebuilt/games/pong/pong.gb` and `prebuilt/games/minesweep/minesweep.gb`. That author's README identifies the games as CC0 1.0 Universal; the corresponding license is included at `roms/CC0-LICENSE.txt`. Note that the source repository documents exceptions for certain unrelated third-party art assets; review those restrictions before adding more games.
