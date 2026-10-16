@@ -21,7 +21,7 @@ jobs:
       - name: Unit tests (no paid providers)
         run: python -m unittest discover -s video-studio/tests -v
       - name: Verify Python syntax
-        run: python -m py_compile video-studio/studio.py video-studio/gui.py video-studio/reference_lab.py video-studio/editor.py video-studio/style_report.py
+        run: python -m py_compile video-studio/studio.py video-studio/gui.py video-studio/reference_lab.py video-studio/editor.py video-studio/style_report.py video-studio/content_modes.py video-studio/future_tab.py
       - name: Install free FFmpeg for smoke validation
         run: |
           sudo apt-get update -qq
