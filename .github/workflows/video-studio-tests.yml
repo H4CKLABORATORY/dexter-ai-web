@@ -23,7 +23,7 @@ jobs:
       - name: Verify Python syntax
         run: python -m py_compile video-studio/studio.py video-studio/gui.py video-studio/reference_lab.py video-studio/editor.py
       - name: Smoke fixture
-        run: ffmpeg -hide_banner -loglevel error -f lavfi -i testsrc2=size=320x180:rate=15 -f lavfi -i sine=frequency=880 -t 2 -c:v libx264 -pix_fmt yuv420p -c:a aac -y /tmp/ffsample.mp4
+        run: ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=blue:s=320x180:r=15 -f lavfi -i anullsrc=r=48000:cl=mono -t 2 -c:v mpeg4 -q:v 5 -c:a aac -shortest -y /tmp/ffsample.mp4
       - name: Smoke import
         run: |
           python video-studio/studio.py prepare --name "Free Fire Demo" --source /tmp/ffsample.mp4
