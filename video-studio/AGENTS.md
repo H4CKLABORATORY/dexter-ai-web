@@ -10,3 +10,10 @@
 - Usar el CLI oficial documentado de OpenCreator, no simular instalación ni endpoints inexistentes. No usar --execute sin consentimiento del usuario.
 - Mantener originales, registrar resultados en cada carpeta de trabajo y no enviar claves ni material privado al repositorio.
 - Publicación manual: el usuario decide qué exportación subir y cuándo.
+
+- Biblioteca privada library/: guardar guiones, referencias TikTok, SRT y memes autorizados; nunca commitear.
+- Separar análisis técnico verificable (escenas, audio, SRT) de interpretación narrativa (requiere IA multimodal y revisión).
+- No inferir que la voz de terceros es reutilizable: sólo locuciones propias, licenciadas o sintéticas.
+- No afirmar que los cortes por silencio encuentran clips virales o imitan a una editora real.
+- Para memes usar sólo biblioteca con etiquetas/licencias; mantener propuestas en meme_suggestions hasta aprobación humana.
+- Al editar plan, proteger el original y comprobar el render antes de presentar el resultado como completado.
