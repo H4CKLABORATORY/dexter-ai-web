@@ -94,6 +94,8 @@ def validate_tiktok_url(value):
 
 def add_tiktok(args):
     initialize()
+    if not args.authorized:
+        raise ValueError("Para descargar referencias confirma --authorized (material propio o permiso de uso).")
     if not validate_tiktok_url(args.url):
         raise ValueError("Sólo enlaces HTTPS públicos de TikTok; no se admiten URL arbitrarias.")
     if not shutil.which("yt-dlp"):
