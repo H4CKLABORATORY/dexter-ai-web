@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 from collections import Counter
 import reference_lab as lab
+import content_modes as modes
 
 STOP = {"para","pero","porque","como","este","esta","estos","donde","cuando","unos",
         "unas","tengo","quiero","vamos","estaba","estoy","entonces","ahora","ellos",
@@ -15,6 +16,9 @@ STOP = {"para","pero","porque","como","este","esta","estos","donde","cuando","un
 
 def main():
     style=lab.initialize()
+    modes.initialize()
+    known=modes.read_json(modes.KNOWLEDGE, modes.STYLE_SEED)
+    catalog=modes.read_json(modes.CATALOG,{"entries":[],"known_titles_only":[]})
     measure=lab.LIB / "reference-analysis.json"
     data=json.loads(measure.read_text(encoding="utf-8")) if measure.is_file() else {}
     refs=data.get("analyzed",[])
@@ -50,12 +54,25 @@ def main():
         f"- Evitar: {', '.join(style.get('avoid_phrases',[]))}",
         f"- Dinámica: {style.get('strategy','')}",
         "",
+        "## Estilo previo recuperado y adaptable",
+        f"- Dialecto: {known.get('dialect','')}",
+        f"- Vocabulario específico: {', '.join(known.get('terms',[]))}",
+        f"- Expresiones que se evitan: {', '.join(known.get('avoid',[]))}",
+        f"- Videos largos: {known.get('video_format',{}).get('long','')}",
+        f"- Shorts: {known.get('video_format',{}).get('short','')}",
+        f"- Memes: {known.get('video_format',{}).get('meme','')}",
+        f"- Guiones completos indexados: {len(catalog.get('entries',[]))}",
+        f"- Títulos recordados sin texto: {len(catalog.get('known_titles_only',[]))}",
+        "",
         "## Evidencia de la biblioteca",
         f"- Guiones importados: {script_count}",
         f"- Referencias analizadas: {len(refs)}",
         f"- Mediana aproximada de plano/escena: {seconds if seconds is not None else 'sin datos'} s",
         f"- Palabras frecuentes en tus guiones: {', '.join(w for w,_ in counter.most_common(16)) or 'sin guiones'}",
         f"- Categorías de memes etiquetadas: {', '.join(k for k,_ in kinds.most_common()) or 'sin memes'}",
+        "",
+        "## Modos de contenido disponibles",
+        *[f"- {x['name']} ({x['id']}): {x['platform']} / {x['length']}" for x in modes.all_modes()],
         "",
         "## Qué debe hacer el editor",
         "1. Conservar grabación y voz originales de Dexter.",
