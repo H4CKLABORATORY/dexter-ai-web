@@ -110,12 +110,13 @@ class OtherContentTab(ttk.Frame):
         data=modes.read_json(modes.KNOWLEDGE,{})
         self.write(json.dumps(data,ensure_ascii=False,indent=2))
 
-    def determine(self,title,filename="",script_path=""):
+    def determine(self,title,filename="",script_path="",transcript_path=""):
         """Prioriza modo manual; pregunta sólo si falta evidencia suficiente."""
         selected=self.choice.get()
         try:
             script=modes.script_content(script_path) if script_path else ""
-            info=modes.detect(title=title,filename=filename,script=script,
+            transcript=modes.script_content(transcript_path) if transcript_path else ""
+            info=modes.detect(title=title,filename=filename,script=script,transcript=transcript,
                               mode_override=selected if selected!="auto" else None)
         except (ValueError, OSError, UnicodeError) as exc:
             messagebox.showerror("Detección",str(exc),parent=self);return None
