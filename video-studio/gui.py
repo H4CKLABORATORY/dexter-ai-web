@@ -9,6 +9,9 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from studio import slugify
+from future_tab import OtherContentTab
+import content_modes as modes
+import json
 
 HERE = Path(__file__).resolve().parent
 
@@ -16,13 +19,19 @@ class StudioGUI:
     def __init__(self, root):
         self.root = root
         root.title("Dexter Video Studio — Free Fire / YouTube / TikTok")
-        root.geometry("810x820")
+        root.geometry("850x850")
         root.minsize(570, 460)
         self.events = queue.Queue()
         self.busy = False
 
-        frame = ttk.Frame(root, padding=18)
-        frame.pack(fill="both", expand=True)
+        notebook=ttk.Notebook(root)
+        notebook.pack(fill="both",expand=True)
+        frame=ttk.Frame(notebook,padding=18)
+        notebook.add(frame,text="Mi edición / Free Fire")
+        self.future=OtherContentTab(notebook,log=self.append,on_change=self.refresh_content_mode)
+        notebook.add(self.future,text="Nuevos contenidos y métodos")
+        self.active_mode=None
+        self.mode_details=None
 
         self.source = tk.StringVar()
         self.name = tk.StringVar(value="Video Free Fire 01")
@@ -91,6 +100,24 @@ class StudioGUI:
         self.log.pack(fill="both", expand=True, pady=(10, 0))
         root.after(150, self.poll)
 
+    def refresh_content_mode(self):
+        self.append("Métodos actualizados. Selección: "+self.future.choice.get())
+
+    def save_active_content_mode(self, job_slug, mode, details):
+        from studio import project
+        folder=project(job_slug)
+        config=folder/"project.json"
+        metadata=json.loads(config.read_text(encoding="utf-8"))
+        metadata["content_method"]=mode["id"]
+        metadata["content_method_name"]=mode["name"]
+        metadata["content_detection"]=details
+        metadata["content_method_settings"]={k:mode.get(k) for k in ("platform","layout","length","goal")}
+        modes.atomic_json(config,metadata)
+        self.active_mode=mode
+        self.mode_details=details
+        self.job.set(job_slug)
+        self.append("Método de edición guardado en el proyecto: "+mode["name"])
+
     def file_picker_row(self, parent, label, variable, kind):
         r = ttk.Frame(parent); r.pack(fill="x", pady=3)
         ttk.Label(r, text=label, width=23).pack(side="left")
@@ -156,8 +183,15 @@ class StudioGUI:
         except ValueError as exc:
             messagebox.showerror("Nombre", str(exc))
             return
+        resolution=self.future.determine(self.name.get(),filename=Path(self.source.get()).name,
+                                         script_path=self.script_file.get())
+        if resolution is None:
+            return
+        chosen,details=resolution
+        self.platform.set(chosen["platform"])
+        self.layout.set(chosen["layout"])
         self.execute(["prepare", "--name", self.name.get(), "--source", self.source.get()],
-                     on_success=lambda: self.job.set(slug))
+                     on_success=lambda: self.save_active_content_mode(slug,chosen,details))
 
     def export(self):
         if not self.job.get():
@@ -226,8 +260,17 @@ class StudioGUI:
         if not self.job.get():
             messagebox.showwarning("Proyecto", "Prepara un proyecto primero.")
             return
+        mode=self.active_mode
+        if mode is None:
+            config=HERE/"jobs"/self.job.get()/"project.json"
+            if config.is_file():
+                details=json.loads(config.read_text(encoding="utf-8"))
+                identifier=details.get("content_method")
+                mode=next((x for x in modes.all_modes() if x["id"]==identifier),None)
+        kind="long" if mode and mode.get("length")=="long" else "short"
+        target="0" if kind=="long" else "30"
         args=["plan","--job",self.job.get(),"--platform",self.platform.get(),
-              "--layout",self.layout.get(),"--target","30"]
+              "--layout",self.layout.get(),"--kind",kind,"--target",target]
         if self.subtitle_file.get():
             args+=["--srt",self.subtitle_file.get()]
         if self.script_file.get():
