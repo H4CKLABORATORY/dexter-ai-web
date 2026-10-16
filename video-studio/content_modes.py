@@ -7,6 +7,7 @@ No depende de servicios externos ni activa modelos por su cuenta.
 """
 import argparse
 from datetime import datetime, timezone
+from difflib import SequenceMatcher
 import hashlib
 import json
 from pathlib import Path
@@ -229,6 +230,22 @@ def import_folder(folder, max_files=500, copy=True):
             failed.append({"name":source.name,"error":str(e)})
     atomic_json(CATALOG, catalog)
     return {"added":added, "duplicates":duplicates, "failed":failed, "total_catalog":len(catalog["entries"])}
+
+def match_catalog_script(title):
+    """Solo empareja el título con contenido realmente importado, nunca con títulos recordados."""
+    initialize()
+    catalog=read_json(CATALOG,{"entries":[]})
+    normalized=tokenize(title).strip()
+    best=None
+    score=0.0
+    for item in catalog.get("entries",[]):
+        if item.get("type") not in (".md",".txt"):
+            continue
+        entry_name=tokenize(item.get("name","")).strip()
+        ratio=SequenceMatcher(None,normalized,entry_name).ratio()
+        if ratio>score and Path(item.get("path","")).is_file():
+            best=item; score=ratio
+    return dict(best,match_score=round(score,3)) if best and score>=0.9 else None
 
 def script_content(path, limit=18000):
     source=Path(path).expanduser().resolve()
