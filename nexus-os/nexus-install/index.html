@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091225"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="NEXUS INSTALL: acceso móvil al instalador oficial de plugins de ChatGPT, sin PC virtual.">
+<title>NEXUS INSTALL — Plugins desde iPhone</title>
+<style>
+:root{color-scheme:dark;font:15px system-ui,-apple-system,"Segoe UI",sans-serif;--bg:#070b19;--pane:#121c32;--line:#344562;--muted:#a9bed8;--mint:#75f7d4;--text:#f3f8ff}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;color:var(--text);background:radial-gradient(ellipse at 90% 0,#423a8657,transparent 50%),radial-gradient(ellipse at 0% 80%,#0b616c4e,transparent 60%),var(--bg)}
+main{width:min(1000px,100%);margin:auto;padding:24px 16px 74px}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:14px;border-bottom:1px solid #ffffff29}
+.brand{color:var(--mint);font-size:12px;letter-spacing:.19em;font-weight:850}.back{color:#e4f0ff;border:1px solid #4c6280;text-decoration:none;border-radius:11px;padding:9px 12px}
+.top{padding:32px 0 15px}.eyebrow{font-size:11px;letter-spacing:.22em;color:var(--mint);font-weight:850}.top h1{font-size:clamp(42px,9vw,76px);letter-spacing:-.075em;line-height:.99;margin:11px 0}.top h1 span{color:#ada7ff}.muted{color:var(--muted);line-height:1.7}p{line-height:1.65}.hero-description{max-width:680px}
+.bento{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:20px}.card{background:linear-gradient(145deg,#1d2b48,#111a30);padding:21px;border:1px solid var(--line);border-radius:20px;min-width:0}.card.main{border-color:#83f7da9b;background:linear-gradient(138deg,#143f44,#222752 85%)}
+h2{font-size:20px;margin:7px 0 10px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;gap:7px;padding:12px 16px;border-radius:12px;background:var(--mint);color:#06202a;font:inherit;font-weight:850;text-decoration:none;border:0;cursor:pointer}.button.secondary{color:#edf7ff;background:#273954;border:1px solid #526b92}.button:disabled{opacity:.45}.button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.glyph{font-size:27px;color:var(--mint)}label{font-weight:750;display:block;margin:13px 0 8px}
+input{width:100%;min-height:50px;padding:13px 14px;font:inherit;color:#fff;border:1px solid #597293;border-radius:12px;background:#081427}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{background:#233b56;color:#dbf6ff;border:1px solid #4a6889;border-radius:50px;padding:9px 13px;font:inherit;cursor:pointer}
+#recommendation{padding:12px;border-radius:12px;background:#0c2130;border:1px solid #426f78;margin-top:13px;font-size:13px;line-height:1.6}#recommendation[hidden]{display:none}
+.steps{display:grid;gap:12px;padding:0;list-style:none}.steps li{display:flex;gap:11px;align-items:flex-start}.num{font-weight:850;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#1f4b4e;color:#a0fce5;flex:0 0 28px}.steps b{display:block}.steps small{display:block;color:var(--muted);line-height:1.5;margin-top:4px}
+.status{color:#bdf9e8;margin-top:13px;font-size:13px;min-height:25px}.note{border-left:3px solid #ffce88;background:#312c2370;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:18px;color:#e8dbc2;font-size:13px}
+.linkrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.linkrow a{color:#9fffe2;font-size:13px}
+@media(max-width:720px){.bento{grid-template-columns:1fr}.top{padding-top:25px}.card{padding:18px}.bar{flex-wrap:wrap}}
+</style></head><body><main>
+<header class="bar"><div class="brand">⬡ DEXTER NEXUS OS / INSTALL</div><a href="../" class="back">← Volver</a></header>
+<section class="top"><div class="eyebrow">NEXUS INSTALL · MOBILE EDITION</div><h1>Plugins desde <span>tu iPhone.</span></h1>
+<p class="muted hero-description">Sin emuladores ni computadoras de pago. Abre el instalador de ChatGPT en tu teléfono. Para plugins que funcionan en móvil, la instalación se completa desde ChatGPT con las autorizaciones que sean necesarias.</p></section>
+<div class="bento">
+<section class="card main"><div class="glyph">✳</div><h2>Instalar plugin en ChatGPT</h2>
+<p class="muted">Escribe qué herramienta necesitas. El sistema preparará una búsqueda orientativa y te llevará directamente al directorio oficial de plugins.</p>
+<label for="query">¿Qué plugin necesitas?</label>
+<input id="query" type="search" maxlength="300" placeholder="Ej. Gmail, GitHub, videos, archivos..." autocomplete="off">
+<div class="chips" aria-label="Búsquedas rápidas">
+<button class="chip" type="button" data-query="GitHub">GitHub</button>
+<button class="chip" type="button" data-query="Gmail">Gmail</button>
+<button class="chip" type="button" data-query="Google Drive">Google Drive</button>
+<button class="chip" type="button" data-query="Render">Render</button>
+<button class="chip" type="button" data-query="Plugin para editar videos">Videos</button>
+</div>
+<div id="recommendation" hidden></div>
+<div class="actions">
+<a class="button" id="install" href="https://chatgpt.com/plugins" target="_blank" rel="noopener noreferrer">Abrir instalador oficial ↗</a>
+<button class="button secondary" id="copy" type="button">Copiar búsqueda inteligente</button>
+</div><p class="status" id="status" role="status" aria-live="polite"></p>
+</section>
+<aside class="card"><div class="glyph">⚙</div><h2>Instalación real, sin trucos</h2>
+<ol class="steps">
+<li><span class="num">1</span><span><b>Busca el plugin</b><small>El directorio de ChatGPT muestra las herramientas disponibles para tu cuenta.</small></span></li>
+<li><span class="num">2</span><span><b>Pulsa «Instalar plugin»</b><small>La instalación se realiza en ChatGPT, no en una página que imita el sistema.</small></span></li>
+<li><span class="num">3</span><span><b>Conecta tu cuenta cuando se solicite</b><small>GitHub, Google y otros proveedores pueden requerir autorización.</small></span></li></ol>
+<div class="actions"><a class="button secondary" href="https://chatgpt.com/plugins/plugins_6ad03bbf2e6c819198524e06a77b8af6" target="_blank" rel="noopener noreferrer">Mi Mobile Plugin Manager ↗</a></div>
+</aside>
+</div>
+<div class="note"><strong>Compatibilidad:</strong> NEXUS INSTALL no puede instalar silenciosamente plugins en tu cuenta. Un plugin marcado «Solo para escritorio» necesita la aplicación ChatGPT Desktop; esta página no elimina ese requisito. Para esas funciones podemos buscar equivalentes móviles o basados en servicios web.</div>
+<nav class="linkrow"><a href="../plugin-hub/">Análisis avanzado →</a><a href="https://chatgpt.com/plugins" target="_blank" rel="noopener noreferrer">Directorio de plugins →</a></nav>
+</main>
+<script>
+'use strict';
+(()=>{
+const input=document.getElementById('query'),out=document.getElementById('recommendation'),status=document.getElementById('status');
+const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+const targets=[
+ {match:/github|repositorio|git|codigo/,name:'GitHub',detail:'Conector de repositorios y proyectos; puede funcionar sin una PC local.'},
+ {match:/gmail|correo|email/,name:'Gmail',detail:'Conector de correo; requiere autorización de tu cuenta Google.'},
+ {match:/drive|archivo|documento/,name:'Google Drive',detail:'Servicio de documentos en la nube; no necesita emular Windows.'},
+ {match:/render|servidor|deploy|hosting/,name:'Render',detail:'Conector de alojamiento; verifica requisitos de tu plan y del servicio.'},
+ {match:/windows|desktop|escritorio|exe/,name:'Aplicaciones de escritorio',detail:'Si el plugin es «Solo para escritorio», no es posible habilitarlo en iPhone con una web. Busca su API o alternativa móvil.'},
+ {match:/video|editar|imagen|foto/,name:'Herramientas creativas',detail:'Busca plugins con servicios web o aplicaciones compatibles con iPhone.'}
+];
+function current(){const q=input.value.trim().slice(0,300);const rule=targets.find(x=>x.match.test(normalize(q)));return {q,rule}}
+function render(){
+ const {q,rule}=current();out.hidden=!q;
+ if(!q){status.textContent='Instala desde ChatGPT; puedes buscar plugins desde este iPhone.';return}
+ out.textContent=rule?'Ruta sugerida: '+rule.name+'. '+rule.detail:'Busca «'+q+'» en el directorio oficial; ChatGPT determinará si está disponible para tu cuenta.';
+ status.textContent='La disponibilidad y las instalaciones se verifican dentro de ChatGPT.';
+}
+document.querySelectorAll('[data-query]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.query;render()}));
+input.addEventListener('input',render);
+document.getElementById('copy').addEventListener('click',async()=>{
+ const {q,rule}=current();
+ if(!q){status.textContent='Escribe el nombre del plugin o la tarea que necesitas.';input.focus();return}
+ const request='Necesito instalar un plugin desde mi iPhone para: '+q+'. Usa Plugin Management y Mobile Plugin Manager para buscar candidatos oficiales, comprobar duplicados y compatibilidad iOS; si falta, preséntame la instalación mediante el flujo oficial de ChatGPT. Prioriza soluciones gratuitas y disponibles en móvil; si es solo escritorio, busca alternativa. No afirmes que quedó instalado sin confirmación.';
+ try{await navigator.clipboard.writeText(request);status.textContent='Solicitud copiada. Abre ChatGPT y pégala para iniciar la búsqueda con el gestor real.';}
+ catch{const t=document.createElement('textarea');t.value=request;t.style.cssText='width:100%;min-height:135px;margin-top:10px';t.setAttribute('aria-label','Solicitud preparada');out.hidden=false;out.replaceChildren(t);t.focus();t.select();status.textContent='Copia la solicitud seleccionada y pégala en ChatGPT.'}
+});
+render();
+})();
+</script></body></html>
