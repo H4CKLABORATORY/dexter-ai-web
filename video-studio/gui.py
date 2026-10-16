@@ -183,6 +183,11 @@ class StudioGUI:
         except ValueError as exc:
             messagebox.showerror("Nombre", str(exc))
             return
+        if not self.script_file.get():
+            matched=modes.match_catalog_script(self.name.get())
+            if matched:
+                self.script_file.set(matched["path"])
+                self.append("Guion original importado encontrado para este proyecto: "+matched["name"])
         resolution=self.future.determine(self.name.get(),filename=Path(self.source.get()).name,
                                          script_path=self.script_file.get())
         if resolution is None:
