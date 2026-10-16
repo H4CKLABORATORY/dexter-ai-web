@@ -189,7 +189,7 @@ class StudioGUI:
                 self.script_file.set(matched["path"])
                 self.append("Guion original importado encontrado para este proyecto: "+matched["name"])
         resolution=self.future.determine(self.name.get(),filename=Path(self.source.get()).name,
-                                         script_path=self.script_file.get())
+                                         script_path=self.script_file.get(),transcript_path=self.subtitle_file.get())
         if resolution is None:
             return
         chosen,details=resolution
