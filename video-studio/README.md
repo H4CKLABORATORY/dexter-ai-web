@@ -9,6 +9,10 @@ Módulo independiente para crear videos de YouTube, YouTube Shorts y TikTok, esp
 - Por defecto OpenCreator solo recibe --dry-run: no consume créditos ni realiza solicitudes a proveedores. Solo --execute habilita las operaciones reales.
 - NO incluye OpenCreator instalado en tu PC, servicios externos, modelos de pago, publicación automática ni análisis de highlights por IA. GitHub Pages no puede ejecutar este software de escritorio.
 
+## Interfaz gráfica para Windows (sin consola)
+
+Con Python 3 instalado, abre PowerShell en esta carpeta y ejecuta: py -3 gui.py. Selecciona tu grabación con el botón Buscar, escribe nombre, pulsa Preparar proyecto y luego Exportar MP4. Funciona sin cuentas, sin nube y sin pagos. Esta ventana usa los mismos comandos de studio.py: requiere FFmpeg para exportar. OpenCreator no se controla desde esta ventana.
+
 ## Guía Windows sin costes obligatorios
 
 1. Instala Python 3 y FFmpeg desde las fuentes oficiales: https://www.python.org/downloads/ y https://ffmpeg.org/download.html. Agrega FFmpeg al PATH.
