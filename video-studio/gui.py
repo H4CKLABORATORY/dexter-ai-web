@@ -16,7 +16,7 @@ class StudioGUI:
     def __init__(self, root):
         self.root = root
         root.title("Dexter Video Studio — Free Fire / YouTube / TikTok")
-        root.geometry("660x520")
+        root.geometry("790x740")
         root.minsize(570, 460)
         self.events = queue.Queue()
         self.busy = False
@@ -32,6 +32,9 @@ class StudioGUI:
         self.gpu = tk.BooleanVar(value=False)
         self.start = tk.StringVar(value="0")
         self.duration = tk.StringVar(value="")
+        self.reference = tk.StringVar()
+        self.subtitle_file = tk.StringVar()
+        self.script_file = tk.StringVar()
 
         ttk.Label(frame, text="Producción local de videos", font=("Segoe UI", 17, "bold")).pack(anchor="w", pady=(0, 12))
         ttk.Label(frame, text="Grabación propia (.mp4, .mov, .mkv, .webm, .avi)").pack(anchor="w")
@@ -63,9 +66,32 @@ class StudioGUI:
 
         ttk.Button(frame, text="2. Exportar MP4", command=self.export).pack(anchor="w", pady=7)
         ttk.Label(frame, text="fit conserva todo el gameplay ultrawide; crop puede recortar. La exportación no se publica.").pack(anchor="w", pady=4)
-        self.log = tk.Text(frame, height=8, wrap="word", state="disabled")
+        ttk.Separator(frame, orient="horizontal").pack(fill="x", pady=(12, 7))
+        ttk.Label(frame, text="Biblioteca Free Fire / Referencias TikTok", font=("Segoe UI", 12, "bold")).pack(anchor="w")
+        self.file_picker_row(frame, "Video referencia", self.reference, "video")
+        ttk.Button(frame, text="Guardar referencia en biblioteca", command=self.save_reference).pack(anchor="w", pady=4)
+        ttk.Button(frame, text="Analizar biblioteca (escenas/silencios)", command=self.analyze_references).pack(anchor="w", pady=4)
+        self.file_picker_row(frame, "Guion (.txt/.md)", self.script_file, "script")
+        self.file_picker_row(frame, "Subtítulos (.srt)", self.subtitle_file, "srt")
+        r2 = ttk.Frame(frame); r2.pack(fill="x", pady=7)
+        ttk.Button(r2, text="3. Plan de edición", command=self.auto_plan).pack(side="left")
+        ttk.Button(r2, text="4. Render final + subtítulos", command=self.render_auto).pack(side="left", padx=8)
+        ttk.Label(frame, text="El plan editable está en jobs/<proyecto>/edit-plan.json. Revisa memes y cortes antes del render.").pack(anchor="w")
+        self.log = tk.Text(frame, height=7, wrap="word", state="disabled")
         self.log.pack(fill="both", expand=True, pady=(10, 0))
         root.after(150, self.poll)
+
+    def file_picker_row(self, parent, label, variable, kind):
+        r = ttk.Frame(parent); r.pack(fill="x", pady=3)
+        ttk.Label(r, text=label, width=23).pack(side="left")
+        ttk.Entry(r, textvariable=variable).pack(side="left", fill="x", expand=True)
+        pattern = {"video": "*.mp4 *.mov *.mkv *.webm *.avi", "script": "*.txt *.md", "srt": "*.srt"}[kind]
+        ttk.Button(r, text="Buscar", command=lambda: self.select_file(variable, pattern)).pack(side="left", padx=5)
+
+    def select_file(self, var, pattern):
+        selected = filedialog.askopenfilename(filetypes=[("Archivo", pattern)])
+        if selected:
+            var.set(selected)
 
     def input_row(self, parent, label, variable):
         r = ttk.Frame(parent)
@@ -84,7 +110,7 @@ class StudioGUI:
         self.log.see("end")
         self.log.configure(state="disabled")
 
-    def execute(self, args, on_success=None):
+    def execute(self, args, on_success=None, runner="studio.py"):
         if self.busy:
             messagebox.showinfo("En curso", "Espera a que termine la tarea actual.")
             return
@@ -92,7 +118,7 @@ class StudioGUI:
         self.append("> " + " ".join(args))
         def task():
             try:
-                result = subprocess.run([sys.executable, str(HERE / "studio.py"), *args],
+                result = subprocess.run([sys.executable, str(HERE / runner), *args],
                                         cwd=HERE, text=True, capture_output=True, check=False)
                 output = (result.stdout + "\n" + result.stderr).strip()
                 self.events.put((result.returncode == 0, output[-3500:], on_success))
@@ -144,6 +170,34 @@ class StudioGUI:
         if self.gpu.get():
             args.append("--gpu")
         self.execute(args)
+
+    def save_reference(self):
+        if not self.reference.get():
+            messagebox.showwarning("Referencia", "Selecciona un video de referencia.")
+            return
+        self.execute(["add", "--kind", "reference", "--file", self.reference.get()],
+                     runner="reference_lab.py")
+
+    def analyze_references(self):
+        self.execute(["analyze"], runner="reference_lab.py")
+
+    def auto_plan(self):
+        if not self.job.get():
+            messagebox.showwarning("Proyecto", "Prepara un proyecto primero.")
+            return
+        args=["plan","--job",self.job.get(),"--platform",self.platform.get(),
+              "--layout",self.layout.get(),"--target","30"]
+        if self.subtitle_file.get():
+            args+=["--srt",self.subtitle_file.get()]
+        if self.script_file.get():
+            args+=["--script",self.script_file.get()]
+        self.execute(args,runner="editor.py")
+
+    def render_auto(self):
+        if not self.job.get():
+            messagebox.showwarning("Proyecto", "Prepara el proyecto y el plan primero.")
+            return
+        self.execute(["render","--job",self.job.get(),"--burn-captions"],runner="editor.py")
 
 if __name__ == "__main__":
     root = tk.Tk()
