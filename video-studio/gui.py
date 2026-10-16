@@ -6,7 +6,7 @@ import sys
 import threading
 from pathlib import Path
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from studio import slugify
 
@@ -16,7 +16,7 @@ class StudioGUI:
     def __init__(self, root):
         self.root = root
         root.title("Dexter Video Studio — Free Fire / YouTube / TikTok")
-        root.geometry("790x740")
+        root.geometry("810x820")
         root.minsize(570, 460)
         self.events = queue.Queue()
         self.busy = False
@@ -33,6 +33,7 @@ class StudioGUI:
         self.start = tk.StringVar(value="0")
         self.duration = tk.StringVar(value="")
         self.reference = tk.StringVar()
+        self.tiktok_url = tk.StringVar()
         self.subtitle_file = tk.StringVar()
         self.script_file = tk.StringVar()
 
@@ -70,8 +71,15 @@ class StudioGUI:
         ttk.Label(frame, text="Biblioteca Free Fire / Referencias TikTok", font=("Segoe UI", 12, "bold")).pack(anchor="w")
         self.file_picker_row(frame, "Video referencia", self.reference, "video")
         ttk.Button(frame, text="Guardar referencia en biblioteca", command=self.save_reference).pack(anchor="w", pady=4)
+        rurl = ttk.Frame(frame); rurl.pack(fill="x", pady=3)
+        ttk.Label(rurl, text="Link TikTok público", width=23).pack(side="left")
+        ttk.Entry(rurl, textvariable=self.tiktok_url).pack(side="left", fill="x", expand=True)
+        ttk.Button(rurl, text="Importar", command=self.import_tiktok).pack(side="left", padx=5)
         ttk.Button(frame, text="Analizar biblioteca (escenas/silencios)", command=self.analyze_references).pack(anchor="w", pady=4)
         self.file_picker_row(frame, "Guion (.txt/.md)", self.script_file, "script")
+        rlibrary = ttk.Frame(frame); rlibrary.pack(anchor="w", pady=4)
+        ttk.Button(rlibrary, text="Guardar guion", command=self.save_script).pack(side="left")
+        ttk.Button(rlibrary, text="Guardar meme propio", command=self.save_meme).pack(side="left", padx=8)
         self.file_picker_row(frame, "Subtítulos (.srt)", self.subtitle_file, "srt")
         r2 = ttk.Frame(frame); r2.pack(fill="x", pady=7)
         ttk.Button(r2, text="3. Plan de edición", command=self.auto_plan).pack(side="left")
@@ -177,6 +185,34 @@ class StudioGUI:
             return
         self.execute(["add", "--kind", "reference", "--file", self.reference.get()],
                      runner="reference_lab.py")
+
+    def import_tiktok(self):
+        if not self.tiktok_url.get():
+            messagebox.showwarning("TikTok", "Pega un enlace público de tu TikTok.")
+            return
+        if not messagebox.askyesno("Permiso", "¿Confirmas que los videos son tuyos o tienes permiso para usarlos como referencia?"):
+            return
+        name = simpledialog.askstring("Biblioteca TikTok", "Nombre corto de la colección:")
+        if not name:
+            return
+        self.execute(["tiktok","--url",self.tiktok_url.get(),"--name",name,
+                      "--limit","8","--authorized"],runner="reference_lab.py")
+
+    def save_script(self):
+        if self.script_file.get():
+            self.execute(["add","--kind","script","--file",self.script_file.get()],runner="reference_lab.py")
+        else:
+            messagebox.showwarning("Guion","Selecciona primero el archivo de guion.")
+
+    def save_meme(self):
+        image=filedialog.askopenfilename(filetypes=[("Imagen de meme","*.png *.jpg *.jpeg *.webp")])
+        if not image:
+            return
+        if not messagebox.askyesno("Permisos","¿Este meme es tuyo o tienes licencia o permiso para editarlo y distribuirlo?"):
+            return
+        tags=simpledialog.askstring("Etiquetas","Palabras relacionadas (separadas por comas):") or ""
+        self.execute(["add","--kind","meme","--file",image,
+                      "--tags",tags,"--license","owned"],runner="reference_lab.py")
 
     def analyze_references(self):
         self.execute(["analyze"], runner="reference_lab.py")
