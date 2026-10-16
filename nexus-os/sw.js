@@ -1,7 +1,7 @@
 'use strict';
-const VERSION='nexus-shell-v11-mobile-installer';
+const VERSION='nexus-shell-v12-vm-lab';
 const SHELL=[
- './','./index.html','./plugin-hub/index.html','./nexus-install/index.html','./chatgpt-pc/index.html','./cloud-pc/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
+ './','./index.html','./plugin-hub/index.html','./nexus-install/index.html','./vm-lab/index.html','./vm-lab/vm.js','./chatgpt-pc/index.html','./cloud-pc/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
  './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
  './windows-lite/win7.svg','./windows-lite/win10.svg',
