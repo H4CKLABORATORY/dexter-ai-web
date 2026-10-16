@@ -21,4 +21,14 @@ jobs:
       - name: Unit tests (no paid providers)
         run: python -m unittest discover -s video-studio/tests -v
       - name: Verify Python syntax
-        run: python -m py_compile video-studio/studio.py video-studio/gui.py
+        run: python -m py_compile video-studio/studio.py video-studio/gui.py video-studio/reference_lab.py video-studio/editor.py
+      - name: Local media smoke test (no external models)
+        run: |
+          ffmpeg -hide_banner -loglevel error -f lavfi -i testsrc2=size=320x180:rate=15 -f lavfi -i sine=frequency=880 -t 2 -c:v libx264 -pix_fmt yuv420p -c:a aac -y /tmp/ffsample.mp4
+          python video-studio/studio.py prepare --name "Free Fire Demo" --source /tmp/ffsample.mp4
+          python video-studio/reference_lab.py init
+          python video-studio/reference_lab.py analyze --file /tmp/ffsample.mp4
+          python video-studio/editor.py plan --job free-fire-demo --platform tiktok --target 1.5
+          python video-studio/editor.py render --job free-fire-demo
+          test -s video-studio/jobs/free-fire-demo/exports/edit-tiktok.mp4
+
