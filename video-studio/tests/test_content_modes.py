@@ -55,6 +55,16 @@ class ContentModesTest(unittest.TestCase):
         self.assertEqual(x["mode"]["id"],new["id"])
         self.assertEqual(x["mode"]["platform"],"tiktok")
 
+    def test_catalog_match_finds_only_full_scripts(self):
+        self.assertIsNone(m.match_catalog_script("Cazando interesadas"))
+        folder=Path(self.tmp.name)/"match"
+        folder.mkdir()
+        (folder/"Cazando interesadas.txt").write_text("Historia con el guion completo.",encoding="utf-8")
+        m.import_folder(folder)
+        matched=m.match_catalog_script("Cazando interesadas")
+        self.assertTrue(matched["complete_text"])
+        self.assertTrue(Path(matched["path"]).is_file())
+
     def test_import_dedup(self):
         folder=Path(self.tmp.name)/"input"
         folder.mkdir()
