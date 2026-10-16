@@ -1,0 +1,24 @@
+name: Video Studio unit tests
+on:
+  pull_request:
+    paths:
+      - 'video-studio/**'
+      - '.github/workflows/video-studio-tests.yml'
+  push:
+    paths:
+      - 'video-studio/**'
+      - '.github/workflows/video-studio-tests.yml'
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit tests (no paid providers)
+        run: python -m unittest discover -s video-studio/tests -v
+      - name: Verify Python syntax
+        run: python -m py_compile video-studio/studio.py video-studio/gui.py
