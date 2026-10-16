@@ -67,11 +67,21 @@ a{color:#a8ffe7}.wrap{max-width:1080px;margin:auto;padding:22px 17px 90px}.topba
 </section>
 <aside>
 <section class="card">
-<h2>Windows 11 ARM, como en el video</h2>
-<p class="muted">Para experimentar con ARM64 en iPhone se necesita un emulador nativo como <strong>UTM SE</strong>. Safari y v86 no arrancan Windows 11 ARM. UTM SE es gratis, pero sin JIT: Windows moderno puede tardar mucho, congelarse o no ser práctico.</p>
-<div class="buttons"><a class="btn" href="https://apps.apple.com/us/app/utm-se-retro-pc-emulator/id1564628856" target="_blank" rel="noopener noreferrer">Instalar UTM SE ↗</a><a class="btn secondary" href="https://docs.getutm.app/installation/ios/" target="_blank" rel="noopener noreferrer">Documentación oficial ↗</a></div>
-<ol class="list"><li>Instala UTM SE en tu iPhone.</li><li>Crea una VM ARM64 dentro de UTM y añade tu imagen del sistema autorizada.</li><li>Inicia el sistema dentro de UTM, no en esta página.</li></ol>
-<p class="tip">La experiencia del video puede depender de configuración especial. No se ha verificado Windows 11 ni ChatGPT Desktop funcionando en este iPhone.</p>
+<h2>Preparar Windows 11 ARM64</h2>
+<p class="muted"><strong>Instalación nativa experimental.</strong> Windows 11 ARM64 no funciona en el emulador x86 de Safari. La ruta sin servidor es UTM SE para iPhone. Este panel prepara los enlaces oficiales; no significa que Windows esté instalado.</p>
+<div class="buttons">
+<a class="btn" href="https://apps.apple.com/us/app/utm-se-retro-pc-emulator/id1564628856" target="_blank" rel="noopener noreferrer">1 · Instalar UTM SE ↗</a>
+<a class="btn secondary" href="https://www.microsoft.com/en-us/software-download/windows11arm64" target="_blank" rel="noopener noreferrer">2 · Obtener ISO Windows ARM64 ↗</a>
+<a class="btn secondary" href="https://docs.getutm.app/guides/windows/" target="_blank" rel="noopener noreferrer">3 · Configurar máquina ↗</a>
+</div>
+<ol class="list">
+<li>Instala UTM SE desde App Store.</li>
+<li>Descarga la ISO oficial de Windows 11 ARM64 desde Microsoft en Archivos. Se requiere espacio libre considerable y licencia de Windows.</li>
+<li>En UTM SE crea una máquina emulada <strong>ARM64</strong>, adjunta tu ISO e intenta arrancar el instalador desde UTM.</li>
+<li>Solo después de que Windows funcione, abre la <a href="https://chatgpt.com/download/" target="_blank" rel="noopener noreferrer">descarga oficial de ChatGPT para Windows</a> e intenta instalarla dentro del sistema.</li>
+</ol>
+<div class="notice">Compatibilidad no verificada: la plantilla oficial de Windows 11 en UTM utiliza 8 GiB de RAM, más de lo que muchos iPhone pueden dedicar a una app. UTM SE carece de JIT, por lo que Windows 11 puede no arrancar o resultar demasiado lento. Ni Windows ni ChatGPT Desktop se han instalado en tu teléfono.</div>
+<p class="tip">Para usar plugins compatibles con iPhone sin Windows, utiliza <a href="../nexus-install/">NEXUS INSTALL</a>.</p>
 </section>
 <section class="card" style="margin-top:14px">
 <h2>Diagnóstico real</h2>
