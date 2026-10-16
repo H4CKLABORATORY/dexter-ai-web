@@ -1,7 +1,7 @@
 'use strict';
-const VERSION='nexus-shell-v7-mobile-plugin-planner';
+const VERSION='nexus-shell-v8-chatgpt-windows-bridge';
 const SHELL=[
- './','./index.html','./plugin-hub/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
+ './','./index.html','./plugin-hub/index.html','./chatgpt-pc/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
  './windows-lite/worker.js','./windows-lite/win7.webmanifest','./windows-lite/win10.webmanifest',
  './windows-lite/win7.svg','./windows-lite/win10.svg',
