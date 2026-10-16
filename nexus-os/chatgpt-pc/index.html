@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070a19">
+<title>NEXUS CHATGPT PC — Windows Bridge</title>
+<style>
+:root{font:15px system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff;--bg:#070a19;--card:#141f36;--line:#334663;--mint:#78f5d9;--muted:#b3c2da}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 85% 0%,#46378488,transparent 40%),radial-gradient(ellipse at 0 90%,#136b7255,transparent 48%),var(--bg)}
+main{max-width:1080px;margin:auto;padding:20px 18px 60px}.head{display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff20;padding-bottom:16px}
+.brand{color:var(--mint);font-size:12px;letter-spacing:.2em;font-weight:800}.back{font-size:13px;color:#d8e7ff;text-decoration:none;border:1px solid #526587;padding:10px 13px;border-radius:11px}
+.hero{padding:35px 0 14px}.eyebrow{font-size:11px;color:var(--mint);letter-spacing:.18em;font-weight:800}.hero h1{font-size:clamp(39px,8vw,65px);line-height:1.05;margin:12px 0;letter-spacing:-.065em}.hero h1 span{color:#afa2ff}
+.muted{color:var(--muted);line-height:1.68}.deck{max-width:775px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}.card{border:1px solid var(--line);background:linear-gradient(130deg,#1d2a45e6,#101a2fdc);border-radius:19px;padding:21px;min-width:0}
+h2{font-size:20px;margin:9px 0}.card p{font-size:14px;margin:12px 0}.big{font-size:29px}.flag{display:inline-block;border:1px solid #8de8d977;border-radius:50px;padding:5px 9px;font-size:11px;color:#a9f7e7;background:#12333a}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 15px;min-height:46px;border:0;border-radius:11px;background:var(--mint);color:#071e27;text-decoration:none;font:inherit;font-weight:850;cursor:pointer}
+.button.secondary{background:#263855;color:#eaf2ff;border:1px solid #536d91}.actions{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 2px}
+.steps{display:grid;gap:10px;margin:14px 0}.step{border:1px solid #3e4f6c;background:#0d172d;border-radius:13px;padding:13px;display:flex;align-items:flex-start;gap:11px}
+.step input{accent-color:#65d9bf;margin-top:5px;width:19px;height:19px;flex-shrink:0;cursor:pointer}
+.step strong{display:block;font-size:15px}.step p{margin:5px 0 0}
+.hint{font-size:12px}.warn{border-left:3px solid #f1c886;background:#2c281f77;padding:14px 17px;border-radius:0 11px 11px 0;color:#e6d6b9}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mode div{padding:11px;border:1px solid #4c6081;border-radius:12px;background:#141f34;font-size:13px}
+.status{font-size:13px;color:#a8f4df}kbd{padding:3px 6px;border:1px solid #516786;border-radius:5px;background:#0a1529;color:#fff}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #75ffe0;outline-offset:3px}
+@media(max-width:700px){.grid,.mode{grid-template-columns:1fr}.hero{padding-top:26px}.card{padding:17px}}
+</style></head><body><main>
+<header class="head"><div class="brand">⬡ DEXTER NEXUS OS / WINDOWS BRIDGE</div><a class="back" href="../">← Inicio</a></header>
+<section class="hero"><div class="eyebrow">NEXUS / CHATGPT NATIVE DESKTOP</div>
+<h1>Tu ChatGPT de <span>PC,</span> en el iPhone.</h1>
+<p class="muted deck">Una conexión real a una computadora Windows con la aplicación oficial de ChatGPT. No se emula ni sustituye ChatGPT Desktop con una página web. El iPhone recibe la pantalla de Windows y permite controlarla desde Safari.</p>
+<span class="flag">Preparado para conectar a un Windows real</span>
+</section>
+<div class="grid">
+<section class="card"><div class="big">⊞</div><h2>Instalar ChatGPT en Windows</h2>
+<p class="muted">Haz esto una sola vez en tu computadora Windows 10/11 o en una máquina virtual Windows que ya tengas. El instalador usa Microsoft Store; tú debes iniciar sesión.</p>
+<div class="actions">
+<a class="button" href="https://chatgpt.com/download/" target="_blank" rel="noopener noreferrer">Descargar ChatGPT oficial ↗</a>
+<a class="button secondary" href="https://github.com/H4CKLABORATORY/dexter-ai-web/blob/main/windows-chatgpt-bridge/setup-chatgpt.ps1" target="_blank" rel="noopener noreferrer">Script de instalación ↗</a></div>
+<p class="muted hint">El script de GitHub puede ejecutarse en PowerShell desde el propio Windows después de descargarlo y revisarlo. No instala el acceso remoto sin tu consentimiento.</p>
+</section>
+<section class="card"><div class="big">▣</div><h2>Abrir tu Windows desde Safari</h2>
+<p class="muted">DWService permite conectarte a una PC real desde un navegador. Para la conexión permanente, la máquina debe tener DWAgent instalado y estar encendida.</p>
+<div class="actions">
+<a class="button" href="https://www.dwservice.net/es/" target="_blank" rel="noopener noreferrer">Abrir Windows remoto ↗</a>
+<a class="button secondary" href="https://docs.dwservice.net/docs/site/dwservice-installation/how-do-i-install-the-agent/" target="_blank" rel="noopener noreferrer">Instalar DWAgent ↗</a></div>
+<p class="muted hint">La pantalla se abre en la página oficial de DWService; NEXUS no solicita ni almacena contraseñas, tokens ni datos de la sesión.</p>
+</section>
+</div>
+<section class="card"><div class="eyebrow">CONFIGURACIÓN GUIADA</div><h2>Conecta ChatGPT una sola vez</h2>
+<p class="muted">Marca los pasos que completaste. Estas marcas se guardan solo en el navegador de tu teléfono; no son una comprobación técnica de la conexión.</p>
+<div class="steps" id="checklist">
+<label class="step"><input type="checkbox" data-step="1"><span><strong>1. Tengo una computadora Windows real</strong><p class="muted">Puede ser tu PC personal o una VM Windows contratada en la nube.</p></span></label>
+<label class="step"><input type="checkbox" data-step="2"><span><strong>2. Instalé y abrí ChatGPT Desktop</strong><p class="muted">Desde Microsoft Store o la descarga oficial, dentro de ese Windows.</p></span></label>
+<label class="step"><input type="checkbox" data-step="3"><span><strong>3. Activé DWAgent en Windows</strong><p class="muted">Lo asocié con mi cuenta DWService personal y protegí el acceso.</p></span></label>
+<label class="step"><input type="checkbox" data-step="4"><span><strong>4. Entré a Windows desde el iPhone</strong><p class="muted">En DWService, seleccioné mi computadora y la función Screen/Pantalla.</p></span></label>
+<label class="step"><input type="checkbox" data-step="5"><span><strong>5. Abrí ChatGPT Desktop e inicié sesión</strong><p class="muted">Ya puedo acceder a los plugins compatibles con esta app, sujetos a permisos y al plan.</p></span></label>
+</div><div class="actions"><button id="reset" type="button" class="button secondary">Reiniciar lista</button><a class="button" href="https://www.dwservice.net/es/" target="_blank" rel="noopener noreferrer">Entrar a la PC ↗</a></div>
+<p id="progress" class="status" role="status" aria-live="polite">0 de 5 pasos marcados</p>
+</section>
+<section class="card" style="margin-top:14px"><div class="eyebrow">TIPOS DE COMPUTADORA</div><h2>¿Dónde funciona?</h2>
+<div class="mode"><div><b>Windows en tu casa</b><p class="muted">No necesita servidor de pago, pero la computadora debe permanecer encendida y conectada a internet.</p></div><div><b>Windows en la nube</b><p class="muted">Funciona sin tu PC personal, pero requiere aprovisionar una VM Windows real con almacenamiento persistente y normalmente facturación.</p></div></div>
+<p class="warn">Importante: NEXUS OS está alojado en un servidor web Linux, que no puede ejecutar la app oficial de ChatGPT para Windows. Esta página es el puente de acceso, no una PC creada ni un Windows remoto ya encendido. Habilita la verificación en dos pasos y nunca compartas el acceso a tu computadora.</p>
+<p class="muted hint">Puedes instalar un plugin «Desktop only» únicamente cuando la aplicación de escritorio y tu cuenta cumplen sus requisitos. La conexión a servicios de terceros sigue necesitando las autorizaciones correspondientes.</p>
+<a class="button secondary" href="../plugin-hub/">Volver al gestor de plugins →</a>
+</section></main>
+<script>
+'use strict';(()=>{
+const key='nexus-chatgpt-windows-checklist-v1',boxes=[...document.querySelectorAll('[data-step]')],progress=document.getElementById('progress');
+function save(){const done=boxes.filter(x=>x.checked).map(x=>x.dataset.step);try{localStorage.setItem(key,JSON.stringify(done))}catch{}render()}
+function render(){const count=boxes.filter(x=>x.checked).length;progress.textContent=count+' de '+boxes.length+' pasos marcados (no verificados por NEXUS).'}
+try{const done=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(done))boxes.forEach(x=>x.checked=done.includes(x.dataset.step))}catch{}
+boxes.forEach(x=>x.addEventListener('change',save));
+document.getElementById('reset').addEventListener('click',()=>{boxes.forEach(x=>x.checked=false);save()});render();
+})();
+</script>
+</body></html>
