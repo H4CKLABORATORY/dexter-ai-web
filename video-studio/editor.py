@@ -156,6 +156,17 @@ def plan(args):
         original_subtitles = parse_srt(subtitle_file.read_text(encoding="utf-8-sig"))
     remapped = remap_captions(original_subtitles, clips)
     memes = suggest_memes(remapped)
+    script_sections = []
+    script_source = None
+    if args.script:
+        script_file = lab.safe_existing(args.script, {".txt", ".md"})
+        script_source = str(script_file)
+        raw_text = script_file.read_text(encoding="utf-8-sig")
+        script_sections = [
+            {"order": number, "text": block[:1200], "needs_timing_alignment": True}
+            for number, block in enumerate(re.split(r"\n\s*\n", raw_text), 1)
+            if block.strip()
+        ]
     style = lab.initialize()
     edition = {
         "source": str(src),
@@ -164,6 +175,8 @@ def plan(args):
         "layout": args.layout,
         "clips": clips,
         "captions": remapped,
+        "script_source": script_source,
+        "script_sections": script_sections,
         "meme_suggestions": memes,
         "meme_events_approved": [],
         "voiceover": None,
@@ -344,6 +357,7 @@ def parser():
     q=subs.add_parser("plan")
     q.add_argument("--job",required=True)
     q.add_argument("--srt")
+    q.add_argument("--script")
     q.add_argument("--platform",choices=studio.PRESETS,default="tiktok")
     q.add_argument("--kind",choices=["short","long"],default="short")
     q.add_argument("--layout",choices=["fit","crop"],default="fit")
