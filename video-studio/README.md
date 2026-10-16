@@ -53,3 +53,67 @@ Documentación fuente:
 Este script no descarga material ajeno, no publica a YouTube/TikTok, no expone servidores, no contacta la nube y no guarda tokens. No subas videos, secretos ni archivos config.toml al repositorio. FFmpeg funciona localmente; OpenCreator puede enviar datos a proveedores al activar su ejecución real.
 
 Flujo: grabar Free Fire → preparar proyecto → completar brief.md → exportar horizontal y vertical → opcional OpenCreator para subtítulos y miniaturas → revisar manualmente → publicar manualmente.
+
+
+## Modo Free Fire — biblioteca de estilo y editor de referencia
+
+La biblioteca vive sólo en TU PC, en video-studio/library/ (excluida de GitHub). No subas guiones privados, memes, audio ni videos. Inicialízala:
+
+~~~powershell
+py -3 reference_lab.py init
+py -3 reference_lab.py add --kind script --file "D:\Guiones\cazando-interesadas.txt"
+py -3 reference_lab.py add --kind reference --file "D:\Referencias\ejemplo-edit.mp4"
+py -3 reference_lab.py add --kind meme --file "D:\Memes\sorpresa.png" --tags "sorpresa,confusion" --license owned
+py -3 reference_lab.py analyze
+~~~
+
+Opcional: importar tu TikTok público **sin eludir restricciones**, sólo material propio o con permiso. Requiere tener yt-dlp instalado. Se descargan **máximo 8 videos por defecto**; sin cookies ni accesos privados. TikTok puede bloquear o modificar su funcionamiento, por lo que es más fiable proporcionar MP4 de tus propios videos.
+
+~~~powershell
+py -3 reference_lab.py tiktok --url "https://www.tiktok.com/@TU_CUENTA" --name "mis-videos" --limit 8 --authorized
+~~~
+
+El análisis de referencia identifica duración, formato, cambios de escena aproximados, silencios y ritmo de montaje. Si adjuntas un archivo .srt con el mismo nombre que el MP4, calcula métricas de subtítulos. **NO interpreta automáticamente memes, posición de texto, quién habla ni copia ninguna voz**. Es un diagnóstico técnico, no una lectura multimodal inteligente.
+
+### Transcribe tu gameplay sin pagar a una API
+
+Instala opcionalmente faster-whisper (modelo gratuito/local; la primera descarga necesita Internet y almacenamiento). En tu PC puedes usar CPU, o GPU CUDA con requisitos adicionales.
+
+~~~powershell
+py -3 -m pip install faster-whisper
+py -3 reference_lab.py transcribe --file "D:\Grabaciones\freefire.mp4" --output "D:\Grabaciones\freefire.srt" --language es --model small
+~~~
+
+Transcribe para generar tiempos de subtítulos de TU voz. Revisa nombres propios, puntuación y palabras de Free Fire.
+
+### Crear un plan editable y exportar la edición
+
+~~~powershell
+py -3 editor.py plan --job cazando-interesadas-01 --platform tiktok --layout fit --target 30 --remove-silences --srt "D:\Grabaciones\freefire.srt" --script "D:\Guiones\cazando-interesadas.txt"
+~~~
+
+Se genera jobs/cazando-interesadas-01/edit-plan.json con cortes, subtítulos, secciones de guion, memes sugeridos y avisos de revisión. Los cortes automáticos quitan silencios, **no identifican jugadas emocionantes ni humor**. Si no hay SRT, no hay subtítulos sincronizados.
+
+Las sugerencias de meme vienen de etiquetas que tú colocas en imágenes de tu biblioteca. **No se insertan sin aprobación:** copia eventos de meme_suggestions a meme_events_approved en el JSON para que aparezcan en el video.
+
+~~~powershell
+py -3 editor.py render --job cazando-interesadas-01 --burn-captions
+~~~
+
+Se exporta un MP4 con los cortes elegidos, tu audio original, subtítulos incrustados y **memes de imagen** aprobados. FFmpeg debe tener soporte libass para incrustar subtítulos. Los memes de audio/video, selección semántica de momentos y posicionamiento visual automático se reservan para una fase posterior. Si editas el plan, vuelve a exportar con --overwrite.
+
+### Voz femenina en shorts (opcional)
+
+- Puedes usar una **voz sintética instalada en Windows** a través de pyttsx3, sin clonar a otra creadora.
+- Las voces disponibles dependen de tu PC. Instala pyttsx3 con py -3 -m pip install pyttsx3 y consulta py -3 editor.py voices.
+- Genera una pista desde tu guion: py -3 editor.py narrate --job cazando-interesadas-01 --script "D:\Guiones\narracion.txt" --voice "ID_DE_VOZ_INSTALADA".
+- Después registra la ruta de narration.wav en la propiedad voiceover del plan JSON. El render mezcla esa pista con el audio original a un volumen menor. Esta versión lee el texto seguido, no alinea cada oración automáticamente.
+- También puedes utilizar una locución femenina que tengas permiso de usar. Una voz de un TikTok no se clona ni se reutiliza sin autorización.
+
+### Interfaz visual
+
+Ejecuta py -3 gui.py. La ventana permite seleccionar tu grabación, preparar proyecto, guardar referencias, analizar la biblioteca, seleccionar guion/SRT, crear el plan y exportar el video. Para enlaces TikTok, transcripción local y narración, usa los comandos documentados.
+
+### Lo que falta para edición profesional totalmente automática
+
+Se necesita un modelo multimodal compatible para interpretar personajes, eventos, chistes, texto en pantalla y comparar en detalle los ejemplos con tus nuevos videos. También se necesita un modelo de alineación para narración escena por escena y un editor de timeline visual para revisar. **Estas funciones no están conectadas hoy**, y no es correcto afirmar que el editor ya puede aprender todo un canal de TikTok por sí solo.
