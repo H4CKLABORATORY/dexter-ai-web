@@ -44,3 +44,27 @@ jobs:
         run: |
           python video-studio/editor.py render --job free-fire-demo
           test -s video-studio/jobs/free-fire-demo/exports/edit-tiktok.mp4
+      - name: Create installable source ZIP (no private videos)
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          root = Path('video-studio')
+          archive = Path('dexter-video-studio-v2.zip')
+          with ZipFile(archive, 'w', ZIP_DEFLATED) as z:
+              for path in root.rglob('*'):
+                  if not path.is_file():
+                      continue
+                  relative = path.relative_to(root)
+                  if any(x in ('library', 'jobs', '__pycache__') for x in relative.parts):
+                      continue
+                  if path.suffix == '.pyc':
+                      continue
+                  z.write(path, arcname=path.as_posix())
+          print('Paquete:', archive, 'bytes:', archive.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dexter-video-studio-freefire-v2
+          path: dexter-video-studio-v2.zip
+          if-no-files-found: error
