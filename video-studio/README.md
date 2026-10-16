@@ -121,3 +121,47 @@ Se necesita un modelo multimodal compatible para interpretar personajes, eventos
 ### Crear la guía de estilo a partir de la biblioteca
 
 Con los videos de referencia analizados y los guiones/memes importados, ejecuta `py -3 style_report.py` o usa el botón **Generar guía de estilo**. Crea `library/EDITING_STYLE_GUIDE.md` con vocabulario real, duración mediana aproximada de escenas, formatos y reglas de edición. El archivo puede adjuntarse como contexto al agente de OpenCreator/Codex. No es un modelo entrenado ni implica que se hayan comprendido visualmente los videos.
+
+
+## Pestaña NUEVOS CONTENIDOS: expansión sin reprogramar
+
+Abre la aplicación Windows con py -3 gui.py. Tiene dos pestañas:
+- Mi edición / Free Fire: mantiene los procesos de grabación, referencias, guion, subtítulos, render y exportación.
+- Nuevos contenidos y métodos: selecciona un método existente o registra uno nuevo con nombre, palabras clave, objetivo, plataforma, tipo de encuadre y duración.
+
+### Funcionamiento
+
+1. Al preparar un proyecto el programa revisa el **título, el nombre del video y el texto del guion realmente disponible**. No afirma haber visto las imágenes ni escuchado audio a menos que se procese por otro módulo.
+2. El clasificador usa reglas y puntuaciones explicables. Ante señales fuertes y diferenciadas asigna el modo. Si son insuficientes o contradictorias, pregunta el tipo de contenido, su objetivo y si irá a YouTube, Shorts o TikTok.
+3. El usuario puede seleccionar un método manualmente; su elección tiene prioridad sobre la clasificación automática.
+4. Guarda la elección en jobs/<slug>/project.json para ese proyecto. En videos largos adapta el plan de edición para mantener su duración; en cortos propone inicialmente un recorte de hasta 30 segundos. La selección final de escenas y memes sigue requiriendo criterio editorial.
+5. Los nuevos métodos se almacenan en **library/content_methods.json** y se reconocen por sus propias palabras clave. No ejecutan scripts externos ni prometen nueva capacidad de IA.
+
+### Conocimiento de estilo recuperado
+
+Al inicializar la biblioteca se genera (sólo si no existe, nunca se sobrescribe) **library/dexter_knowledge.json**, una base editable con estilo de narración de Dexter FF, el vocabulario latino, formato Free Fire, historias, humor, subtítulos, memes y reglas de no alterar personajes/outfits. Otro archivo **library/script_catalog.json** diferencia estrictamente:
+- known_titles_only: **nombres de guiones recordados** de conversaciones anteriores (sin texto).
+- entries: **guiones reales completos** importados por ti desde archivos locales, con huella SHA256 para evitar duplicados.
+
+El sistema NO afirma tener todas las transcripciones de conversaciones anteriores; las que no están en archivos disponibles se deben importar una vez. No inventa el contenido faltante ni lo sube a GitHub. Se puede generar **library/EDITING_STYLE_GUIDE.md**, reutilizable como contexto al trabajar con Codex/OpenCreator.
+
+### Importa los guiones completos en un solo lote
+
+En la segunda pestaña, pulsa Importar carpeta de guiones. Admite archivos .txt, .md y .srt con UTF-8. También en consola:
+
+~~~powershell
+py -3 content_modes.py init
+py -3 content_modes.py import-scripts --folder "D:\MisGuiones"
+py -3 content_modes.py classify --title "Free Fire Cazando interesadas" --script "D:\MisGuiones\cazando-interesadas.txt"
+~~~
+
+Protege la biblioteca, no publica guiones ni credenciales en GitHub. Si el título de un proyecto coincide con un guion realmente importado (similitud alta), la ventana selecciona automáticamente ese archivo de texto para crear su plan.
+
+### Añadir métodos a futuro sin alterar código
+
+~~~powershell
+py -3 content_modes.py add-mode --name "Entrevistas" --keywords "entrevista,preguntas,invitado" --platform youtube --layout fit --length long --goal "conversación"
+py -3 content_modes.py classify --title "Entrevista preguntas invitado"
+~~~
+
+La detección es una **clasificación local por palabras**. Para conocer eventos de gameplay, apariciones de texto en pantalla, emociones y ritmo de memes se necesitará integrar un sistema audiovisual multimodal adicional y revisar los resultados. No se habilita un proveedor de pago sin decisión tuya.
