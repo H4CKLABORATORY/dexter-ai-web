@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='nexus-shell-v9-cloud-pc-launcher';
+const VERSION='nexus-shell-v10-free-remote-pc';
 const SHELL=[
  './','./index.html','./plugin-hub/index.html','./chatgpt-pc/index.html','./cloud-pc/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
