@@ -75,7 +75,9 @@ class StudioGUI:
         ttk.Label(rurl, text="Link TikTok público", width=23).pack(side="left")
         ttk.Entry(rurl, textvariable=self.tiktok_url).pack(side="left", fill="x", expand=True)
         ttk.Button(rurl, text="Importar", command=self.import_tiktok).pack(side="left", padx=5)
-        ttk.Button(frame, text="Analizar biblioteca (escenas/silencios)", command=self.analyze_references).pack(anchor="w", pady=4)
+        ar=ttk.Frame(frame); ar.pack(anchor="w",pady=4)
+        ttk.Button(ar, text="Analizar biblioteca", command=self.analyze_references).pack(side="left")
+        ttk.Button(ar, text="Generar guía de estilo", command=self.style_guide).pack(side="left",padx=8)
         self.file_picker_row(frame, "Guion (.txt/.md)", self.script_file, "script")
         rlibrary = ttk.Frame(frame); rlibrary.pack(anchor="w", pady=4)
         ttk.Button(rlibrary, text="Guardar guion", command=self.save_script).pack(side="left")
@@ -216,6 +218,9 @@ class StudioGUI:
 
     def analyze_references(self):
         self.execute(["analyze"], runner="reference_lab.py")
+
+    def style_guide(self):
+        self.execute([],runner="style_report.py")
 
     def auto_plan(self):
         if not self.job.get():
