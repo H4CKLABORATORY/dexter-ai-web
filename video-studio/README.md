@@ -117,3 +117,7 @@ Ejecuta py -3 gui.py. La ventana permite seleccionar tu grabación, preparar pro
 ### Lo que falta para edición profesional totalmente automática
 
 Se necesita un modelo multimodal compatible para interpretar personajes, eventos, chistes, texto en pantalla y comparar en detalle los ejemplos con tus nuevos videos. También se necesita un modelo de alineación para narración escena por escena y un editor de timeline visual para revisar. **Estas funciones no están conectadas hoy**, y no es correcto afirmar que el editor ya puede aprender todo un canal de TikTok por sí solo.
+
+### Crear la guía de estilo a partir de la biblioteca
+
+Con los videos de referencia analizados y los guiones/memes importados, ejecuta `py -3 style_report.py` o usa el botón **Generar guía de estilo**. Crea `library/EDITING_STYLE_GUIDE.md` con vocabulario real, duración mediana aproximada de escenas, formatos y reglas de edición. El archivo puede adjuntarse como contexto al agente de OpenCreator/Codex. No es un modelo entrenado ni implica que se hayan comprendido visualmente los videos.
