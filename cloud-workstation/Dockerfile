@@ -4,7 +4,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/home/nexus
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates curl wget git gnupg apt-transport-https \
-  nginx apache2-utils tini ttyd \
+  nginx apache2-utils tini build-essential cmake pkg-config \
+  libjson-c-dev libwebsockets-dev libuv1-dev libssl-dev zlib1g-dev \
+  && git clone --quiet --depth=1 --branch 1.7.7 https://github.com/tsl0922/ttyd.git /tmp/ttyd \
+  && cmake -S /tmp/ttyd -B /tmp/ttyd/build -DCMAKE_BUILD_TYPE=Release \
+  && cmake --build /tmp/ttyd/build -j 2 \
+  && cmake --install /tmp/ttyd/build \
+  && rm -rf /tmp/ttyd \
   && wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb \
   && dpkg -i /tmp/packages-microsoft-prod.deb \
   && rm -f /tmp/packages-microsoft-prod.deb \
