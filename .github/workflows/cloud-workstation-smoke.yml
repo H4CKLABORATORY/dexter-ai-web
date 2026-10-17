@@ -1,0 +1,59 @@
+name: Verify authenticated cloud workstation
+on:
+  push:
+    paths:
+      - 'cloud-workstation/**'
+      - '.github/workflows/cloud-workstation-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check shell script syntax
+        run: sh -n cloud-workstation/launch.sh
+      - name: Build workstation Docker image on a remote GitHub runner
+        run: docker build --progress=plain -f cloud-workstation/Dockerfile -t dexter-cloud-workstation:smoke .
+      - name: Verify actual PowerShell 7 installation
+        run: |
+          docker run --rm --entrypoint pwsh dexter-cloud-workstation:smoke -NoLogo -NoProfile -Command '$PSVersionTable.PSVersion.ToString()'
+      - name: Boot private workstation
+        run: |
+          docker run -d --name dexter-smoke -p 127.0.0.1:18080:10000 \
+            -e NEXUS_PASSWORD='TEST-ONLY-CI-PASSWORD-DoNotReuse-2026' \
+            dexter-cloud-workstation:smoke
+      - name: Verify authorization, portal, shell and OpenCode
+        run: |
+          set -eu
+          BASE=http://127.0.0.1:18080
+          PASS=TEST-ONLY-CI-PASSWORD-DoNotReuse-2026
+          for i in $(seq 1 90); do
+            if curl -fsS --max-time 2 "$BASE/health" >/dev/null; then break; fi
+            sleep 2
+          done
+          curl -fsS "$BASE/health"
+          unauth=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/portal/")
+          test "$unauth" = 401 || { echo "SECURITY FAILURE: unauthenticated portal HTTP $unauth"; exit 1; }
+          curl -fsS -u "nexus:$PASS" "$BASE/portal/" | grep -q 'Tu computadora remota'
+          for i in $(seq 1 60); do
+            shell=$(curl -sS -o /dev/null -w '%{http_code}' -u "nexus:$PASS" "$BASE/shell/" || true)
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -u "nexus:$PASS" "$BASE/app/" || true)
+            if [ "$shell" = 200 ] && [ "$code" = 200 ]; then
+              echo "Authenticated terminal and OpenCode HTTP endpoints OK"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Service readiness failed: shell=$shell opencode=$code" >&2
+          exit 1
+      - name: Show startup diagnostics only on failure
+        if: failure()
+        run: docker logs dexter-smoke 2>&1 | tail -80 || true
+      - name: Stop smoke container
+        if: always()
+        run: docker rm -f dexter-smoke || true
