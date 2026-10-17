@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d18"><meta name="description" content="PowerShell 7 real en el navegador del iPhone mediante GitHub Codespaces, sin PC física.">
+<title>NEXUS PowerShell Cloud — iPhone</title>
+<style>
+:root{color-scheme:dark;font:15px system-ui,-apple-system,"Segoe UI",sans-serif;--ink:#edf9ff;--muted:#a7bcce;--cyan:#6ef6e2}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 20% -15%,#006e794f,transparent 58%),radial-gradient(ellipse at 90% 30%,#332e8950,transparent 45%),#080e1b}
+main{max-width:840px;margin:auto;padding:24px 19px 82px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{font-size:12px;color:var(--cyan);letter-spacing:.12em;font-weight:850}.back{color:#caeafc;text-decoration:none;border:1px solid #42566b;padding:9px 12px;border-radius:10px}
+h1{font-size:clamp(38px,8vw,65px);line-height:1.04;letter-spacing:-.06em;margin:32px 0 15px}h1 span{color:var(--cyan)}h2{font-size:21px;margin:0 0 11px}p{line-height:1.65}.muted{color:var(--muted)}.eyebrow{display:inline-block;border:1px solid #5ae6d96b;background:#16403b65;color:#91ffeb;border-radius:99px;padding:6px 11px;font-size:12px;font-weight:700;margin-top:24px}
+.card{border:1px solid #3b5470;border-radius:18px;padding:20px;margin:20px 0;background:linear-gradient(130deg,#17293f,#101729);box-shadow:0 8px 22px #00000023}.primary{border-color:#54ebd27d}
+.action{display:inline-flex;min-height:48px;align-items:center;justify-content:center;padding:12px 18px;background:var(--cyan);color:#031c24;border-radius:12px;font-weight:850;text-decoration:none;text-align:center;margin:8px 8px 0 0}.action.secondary{background:#2a3f60;color:#eaf7ff;border:1px solid #526a8a}
+pre{white-space:pre-wrap;word-break:break-word;background:#040b14;border:1px solid #354862;color:#afffe8;border-radius:11px;padding:15px;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;user-select:text}
+ol{padding-left:23px;color:#d2e2f2;line-height:1.65}li{padding-bottom:12px}.steps{display:grid;grid-template-columns:1fr 1fr;gap:12px}.badge{font-size:11px;color:#a1ffc9;background:#153b30;padding:5px 9px;border-radius:99px}
+.note{border-left:3px solid #e5bb74;color:#e9d7b8;background:#3a2e2138;padding:12px 15px;border-radius:0 9px 9px 0}
+details{border:1px solid #354c65;border-radius:13px;padding:14px;margin:12px 0;background:#111f35}summary{cursor:pointer;font-weight:750}
+.copy{background:#284765;color:#e7fcff;border:1px solid #51778b;border-radius:9px;padding:10px 14px;min-height:44px;font-weight:700}
+:focus-visible{outline:2px solid #91ffe8;outline-offset:3px}@media(max-width:620px){.steps{grid-template-columns:1fr}.action{width:100%;margin-right:0}}
+</style></head>
+<body><main>
+<header class="top"><div class="brand">⬡ DEXTER NEXUS OS / CLOUD SHELL</div><a class="back" href="../">← Inicio</a></header>
+<div class="eyebrow">PowerShell auténtico · Linux en la nube · Acceso desde Safari</div>
+<h1>Tu <span>PowerShell</span> en el iPhone.</h1>
+<p class="muted">Sin PC física. Abre una máquina virtual de GitHub Codespaces, entra a su terminal y ejecuta PowerShell 7 auténtico, Git, Node.js y OpenCode. No es una copia de Windows: los programas .exe de Windows y sus controladores no funcionan aquí como en una PC.</p>
+<section class="card primary">
+<h2>Iniciar computadora virtual</h2>
+<p class="muted">Usa el repositorio del proyecto DEXTER. PowerShell y Node.js están configurados para instalarse en tu Codespace. Es necesario iniciar sesión en GitHub y confirmar la creación del entorno.</p>
+<a class="action" href="https://codespaces.new/H4CKLABORATORY/dexter-ai-web?quickstart=1" target="_blank" rel="noopener noreferrer">Abrir PowerShell Cloud ↗</a>
+<a class="action secondary" href="https://github.com/codespaces" target="_blank" rel="noopener noreferrer">Mis máquinas virtuales ↗</a>
+<p class="muted"><small>GitHub ofrece cuota gratuita mensual para cuentas personales, pero no una VM ilimitada 24/7. La máquina puede detenerse por inactividad o al agotarse la cuota.</small></p>
+</section>
+<div class="steps">
+<section class="card"><h2>1. Terminal real</h2>
+<p class="muted">Una vez que abra VS Code dentro del navegador de tu iPhone, busca <b>Terminal → New Terminal</b>. Debería iniciarse PowerShell automáticamente. También puedes escribir:</p>
+<pre>pwsh
+$PSVersionTable
+Get-Location
+Get-ChildItem</pre>
+<button class="copy" data-copy="pwsh">Copiar comando de inicio</button>
+</section>
+<section class="card"><h2>2. Abrir servidor OpenCode</h2>
+<p class="muted">Ejecuta el script incluido. Solicita una contraseña y abre el servidor en el puerto 4096. No muestra una dirección inventada.</p>
+<pre>pwsh -File ./scripts/start-opencode-mobile.ps1</pre>
+<button class="copy" data-copy="pwsh -File ./scripts/start-opencode-mobile.ps1">Copiar comando del servidor</button>
+</section>
+</div>
+<section class="card"><h2>3. Conseguir la URL del iPhone</h2>
+<ol>
+<li>En el Codespace abre la pestaña <b>PORTS / PUERTOS</b> y localiza el puerto <b>4096</b>.</li>
+<li>Copia su enlace HTTPS, similar a <code>https://nombre-del-codespace-4096.app.github.dev</code>. <b>Este texto es un ejemplo, no una URL activa.</b></li>
+<li>El puerto es privado por defecto. Algunas apps externas de OpenCode Mobile no pueden autenticarse con la sesión GitHub de un puerto privado. Para conexiones externas puede ser necesario hacerlo público, <b>solo con la contraseña fuerte del servidor activada</b>. Esto expone el servicio a Internet y conlleva riesgos.</li>
+<li>En OpenCode Mobile introduce la URL real. Si tu versión necesita un plugin con túnel y QR, revisa los pasos siguientes.</li>
+</ol>
+<div class="note"><b>Seguridad:</b> nunca publiques claves ni tokens en el repositorio. No compartas la contraseña de la terminal o el enlace de acceso. Si el cliente móvil no acepta autenticación HTTP Basic, no desactives la contraseña para forzar una conexión.</div>
+</section>
+<details><summary>La aplicación me pide código QR y plugin /mobile</summary>
+<p class="muted">La app que muestra “Install the OpenCode plugin” podría requerir el complemento separado <b>opencode-mobile</b>. En la terminal del Codespace ejecuta el instalador del proyecto y configura el túnel que te indique. Después inicia OpenCode y usa <b>/mobile</b> para obtener el QR o la URL. Ese túnel es distinto del puerto de Codespaces.</p>
+<pre>npx opencode-mobile install
+opencode
+# Dentro de OpenCode escribe: /mobile</pre>
+<p class="muted">Verifica el complemento que utiliza tu versión de la app antes de concederle acceso. Un Codespace no proporciona un servidor permanente ni garantiza que el plugin funcione sin configurar un túnel.</p>
+</details>
+<details><summary>¿Puedo instalar PowerShell directamente en iOS sin nube?</summary>
+<p class="muted">Puedes instalar un terminal Unix local, como a-Shell, para ejecutar comandos compatibles, Python, Git y otras herramientas disponibles para iOS. No equivale a PowerShell 7 ni ejecuta programas Windows. Para PowerShell real sin PC física, aquí usamos la máquina virtual en la nube.</p>
+<a class="action secondary" href="https://apps.apple.com/us/app/a-shell/id1473805438" target="_blank" rel="noopener noreferrer">Ver a-Shell gratis ↗</a>
+</details>
+<p class="muted">Estado: <span class="badge">Configuración lista en GitHub</span> · El Codespace y OpenCode deben iniciarse desde tu cuenta GitHub. La web no asegura que exista una máquina activa.</p>
+<script>
+document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{
+ const value=button.dataset.copy;
+ try{await navigator.clipboard.writeText(value);button.textContent='Copiado ✓';}
+ catch{button.textContent='Selecciona el comando arriba para copiar';}
+}));
+</script>
+</main></body></html>
