@@ -8,6 +8,12 @@ if [ "${#NEXUS_PASSWORD}" -lt 20 ]; then
 fi
 mkdir -p /workspace /home/nexus/.config/opencode
 chown -R nexus:nexus /workspace /home/nexus
+# Public project checkout, restored on each fresh free-instance boot.
+if [ ! -d /workspace/dexter-ai-web/.git ]; then
+  runuser -u nexus -- git clone --quiet --depth 1 \
+    https://github.com/H4CKLABORATORY/dexter-ai-web.git \
+    /workspace/dexter-ai-web || echo "WARNING: automatic public repository clone failed" >&2
+fi
 # Hash password using bcrypt. Never print it into logs.
 printf '%s\n' "$NEXUS_PASSWORD" | htpasswd -icB /etc/nginx/.nexuspasswd nexus >/dev/null
 chmod 600 /etc/nginx/.nexuspasswd
