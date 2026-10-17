@@ -1,0 +1,32 @@
+{
+  "name": "DEXTER NEXUS • PowerShell Cloud",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/powershell:2": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "postCreateCommand": "npm install --global opencode-ai",
+  "forwardPorts": [
+    4096
+  ],
+  "portsAttributes": {
+    "4096": {
+      "label": "OpenCode Mobile (privado inicialmente)",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "PowerShell",
+        "terminal.integrated.profiles.linux": {
+          "PowerShell": {
+            "path": "pwsh"
+          }
+        }
+      }
+    }
+  }
+}
