@@ -213,7 +213,8 @@ function renderPaint(body){
  para(body,'Puedes guardarlo como PNG en Archivos. Las imágenes no se suben a Internet.','hint');
 }
 function renderTerminal(body){
- body.replaceChildren();para(body,'Comandos de demostración; esta consola no da acceso al sistema operativo de Apple.');
+ body.replaceChildren();para(body,'Esta consola es local y limitada. Para ejecutar PowerShell 7 real sin PC física, abre DEXTER PowerShell Cloud.');
+ const link=mk('a','↗ Abrir PowerShell REAL en la nube');link.href='../powershell-mobile/';link.target='_blank';link.rel='noopener noreferrer';link.style.cssText='display:inline-flex;background:#23c5ab;color:#071a23;text-decoration:none;font-weight:800;border-radius:10px;padding:12px;margin:8px 0 13px';body.append(link);
  const output=mk('div','NEXUS WINDOWS '+edition+' LITE WEB SHELL\nEscribe help para comandos disponibles.\n\n','terminal-output');body.append(output);
  const input=field(body,'','> help');input.setAttribute('aria-label','Comando de terminal');
  const run=()=>{
