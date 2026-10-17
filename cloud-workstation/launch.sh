@@ -16,7 +16,8 @@ if [ ! -d /workspace/dexter-ai-web/.git ]; then
 fi
 # Hash password using bcrypt. Never print it into logs.
 printf '%s\n' "$NEXUS_PASSWORD" | htpasswd -icB /etc/nginx/.nexuspasswd nexus >/dev/null
-chmod 600 /etc/nginx/.nexuspasswd
+chgrp www-data /etc/nginx/.nexuspasswd
+chmod 640 /etc/nginx/.nexuspasswd
 # ttyd runs only on loopback; nginx provides authenticated public TLS endpoint.
 runuser -u nexus -- env HOME=/home/nexus ttyd \
   --interface 127.0.0.1 --port 7681 --writable --base-path /shell \
