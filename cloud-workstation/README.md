@@ -15,6 +15,20 @@ Runs on a remote server; Safari on iPhone is only the thin client.
 - OpenCode API also resides at the service root (reverse-proxy protected).
 - `/health` is intentionally non-sensitive, and reports gateway readiness, not an end-to-end service health result.
 
+## PowerShell from iPhone (no jailbreak)
+
+The server installs `mobile-profile.ps1` as the **real PowerShell 7** profile. Open the private `/portal/` page on Safari and tap one of the copyable commands, then paste it into `/shell/`:
+
+- `nexus-help`: discover commands.
+- `nexus-repo`: jump to the checked-out DEXTER repository.
+- `nexus-status`: report actual PowerShell version, tools and Git working tree status.
+- `nexus-recent`: show recent commits, when the Git checkout exists.
+- `nexus-files`: list files in the working directory.
+
+These commands **do not auto-execute from the portal** and do not claim to accelerate hardware. PSReadLine command predictions and audible bell are disabled when supported to minimize mobile-terminal visual noise. If the profile cannot load, the shell still launches.
+
+**checkra1n is not integrated:** it is a jailbreak for older A7-A11 devices, does not work on recent iPhones such as iPhone 14, and cannot improve performance of a remote Linux PowerShell process. Reference: https://checkra.in/ and https://github.com/checkra1n/BugTracker/issues/1.
+
 ## Security boundaries
 - Never expose ttyd or OpenCode without authentication. Without `NEXUS_PASSWORD`, the container refuses to start.
 - HTTPS is terminated by Render. NGINX enforces bcrypt HTTP Basic authentication throughout the service (except health). OpenCode enforces its own Basic auth.
