@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -f /etc/nginx/sites-enabled/default
 COPY cloud-workstation/nginx.conf /etc/nginx/conf.d/nexus.conf
 COPY cloud-workstation/launch.sh /usr/local/bin/nexus-workstation-start
+COPY --chown=nexus:nexus cloud-workstation/mobile-profile.ps1 /home/nexus/.config/powershell/Microsoft.PowerShell_profile.ps1
 COPY cloud-workstation/portal/ /usr/share/nginx/html/portal/
 RUN chmod 755 /usr/local/bin/nexus-workstation-start
 EXPOSE 10000
