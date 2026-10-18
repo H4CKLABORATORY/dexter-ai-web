@@ -44,9 +44,10 @@ jobs:
           for (const command of ['nexus-help', 'nexus-repo', 'nexus-status', 'nexus-recent', 'nexus-files']) {
             if (!html.includes('data-copy="' + command + '"')) throw Error('Mobile button missing: ' + command);
           }
-          const script = html.match(/<script>([\\s\\S]*?)<\\/script>/);
-          if (!script) throw Error('Missing copy handler');
-          new vm.Script(script[1]);
+          const start = html.indexOf('<script>');
+          const end = html.indexOf('</script>', start + 8);
+          if (start < 0 || end < 0) throw Error('Missing copy handler');
+          new vm.Script(html.slice(start + 8, end));
           NODE
       - name: Boot private workstation
         run: |
