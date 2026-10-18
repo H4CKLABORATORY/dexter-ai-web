@@ -22,6 +22,32 @@ jobs:
       - name: Verify actual PowerShell 7 installation
         run: |
           docker run --rm --entrypoint pwsh dexter-cloud-workstation:smoke -NoLogo -NoProfile -Command '$PSVersionTable.PSVersion.ToString()'
+      - name: Validate mobile PowerShell profile commands
+        run: |
+          docker run --rm --entrypoint pwsh dexter-cloud-workstation:smoke -NoLogo -NoProfile -Command '
+            $ErrorActionPreference = "Stop"
+            . /home/nexus/.config/powershell/Microsoft.PowerShell_profile.ps1
+            $required = @("nexus-help", "nexus-repo", "nexus-status", "nexus-recent", "nexus-files")
+            foreach ($name in $required) {
+              if (-not (Get-Command $name -CommandType Function -ErrorAction SilentlyContinue)) { throw "Missing: $name" }
+            }
+            $helpText = nexus-help
+            if ($helpText -notmatch "iPhone") { throw "Profile help unavailable" }
+            nexus-status
+          '
+      - name: Validate portal mobile command buttons
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+          const html = fs.readFileSync('cloud-workstation/portal/index.html', 'utf8');
+          for (const command of ['nexus-help', 'nexus-repo', 'nexus-status', 'nexus-recent', 'nexus-files']) {
+            if (!html.includes('data-copy="' + command + '"')) throw Error('Mobile button missing: ' + command);
+          }
+          const script = html.match(/<script>([\\s\\S]*?)<\\/script>/);
+          if (!script) throw Error('Missing copy handler');
+          new vm.Script(script[1]);
+          NODE
       - name: Boot private workstation
         run: |
           docker run -d --name dexter-smoke -p 127.0.0.1:18080:10000 \
