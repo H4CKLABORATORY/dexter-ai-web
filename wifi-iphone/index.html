@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07130f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="WiFi Portal">
+<meta name="description" content="Portal de iPhone para abrir un explorador Wi-Fi Realtek local.">
+<link rel="manifest" href="./manifest.webmanifest"><title>DEXTER WiFi Portal — iPhone</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui,sans-serif;background:#07120e;color:#ebfff4;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 92% 2%,#164431,transparent 39%),#07120e;min-height:100svh}
+.wrapper{max-width:880px;margin:auto;padding:env(safe-area-inset-top) 20px calc(30px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:92px}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:43px;height:43px;border-radius:12px;background:#173a29;border:1px solid #44936a;display:grid;place-items:center;color:#6afaaa;font-size:29px;font-weight:900}
+small{color:#93ae9d}.kicker{font-size:9px;letter-spacing:1.5px;color:#91b5a1;font-weight:800}.name{font-size:24px;font-weight:850;letter-spacing:-1px}.name span,h1 em{color:#64eda6;font-style:normal}
+.pill{padding:8px 10px;color:#b4dbbe;border:1px solid #39644b;border-radius:30px;font-size:10px;white-space:nowrap}.pill:before{content:"●";color:#6df3a3;margin-right:5px}
+.hero{background:linear-gradient(125deg,#1c402d,#10251b);border:1px solid #30583e;border-radius:23px;overflow:hidden;display:grid;grid-template-columns:1.3fr .7fr;margin:17px 0 0}
+.hero-text{padding:33px}.chip{display:inline-block;color:#86efb6;border:1px solid #457d59;border-radius:18px;padding:7px 12px;font-size:10px;letter-spacing:1.2px;font-weight:800}
+h1{font-size:clamp(29px,5vw,46px);letter-spacing:-1.5px;line-height:1.11;margin:20px 0 12px}
+.hero p{color:#b2c6ba;font-size:13px;line-height:1.65;margin:0;max-width:425px}
+.radar{min-height:250px;display:grid;place-items:center;position:relative;overflow:hidden}
+.ring{position:absolute;border:1px solid #3a7755;border-radius:50%;height:130px;width:130px}.ring:nth-child(2){height:205px;width:205px;opacity:.65}.ring:nth-child(3){height:285px;width:285px;opacity:.35}
+.radar-icon{height:90px;width:90px;border-radius:27px;background:linear-gradient(130deg,#2d6244,#163625);border:1px solid #68e9a5;display:grid;place-items:center;z-index:1;color:#82ffc3;font-size:44px}
+.radar-label{position:absolute;z-index:2;background:#173e2b;color:#a2ffd0;border:1px solid #518665;border-radius:9px;padding:6px 9px;font-size:10px;top:31%;left:4%}.radar-label.second{top:auto;left:auto;bottom:25%;right:5%}
+nav{display:flex;border-bottom:1px solid #315341;gap:9px;margin:23px 0}
+nav button{border:0;border-bottom:2px solid transparent;padding:14px 18px;background:none;color:#a1b7aa;font-size:13px;font-weight:700;flex:1;cursor:pointer}
+nav button.active{color:#70f2ad;border-bottom-color:#70f2ad}.view{display:none}.view.active{display:block}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:23px 0 15px}.bar h2{margin:0;font-size:18px}.bar span{font-size:9px;letter-spacing:1px;color:#87b19a}
+.card{border:1px solid #355442;border-radius:17px;background:#12251a;padding:22px}
+.device{display:flex;align-items:center;gap:12px;margin-bottom:24px}.device-icon{display:grid;place-items:center;background:#235238;color:#98ffc3;width:43px;height:43px;border-radius:13px;font-size:24px}.device strong{font-size:15px}.sub{color:#9db9aa;font-size:11px;margin-top:4px}.no-check{margin-left:auto;padding:7px 9px;border-radius:22px;background:#294334;color:#b7cfbd;font-size:10px;max-width:110px;text-align:center}
+label{display:block;font-size:12px;font-weight:700;margin:0 0 9px;color:#d0ead7}.ip{display:flex;align-items:center;background:#0b1a12;border:1px solid #497258;border-radius:11px;padding:0 12px;height:54px;gap:4px}
+.ip:focus-within{border-color:#7cf4ac}.ip span{color:#85dca6}.ip input{min-width:0;flex:1;background:none;border:0;color:white;font-size:18px;outline:0;padding:12px 5px}
+#reset{border:0;background:transparent;color:#80d7a3;font-size:23px;padding:4px;cursor:pointer}
+.help{font-size:11px;line-height:1.7;color:#9bb8a5}.error{color:#ffbdad;display:none;font-size:12px;margin-top:10px}
+.action{display:flex;align-items:center;justify-content:center;gap:12px;min-height:53px;background:#5df3a9;border-radius:11px;color:#0b2a19;text-decoration:none;font-size:14px;font-weight:850;margin-top:18px;padding:12px;cursor:pointer}
+.action[aria-disabled="true"]{pointer-events:none;background:#7b9583}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:15px 0}.tile{background:#12271d;border:1px solid #345941;padding:15px;border-radius:12px}.tile b{display:block;font-size:17px;color:#dfffee;margin-top:9px}.tile small{font-size:10px}.glow{color:#72e8a4}
+.notice{display:flex;gap:12px;align-items:flex-start;border:1px solid #476047;background:#1b2b20;border-radius:12px;padding:14px 16px;margin-top:16px;font-size:12px;line-height:1.7;color:#aec8b4}
+.notice strong{color:#e0ffec}.steps>div{display:flex;gap:17px;padding:18px 0;border-bottom:1px solid #385340}.steps>div:last-child{border:0}.steps b{font-size:22px;color:#64e8a3}.steps h3{font-size:15px;margin:2px 0 8px}.steps p{font-size:12px;line-height:1.7;color:#aec5b6;margin:0}
+.details{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid #37523f;padding:17px 0;font-size:12px}.details:last-child{border:0}.details span{color:#a0bba6}.details b{text-align:right}
+footer{margin-top:45px;border-top:1px solid #264a36;padding-top:20px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:1px;color:#7da187}
+@media(max-width:600px){.wrapper{padding-left:17px;padding-right:17px}.hero{display:block}.hero-text{padding:27px 23px}.radar{min-height:110px;height:110px}.radar-icon{height:64px;width:64px;font-size:34px;border-radius:19px}.hero h1{font-size:33px}.radar-label{top:15%;left:14%}.radar-label.second{bottom:18%;right:14%}.top{min-height:82px}.pill{font-size:9px}.kicker{font-size:8px;letter-spacing:.7px}.name{font-size:22px}.card{padding:18px}.device strong{font-size:13px}.no-check{font-size:9px}.bar h2{font-size:16px}.tile{padding:11px 8px}.tile b{font-size:14px}.tile small{font-size:9px}}
+</style></head>
+<body><div class="wrapper">
+<header class="top"><div class="brand"><div class="logo">◉</div><div><div class="kicker">DEXTER LAB / NETWORK TOOLS</div><div class="name">WiFi <span>Portal</span></div></div></div><div class="pill">iPhone ready</div></header>
+<main><div class="hero"><div class="hero-text"><span class="chip">PANEL DE ACCESO LOCAL</span><h1>Tu módulo Wi‑Fi,<br><em>desde el iPhone.</em></h1><p>Abre el escáner de redes del dispositivo desde Safari. Sin jailbreak, sin computadora y sin resultados inventados.</p></div><div class="radar" aria-hidden="true"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="radar-icon">◉</div><span class="radar-label">2.4 GHz</span><span class="radar-label second">5 GHz</span></div></div>
+<nav aria-label="Secciones"><button class="active" data-tab="connect" type="button">Conectar</button><button data-tab="iphone" type="button">iPhone</button><button data-tab="info" type="button">Información</button></nav>
+<section class="view active" id="connect"><div class="bar"><h2>Conexión con el módulo</h2><span>RED LOCAL</span></div>
+<div class="card"><div class="device"><div class="device-icon">▣</div><div><strong>Panel del dispositivo</strong><div class="sub">Acceso mediante Safari</div></div><span class="no-check">Conexión no verificada</span></div>
+<label for="ip">Dirección IPv4 privada del módulo</label><div class="ip"><span>http://</span><input id="ip" value="192.168.1.1" inputmode="decimal" autocomplete="off" maxlength="15" aria-describedby="hint"><button id="reset" type="button" aria-label="Restablecer dirección">↺</button></div>
+<div id="error" role="alert" class="error"></div><p class="help" id="hint">La dirección inicial es 192.168.1.1. Si tu módulo utiliza otra IP local, cámbiala aquí.</p>
+<a id="open" class="action" href="http://192.168.1.1/" rel="noopener noreferrer">↗ &nbsp; Abrir escáner Wi‑Fi real</a><p class="help">Primero conecta el iPhone a la red emitida por el módulo. Los resultados reales se muestran en la página del propio hardware.</p></div>
+<div class="tiles"><div class="tile"><span class="glow">◉</span><b>2.4 GHz</b><small>Hardware compatible</small></div><div class="tile"><span class="glow">◉</span><b>5 GHz</b><small>Hardware compatible</small></div><div class="tile"><span class="glow">◎</span><b>Safari</b><small>Sin jailbreak</small></div></div>
+<div class="notice"><span>ⓘ</span><div><strong>Necesitas el módulo físico.</strong> iOS no permite a una web escanear directamente redes cercanas; el escaneo lo realiza el dispositivo Realtek.</div></div></section>
+<section class="view" id="iphone" hidden><div class="bar"><h2>Configurar en iPhone</h2><span>4 PASOS</span></div><div class="card steps">
+<div><b>01</b><article><h3>Enciende el módulo</h3><p>Utiliza hardware RTL8720DN con firmware compatible previamente instalado.</p></article></div>
+<div><b>02</b><article><h3>Conéctate a su Wi‑Fi</h3><p>Ve a Ajustes → Wi‑Fi en el iPhone. Selecciona la red emitida por el dispositivo e introduce su contraseña. Puede aparecer “Sin Internet”; es normal.</p></article></div>
+<div><b>03</b><article><h3>Abre el escáner</h3><p>Pulsa «Abrir escáner Wi‑Fi real» desde la pestaña Conectar para abrir el panel HTTP del módulo en Safari.</p></article></div>
+<div><b>04</b><article><h3>Añade el acceso directo</h3><p>En Safari pulsa Compartir → Añadir a pantalla de inicio. Podrás abrir este portal como aplicación web.</p></article></div>
+</div><div class="notice">Si aparece la página de tu router en 192.168.1.1, comprueba que el iPhone esté conectado al módulo y no al router doméstico.</div></section>
+<section class="view" id="info" hidden><div class="bar"><h2>Compatibilidad y límites</h2><span>SEGURIDAD</span></div><div class="card">
+<div class="details"><span>Firmware identificado</span><b>Familia Realtek RTL8720DN</b></div><div class="details"><span>Interfaz web predeterminada</span><b>192.168.1.1</b></div><div class="details"><span>iPhone compatible</span><b>Safari / pantalla de inicio</b></div><div class="details"><span>Escaneo directo desde iOS</span><b>No disponible</b></div><div class="details"><span>Dispositivo físico</span><b>Obligatorio para resultados reales</b></div>
+</div><div class="notice"><span>ⓘ</span><div>Este portal solo abre una interfaz local. No incluye comandos de interrupción de redes, captura de credenciales ni funciones ofensivas. No flashees el archivo .bin en un dispositivo desconocido.</div></div></section>
+</main><footer><span>DEXTER LAB</span><span>WiFi Portal para iOS · v1.0</span></footer></div>
+<script>
+(function(){
+'use strict';
+const field=document.getElementById('ip'),go=document.getElementById('open'),error=document.getElementById('error'),storageKey='dexter-wifi-ip-v1';
+function valid(ip){const p=ip.split('.');if(p.length!==4||p.some(x=>!/^(0|[1-9][0-9]{0,2})$/.test(x)||Number(x)>255))return false;const a=Number(p[0]),b=Number(p[1]);return a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168)}
+function update(){const ip=field.value.trim(),ok=valid(ip);error.style.display=ok?'none':'block';error.textContent=ok?'':'Introduce una dirección IPv4 privada válida.';go.setAttribute('aria-disabled',String(!ok));if(ok){go.href='http://'+ip+'/';try{localStorage.setItem(storageKey,ip)}catch(e){}}else{go.removeAttribute('href')}}
+try{const saved=localStorage.getItem(storageKey);if(saved&&valid(saved))field.value=saved}catch(e){}
+field.addEventListener('input',update);document.getElementById('reset').addEventListener('click',()=>{field.value='192.168.1.1';update()});
+const tabs=[...document.querySelectorAll('[data-tab]')];tabs.forEach(tab=>tab.addEventListener('click',()=>{tabs.forEach(b=>b.classList.toggle('active',b===tab));document.querySelectorAll('.view').forEach(view=>{view.classList.toggle('active',view.id===tab.dataset.tab);view.hidden=view.id!==tab.dataset.tab})}));update();
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
+})();
+</script></body></html>
