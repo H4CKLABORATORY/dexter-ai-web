@@ -14,7 +14,7 @@ Panel web independiente adaptado al iPhone. Abre la interfaz de exploración Wi-
 2. Conecta Ajustes → Wi-Fi a la red que emite el módulo. Introduce la contraseña real configurada en él.
 3. Desde el portal pulsa «Abrir escáner Wi-Fi real». Se abrirá `http://192.168.1.1/`, o la IPv4 privada elegida, en Safari.
 4. El listado de redes y los botones de exploración están en la web del **dispositivo**, no en GitHub Pages.
-5. Para añadir el portal al iPhone: Safari → Compartir → Añadir a pantalla de inicio.
+5. **Antes de conectarte a una red sin Internet**, abre el portal al menos una vez usando Internet y deja que termine de cargar, para que se guarde la caché de la PWA. Luego: Safari → Compartir → Añadir a pantalla de inicio.
 
 ## Detalles técnicos
 
