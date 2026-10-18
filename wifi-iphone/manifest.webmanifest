@@ -1,0 +1,19 @@
+{
+  "name": "DEXTER WiFi Portal",
+  "short_name": "WiFi Portal",
+  "description": "Acceso iPhone al panel de un módulo de exploración Wi-Fi Realtek",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07120e",
+  "theme_color": "#07130f",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
