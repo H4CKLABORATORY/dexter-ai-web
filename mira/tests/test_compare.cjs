@@ -1,0 +1,11 @@
+const assert = require('node:assert/strict');
+const {measure,compare} = require('../web/compare.js');
+assert.deepEqual(measure(''),{characters:0,words:0,lines:0});
+assert.equal(measure('Hola mundo\n¡bien!').words,3);
+assert.equal(compare('hola mundo','hola mundo').identical,true);
+assert.equal(compare('hola mundo','hola mundo').lexicalOverlapPercent,100);
+assert.equal(compare('rojo azul','verde').lexicalOverlapPercent,0);
+assert.equal(compare('gato perro','gato ave').lexicalOverlapPercent,33.3);
+assert.equal(compare('uno','uno dos').wordDifference,1);
+assert.equal(compare('áéí','ÁÉÍ').lexicalOverlapPercent,100);
+console.log('8 pruebas del laboratorio A/B: OK');

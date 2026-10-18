@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#05070b"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="MIRA Neural Prompt Studio: atlas de partículas interactivo y constructor de prompts."><title>MIRA — Neural Prompt Studio</title><style>:root{color-scheme:dark;--bg:#05070b;--surface:#080a10;--line:#252a31;--mint:#76f3db;--cyan:#65d9f0;--pink:#f56f90;--yellow:#f6d16c;--ink:#c6cbcf;--dim:#818d94}*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{font-family:Consolas,'SFMono-Regular',Menlo,Monaco,monospace;font-size:11px;background:var(--bg);color:var(--ink);overflow:hidden}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:1px solid #96fde8;outline-offset:2px}button:disabled{opacity:.38;cursor:not-allowed}button:hover{color:white}.studio{height:100dvh;width:100%;display:flex;flex-direction:column;min-width:0;position:relative;isolation:isolate;background:#030407}.mint,.cyan{color:var(--mint)!important}.yellow{color:var(--yellow)!important}.rose{color:var(--pink)!important}.sysbar{height:28px;flex:none;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,7,12,.98);border-bottom:1px solid #1b1c22;white-space:nowrap;font-size:9px;letter-spacing:.055em;color:#8c929b;gap:8px}.sys-left,.sys-right{display:flex;align-items:center;gap:13px}.sys-left b{color:#f5f5f5;font-weight:500}.sys-brand{color:#bbc3ca;font-weight:700}.sys-bracket{color:#6de9cf}.logo-text{color:#ec658b;font-size:10px}.sys-right{gap:10px}.blink-dot{display:inline-block;width:5px;height:5px;background:#75e9cf;box-shadow:0 0 10px #75e9cf;border-radius:50%}.micro-action{background:none;border:0;color:#9dabb3;font-size:15px;line-height:1;padding:2px}.steps{height:29px;flex:none;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:#0a0c10;border-bottom:1px solid #29272a;padding:1px 13px 2px;gap:2px}.steps button{border:0;border-right:1px solid #1a1f25;background:#0b0c11;color:#7b838a;font-size:10px;letter-spacing:.025em;position:relative}.steps button.active{color:#111d1b;background:#78eed6;box-shadow:0 0 16px #64ddc14a;font-weight:800}.steps button:not(.active):hover{background:#18262a;color:#a6e5db}.space{position:relative;flex:1;min-height:0;overflow:hidden;background:radial-gradient(ellipse at 47% 50%,#091817 0,#060a10 43%,#020305 83%);touch-action:pan-y}#cosmos{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}#cosmos:active{cursor:grabbing}.grain{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0,rgba(220,225,240,.012) 1px,transparent 2px,transparent 4px);opacity:.4}.stage-corner{position:absolute;top:15px;left:20px;pointer-events:none;z-index:2}.stage-head{display:flex;gap:9px;align-items:stretch}.mint-rule{width:4px;min-height:31px;background:#53f5d7;box-shadow:0 0 12px #55ecc8}.stage-head strong{font-weight:700;font-size:21px;letter-spacing:.025em;line-height:1;color:#eee}.stage-head small{display:block;color:#77cdbd;font-size:10px;margin-top:4px}.stage-actions{position:absolute;top:16px;right:16px;display:flex;gap:7px;z-index:4}.stage-actions button,.zoom-actions button{border:1px solid #31403f;background:#0b1217bd;color:#9debdc;padding:6px 9px;font-size:11px;box-shadow:0 0 10px #071614}.stage-actions button:hover,.zoom-actions button:hover{border-color:#6ceace}.map-labels{position:absolute;inset:0;pointer-events:none;z-index:2;transition:transform .2s}.label{pointer-events:auto;position:absolute;white-space:nowrap;transform:translate(-50%,-50%);color:#94ddd0;border:1px solid #58988f99;background:#05110db7;padding:3px 5px;font-size:clamp(9px,.85vw,12px);text-shadow:0 0 10px #7be3d393;box-shadow:0 0 12px #1af1c117;font-weight:500;max-width:34%;overflow:hidden;text-overflow:ellipsis}.label.prominent{border:0;box-shadow:none;background:transparent;color:#9bffe4;font-size:clamp(17px,1.8vw,26px);text-shadow:0 0 15px #7ff5c4}.label:hover{border-color:#aaf8e6;color:#fff}.core-label{position:absolute;left:65%;top:71%;font-size:10px;color:#a5bbb9;opacity:.68;letter-spacing:.02em;pointer-events:none}.tiny-bars{letter-spacing:3px;color:#7ce8cf}.space-footer{position:absolute;bottom:8px;left:18px;right:15px;display:flex;align-items:center;gap:12px;color:#5d9190;font-size:9px;pointer-events:none}.space-footer b{color:#85d4b8}.space-hint{margin:auto;opacity:.75}.zoom-actions{display:flex;gap:4px;pointer-events:auto}.zoom-actions button{padding:3px 10px}.toast{position:absolute;z-index:8;left:50%;bottom:40px;transform:translate(-50%,10px);background:#081b1b;border:1px solid #316e61;color:#abffea;padding:10px 14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:min(90%,500px);text-align:center}.toast.visible{opacity:1;transform:translate(-50%,0)}.telemetry{height:254px;flex:none;background:#070810;display:grid;grid-template-columns:1.05fr 1.05fr 1.1fr 1.08fr 1.08fr 1.08fr;gap:3px;padding:3px 11px 8px;border-top:1px solid #27292e;min-height:0;overflow:hidden}.instrument{background:#080910;min-width:0;overflow:hidden;border:1px solid #22252b;padding:9px 10px 6px;position:relative}.instrument h2{font-size:clamp(9px,.81vw,12px);font-weight:700;letter-spacing:.035em;color:#d9dbde;margin:0 0 10px;display:flex;justify-content:space-between;white-space:nowrap;gap:6px}.instrument h2 span{font-size:10px}.log-lines{display:grid;gap:3px;font-size:10px;line-height:1.18;white-space:nowrap}.log-lines div{overflow:hidden;text-overflow:clip}.log-lines em{font-style:normal;color:#5f6472;margin-right:8px}.log-lines strong{color:#77d8cc;font-weight:500}.log-lines .warn strong{color:#f4c373}.sections-panel footer{position:absolute;bottom:10px;font-size:9px;color:#3f4752}.section-lines{display:grid;gap:8px;padding-top:10px}.section-line{font-size:10px;min-width:0}.section-line .line-top{display:flex;justify-content:space-between;margin-bottom:3px}.section-line .line-track{height:6px;background:#181b24}.line-track i{display:block;height:100%;max-width:100%;box-shadow:0 0 8px currentColor}.radar-panel svg{width:100%;height:134px;display:block;margin-top:0}.radar-panel .tiny-metrics{display:grid;gap:4px}.tiny-metrics div{display:flex;gap:5px;align-items:center;font-size:9px}.tiny-metrics div>i{height:7px;background:#70d8c1;box-shadow:0 0 8px #58ddba;flex:1}.tiny-metrics b{min-width:14px;text-align:right}.heat-rows{display:grid;gap:5px;margin-top:16px}.heat-row{display:flex;align-items:center;gap:2px}.heat-row>span{font-size:8px;min-width:31px;color:#9ea1a6}.heat-row i{display:block;flex:1;height:7px;background:#181b21}.heat-row i.active{box-shadow:0 0 5px currentColor;background:currentColor}.speed-block{margin-top:13px}.speed-block small{color:#7f8790;display:block}.speed-block strong{font-size:22px;color:#f7f6fa}.speed-block p{margin-top:5px;line-height:1.3;color:#8b9298}.speed-block p b{float:right;color:#dedede}.score-panel .wave{width:100%;height:37px;margin-top:10px;opacity:.75}.gauge{height:115px;display:grid;place-items:center;position:relative;margin-top:6px}.gauge:before{content:'';position:absolute;width:112px;height:112px;border-radius:50%;background:conic-gradient(from 225deg,#ffce5a calc(var(--gauge)*2.7deg),#262831 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));transform:rotate(0deg)}.gauge:after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none}.gauge strong{font-size:34px;color:#fff;line-height:1.2}.gauge small{display:block;color:#9c9fa2;font-size:10px;text-align:center}.gauge-footer{position:absolute;bottom:8px}.gauge-footer small{display:block;color:#71757d;margin-top:4px}.code-panel pre{font-size:10px;line-height:1.52;color:#80c9bb;white-space:pre-wrap;margin:0}.code-panel .comment{color:#737c84}.code-bottom{position:absolute;bottom:10px;color:#ef7c96;font-size:9px}.corner-watermark{position:absolute;bottom:0;right:15px;font-size:8px;color:#46434b;letter-spacing:.13em;pointer-events:none}.corner-watermark span{color:#cf7891}.scrim{position:fixed;inset:0;background:#000a;z-index:9}.scrim[hidden]{display:none}.drawer{position:fixed;top:0;right:0;bottom:0;width:min(470px,100%);z-index:10;background:#070e13;box-shadow:-24px 0 100px #000;transform:translateX(102%);transition:transform .26s ease;display:flex;flex-direction:column;border-left:1px solid #408478}.drawer.open{transform:translateX(0)}.drawer-bar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #263733;padding:20px 20px 16px}.drawer-bar small{font-size:10px}.drawer-bar h2{font-size:20px;letter-spacing:.03em;margin:8px 0 0}.drawer-bar>button{border:1px solid #355d58;background:none;color:#c4ece4;width:34px;height:34px}.drawer-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #253735;padding:8px;gap:5px}.drawer-tabs button{background:#0b1319;border:1px solid #253334;color:#839b9a;padding:10px 3px;font-size:10px}.drawer-tabs button.active{background:#124238;border-color:#6adbc2;color:#d1fff5}.drawer-scroll{padding:20px;overflow:auto;min-height:0;flex:1}.drawer-pane[hidden]{display:none!important}.drawer-pane label,.formatted-label{font-size:10px;color:#9ce8d8;letter-spacing:.07em;display:block;margin:16px 0 9px}.drawer-pane label:first-child{margin-top:0}.drawer-pane textarea,.drawer-pane input:not([type=range]):not([type=file]),.drawer-pane select{background:#09171b;border:1px solid #2c554d;color:#e5f6ef;padding:12px;width:100%;font-size:13px;border-radius:0;line-height:1.5}.drawer-pane textarea{height:174px;resize:vertical}.drawer-pane .small-area{height:102px}.drawer-pane input[type=range]{width:100%;accent-color:#78f5de}.drawer-pane input[type=file]{max-width:100%}.hint{color:#91a9a7;font-size:11px;line-height:1.6}.drawer-info{display:flex;justify-content:space-between;color:#7db6a9;font-size:10px;padding:10px 0 14px}.command-row{display:flex;gap:8px;margin:10px 0}.cmd{width:100%;padding:12px 10px;background:#10191e;border:1px solid #345b58;color:#b9e6dc;font-weight:700;letter-spacing:.03em}.cmd.primary{background:#58dcbf;color:#06150f;border-color:#77f6d8}.cmd.subtle{margin-top:9px;background:transparent}.cmd:hover{border-color:#aafee7}.compiled{white-space:pre-wrap;word-break:break-word;max-height:240px;overflow:auto;color:#8bd2c2;background:#071014;border:1px solid #243e3a;padding:12px;font-size:11px;line-height:1.6}.mini-status,.lab-results{white-space:pre-wrap;line-height:1.5;font-size:11px;color:#c2dfd5;background:#071115;border-left:2px solid #6de4cb;padding:12px;margin:10px 0}.job-list{font-size:10px;white-space:pre-wrap;color:#abc7c5}.drawer-pane button:disabled{opacity:.35}
+@media(max-width:900px){.sysbar{padding:0 9px}.sys-left span:nth-child(n+5),.sys-right #systemStatus{display:none}.telemetry{height:225px;padding:2px 4px 8px;grid-template-columns:repeat(6,minmax(180px,1fr));overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin}.instrument{scroll-snap-align:start}.instrument h2{font-size:11px}.score-panel .gauge{margin-top:5px}.space{min-height:0}.space-hint{display:none}.stage-head strong{font-size:18px}.stage-actions{right:9px;top:12px}.stage-actions button{padding:5px 6px}.stage-corner{top:15px;left:12px}.label{font-size:9px}.label.prominent{font-size:17px}.corner-watermark{bottom:0}}
+@media(max-width:480px){.sysbar{height:26px;font-size:8px}.sys-left{gap:8px}.sys-left span:nth-child(n+4){display:none}.logo-text{font-size:8px}.steps{height:29px;padding:1px 3px}.steps button{font-size:9px}.space{min-height:0}.telemetry{height:205px;grid-template-columns:repeat(6,minmax(177px,1fr))}.stage-corner{top:10px;left:9px}.stage-head strong{font-size:16px}.stage-head small{font-size:8px}.stage-head .mint-rule{min-height:27px}.stage-actions button{font-size:9px;padding:4px 6px}.stage-actions{right:6px;top:11px;gap:4px}.map-labels{pointer-events:none}.map-labels button{pointer-events:auto}.label{padding:2px 3px;max-width:43%;font-size:8px}.label.prominent{font-size:15px}.core-label{font-size:8px}.space-footer{bottom:6px;left:10px;right:9px;font-size:8px}.drawer-bar{padding:20px 15px 13px;padding-top:max(17px,env(safe-area-inset-top))}.drawer-scroll{padding:15px 18px;padding-bottom:max(15px,env(safe-area-inset-bottom))}.drawer-tabs{padding:5px;gap:3px}.drawer-tabs button{font-size:9px;padding:9px 0}.corner-watermark{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* v2.1: auditoría alojada en el mismo panel inmersivo. */
+.drawer-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+.drawer-tabs button{font-size:9px;padding-left:1px;padding-right:1px}
+#auditResults{max-height:31vh;overflow:auto;white-space:pre-wrap}
+#enhancedPrompt{height:215px;resize:vertical}
+#projectStatus{word-break:break-word}
+@media(max-width:480px){.drawer-tabs{gap:2px}.drawer-tabs button{font-size:8px;padding:9px 1px}.stage-actions{top:45px}#enhancedPrompt{height:180px}}
+
+/* v2.3 · controles táctiles accesibles, manteniendo el atlas sin barras laterales. */
+@media(max-width:600px){
+ .drawer-tabs{display:flex;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;flex:none}
+ .drawer-tabs button{flex:0 0 auto;min-width:92px;min-height:42px;font-size:10px}
+ .drawer-bar>button{min-width:42px;min-height:42px}
+ .steps{height:38px;min-height:38px}
+ .steps button{min-height:34px}
+ .stage-actions button{min-height:30px}
+ .zoom-actions button{min-height:32px;min-width:32px}
+ .drawer-pane textarea{font-size:16px} /* evita zoom de enfoque en Safari iOS */
+}
+/* Zona segura de iPhone con Dynamic Island/notch cuando se instala como PWA. */
+@media(max-width:600px){
+ .studio{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+@media(max-width:360px){.sysbar .logo-text{display:none}.sys-left{gap:6px}}
+</style></head>
+<body><div class="studio" id="studio">
+  <header class="sysbar" aria-label="Barra de estado">
+    <div class="sys-left"><span class="sys-brand">MIRA<span class="sys-bracket">//</span>PROMPT-CRAWLER</span><span>LINES <b id="statLines">26</b></span><span>TERMS <b class="cyan" id="statLinks">22</b></span><span>WORDS <b id="statWords">000</b></span><span>LINKS <b class="yellow" id="statNodeLinks">38</b></span><span>FLAGS <b class="rose" id="statFlags">0</b></span><span>FPS <b id="statFPS">--</b></span></div>
+    <div class="sys-right"><span class="blink-dot"></span><span id="systemStatus">LOCAL // READY</span><button type="button" class="micro-action" id="settingsBtn" aria-label="Configuración">⚙</button><button type="button" class="micro-action" id="fullscreenBtn" title="Pantalla completa">⛶</button><span class="logo-text">studio.prompt</span></div>
+  </header>
+  <nav class="steps" id="steps" aria-label="Etapas del estudio">
+    <button type="button" data-phase="role">role</button><button type="button" data-phase="objective">objective</button><button type="button" data-phase="context">context</button><button type="button" data-phase="roles">roles</button><button type="button" data-phase="rules" class="active">rules</button><button type="button" data-phase="review">review</button><button type="button" data-phase="start">start</button>
+  </nav>
+  <main class="space" id="space" aria-label="Universo de relaciones del prompt">
+    <canvas id="cosmos" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div>
+    <div class="stage-corner"><div class="stage-head"><span class="mint-rule"></span><div><strong id="stageTitle">05 RULES</strong><small id="stageTag">verify · ask · keep · report</small></div></div></div>
+    <div class="stage-actions"><button type="button" id="openEditor" title="Editar esta sección"><span>✎</span> EDIT</button><button type="button" id="viewCompare" title="Abrir laboratorio A/B"><span>◈</span> LAB</button><button type="button" id="openAudit" title="Auditar y mejorar prompt">⌁ AUDIT</button><button type="button" id="pauseMotion" aria-pressed="false" title="Pausar animación">Ⅱ</button></div>
+    <div class="map-labels" id="mapLabels"><button class="label prominent" data-focus="rules" style="left:43%;top:26%">rules</button><button class="label" data-focus="objective" style="left:36%;top:37%">Report</button><button class="label" data-focus="rules" style="left:56%;top:40%">draft</button><button class="label" data-focus="context" style="left:28%;top:46%">they</button><button class="label" data-focus="rules" style="left:62%;top:51%">Ask before approval</button><button class="label" data-focus="roles" style="left:25%;top:58%">claims · clear</button><button class="label" data-focus="rules" style="left:37%;top:57%">Keep</button><button class="label" data-focus="review" style="left:55%;top:61%">publishing · approvals</button></div>
+    <div class="core-label">crawler · <span id="coreMode">rules</span> <span class="tiny-bars">||||</span></div>
+    <div class="space-footer"><span>STRUCTURE <b id="signalLabel">67%</b></span><span class="space-hint">DRAG · PAN &nbsp; / &nbsp; SCROLL · ZOOM</span><div class="zoom-actions"><button type="button" id="zoomOut" aria-label="Alejar">−</button><button type="button" id="resetView" aria-label="Centrar vista">⌖</button><button type="button" id="zoomIn" aria-label="Acercar">+</button></div></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <section class="telemetry" aria-label="Consolas de diagnóstico">
+    <article class="instrument log-panel"><h2>CRAWL LOG <span class="mint">2 w/s</span></h2><div id="crawlLines" class="log-lines"></div></article>
+    <article class="instrument sections-panel"><h2>SECTIONS <span class="mint">7</span></h2><div class="section-lines" id="sectionLines"></div><footer>words ↔ kinds ↔ links</footer></article>
+    <article class="instrument radar-panel"><h2>COVERAGE RADAR <span class="mint">live</span></h2><svg id="radar" viewBox="0 0 230 170" role="img" aria-label="Radar de cobertura"><g id="radarGrid"></g><polygon id="radarPoly" points="" fill="#65edd1" fill-opacity=".27" stroke="#78fce2" stroke-width="2"></polygon><g id="radarLabels"></g></svg><div class="tiny-metrics"><div>OBJ words <i style="width:60%"></i><b id="claimCount">11</b></div><div>TEAM words <i style="width:55%"></i><b id="ownerCount">10</b></div><div>RULE words <i style="width:40%"></i><b id="approvalCount">10</b></div></div></article>
+    <article class="instrument heat-panel"><h2>WORD HEAT <span class="mint" id="wordHeatTotal">181</span></h2><div id="wordHeat" class="heat-rows"></div><div class="speed-block"><small>read time · est. 200 wpm</small><strong><span id="teleWordsPerMin">0</span>s</strong><p>read <b id="readWords">154</b><br>linked <b class="yellow" id="linkedWords">39</b><br>flagged <b class="rose" id="flagWords">9</b><br>quality <b class="mint">N/A</b></p></div></article>
+    <article class="instrument score-panel"><h2>SPEC SCORE <span class="mint">live</span></h2><svg class="wave" viewBox="0 0 200 35" aria-hidden="true"><path d="M1 20 C 18 34,28 5,44 10 S77 29 97 20 S123 13 149 18 S175 27 199 16" fill="none" stroke="#d6ae62" stroke-width="1.8"/></svg><div id="gauge" class="gauge" style="--gauge:72"><div><strong id="gaugeNumber">72</strong><small>spec score</small></div></div><div class="gauge-footer"><b class="rose">Flags to ask · <span id="gaugeFlags">0</span></b><small>structure only · not AI IQ</small></div></article>
+    <article class="instrument code-panel"><h2>CRAWLER.PY <span class="rose">VISUAL</span></h2><pre id="codeFeed"><span class="comment"># crawler.py · reads a prompt</span>
+graph = load('studio.prompt')
+spider = Crawler(legs=16,
+                 mode='visual')
+<span class="rose">for</span> section <span class="rose">in</span> graph:
+    spider.walk(section)
+    <span class="mint">yield</span> a.token</pre><div class="code-bottom" id="codeBottom">⇢ signal mapped</div></article>
+  </section>
+  <div class="corner-watermark">MIRA<span>•</span> / NEURAL ATLAS v2.4</div>
+  <div class="scrim" id="scrim" hidden></div>
+  <section class="drawer" id="drawer" aria-label="Editor y laboratorio" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="drawer-bar"><div><small class="mint">MIRA / COMMAND CONSOLE</small><h2 id="drawerTitle">05 // RULES</h2></div><button type="button" id="closeDrawer" aria-label="Cerrar editor">✕</button></div>
+    <div class="drawer-tabs"><button data-tab="editor" class="active">EDITOR</button><button data-tab="audit">AUDITORÍA</button><button data-tab="compare">LAB A/B</button><button data-tab="runtime">MOTOR IA</button><button data-tab="training">TRAIN LoRA</button></div>
+    <div class="drawer-scroll">
+      <section class="drawer-pane" id="editorPane"><label for="fieldEditor" id="fieldLabel">RULES / CONSTRAINTS</label><textarea id="fieldEditor" spellcheck="true" placeholder="Escribe instrucciones claras y verificables..."></textarea><p id="fieldHint" class="hint">Los cambios se guardan localmente.</p><div class="drawer-info"><span id="fieldWordCount">0 words</span><span>LOCAL AUTOSAVE ●</span></div><div class="command-row"><button id="copyPrompt" class="cmd primary">COPIAR PROMPT</button><button id="exportPrompt" class="cmd">EXPORTAR TXT</button></div><div class="formatted-label">PROMPT COMPILADO</div><pre class="compiled" id="compiledPrompt"></pre><button type="button" class="cmd subtle" id="loadExample">CARGAR DEMOSTRACIÓN</button><button type="button" class="cmd subtle" id="clearPrompt">BORRAR CAMPOS</button></section>
+      <section class="drawer-pane" id="auditPane" hidden>
+       <div class="formatted-label">ANÁLISIS ESTRUCTURAL · SIN CONEXIÓN</div>
+       <p class="hint">El análisis usa reglas comprobables y relaciones de palabras. No es una IA generativa ni garantiza calidad o verdad.</p>
+       <button id="runAudit" class="cmd primary">⌁ AUDITAR PROMPT AHORA</button>
+       <div id="auditResults" class="lab-results" aria-live="polite">Pulsa Auditar para ver recomendaciones.</div>
+       <label for="enhancedPrompt">VERSIÓN ESTRUCTURADA (SIN INVENTAR DATOS)</label>
+       <textarea id="enhancedPrompt" class="small-area" readonly></textarea>
+       <div class="command-row"><button id="copyEnhanced" class="cmd">COPIAR MEJORA</button><button id="exportAudit" class="cmd">EXPORTAR INFORME</button></div>
+       <div class="formatted-label">PROYECTO PORTÁTIL</div>
+       <p class="hint">Guarda todas las secciones como JSON o recupéralas en otro dispositivo.</p>
+       <div class="command-row"><button id="exportProject" class="cmd">GUARDAR PROYECTO</button><button id="importProjectButton" class="cmd">IMPORTAR PROYECTO</button></div>
+       <input id="importProject" type="file" accept=".json,application/json" hidden>
+       <div id="projectStatus" class="mini-status">Tus datos permanecen en este dispositivo salvo que los exportes o envíes a un modelo.</div>
+      </section>
+      <section class="drawer-pane" id="comparePane" hidden><div class="formatted-label">LABORATORIO DE RESPUESTAS A/B</div><p class="hint">Compara diferencias medibles; la similitud no representa calidad ni veracidad.</p><button class="cmd" id="savePromptA">GUARDAR PROMPT ORIGINAL (A)</button><div class="mini-status" id="promptAStatus">Sin baseline.</div><label for="requiredCriteria">CRITERIOS OBSERVABLES (UNO POR LÍNEA · OPCIONAL)</label><textarea class="small-area" id="requiredCriteria" placeholder="Ejemplo: Resumen ejecutivo, Fuentes, Conclusión (uno por línea)" aria-describedby="criteriaHelp"></textarea><p id="criteriaHelp" class="hint">Busca literalmente palabras o frases, sin distinguir mayúsculas ni tildes. No comprueba que sean verdaderas. Máximo 20.</p><label for="responseA">RESPUESTA A</label><textarea class="small-area" id="responseA" placeholder="Pega la respuesta de A o ejecuta ambos modelos..."></textarea><label for="responseB">RESPUESTA B</label><textarea class="small-area" id="responseB" placeholder="Pega la respuesta de B..."></textarea><div class="command-row"><button class="cmd primary" id="runCompare">EJECUTAR A/B</button><button class="cmd" id="cancelCompare" disabled>CANCELAR A/B</button><button class="cmd" id="analyzeAB">ANALIZAR</button></div><div id="compareResults" class="lab-results">Esperando respuestas.</div><button class="cmd" id="exportAB" disabled>EXPORTAR INFORME JSON</button><div class="mini-status" id="compareStatus">Cada ejecución con API puede tener costos.</div></section>
+      <section class="drawer-pane" id="runtimePane" hidden><label for="modelMode">TIPO DE MOTOR</label><select id="modelMode"><option value="local">LOCAL · OLLAMA</option><option value="online">ONLINE · API AUTORIZADA</option></select><label for="modelName">NOMBRE DEL MODELO LOCAL</label><input id="modelName" value="llama3.2" list="availableModels" maxlength="150"><datalist id="availableModels"></datalist><button id="listModels" class="cmd">BUSCAR MODELOS OLLAMA INSTALADOS</button><div id="modelListStatus" class="mini-status">No se han consultado modelos instalados.</div><label for="temperature">TEMPERATURA <output id="temperatureLabel">0.4</output></label><input id="temperature" type="range" min="0" max="2" step="0.1" value="0.4"><label for="apiBaseUrl">SERVIDOR DE IA (OPCIONAL)</label><input id="apiBaseUrl" type="url" placeholder="Vacío = este mismo servidor. En iPhone remoto: https://tu-servidor.example"><p class="hint">La URL remota debe ser HTTPS y estar bajo tu control. Nunca introduzcas aquí una clave privada del proveedor; se configura solo en el servidor.</p><button class="cmd" id="testConnection">PROBAR CONEXIÓN</button><div id="connectionStatus" class="mini-status">El editor y la auditoría funcionan sin conexión.</div><label for="accessToken">TOKEN DEL SERVIDOR (SOLO ESTA SESIÓN)</label><input id="accessToken" type="password" autocomplete="off" placeholder="No se guardará en navegador"><button id="runModel" class="cmd primary">▶ EJECUTAR PROMPT</button><div id="runStatus" class="mini-status">La inferencia requiere iniciar server.py.</div><label>RESPUESTA DEL MODELO</label><pre class="compiled" id="modelOutput">Sin ejecuciones.</pre></section>
+      <section class="drawer-pane" id="trainingPane" hidden><p class="hint">El entrenamiento QLoRA requiere GPU y backend. Modifica adaptadores de modelos abiertos bajo licencia; no cambia el modelo interno de ChatGPT.</p><label for="trainingDataset">EJEMPLOS JSON / JSONL</label><input type="file" id="trainingDataset" accept=".json,.jsonl"><div class="mini-status" id="datasetStatus">Sin datos.</div><label for="trainingModel">MODELO BASE</label><input id="trainingModel" value="Qwen/Qwen2.5-3B-Instruct"><label for="trainingSteps">PASOS</label><input type="number" id="trainingSteps" min="1" max="2000" value="30"><button class="cmd primary" id="startTraining">INICIAR TRABAJO LoRA</button><div id="trainStatus" class="mini-status">No se ha iniciado entrenamiento.</div><div id="trainingJobs" class="job-list"></div></section>
+    </div>
+  </section>
+</div><script>
+/* Métricas descriptivas A/B: texto y criterios literales; no evalúan veracidad. */
+(function(root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.MiraCompare = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+  'use strict';
+  const words = text => String(text ?? '').trim().match(/[^\s]+/gu) || [];
+  const tokens = text => (String(text ?? '').toLocaleLowerCase('es').match(/[\p{L}\p{N}]+/gu) || []);
+  const normalize = text => String(text ?? '').normalize('NFD').replace(/\p{M}/gu,'')
+    .toLocaleLowerCase('es').replace(/[^\p{L}\p{N}]+/gu,' ').trim().replace(/\s+/g,' ');
+  function parseCriteria(input) {
+    const lines = Array.isArray(input) ? input : String(input ?? '').split(/\r?\n/);
+    if (lines.length > 100) throw Error('Demasiadas líneas de criterios (máximo 100).');
+    const unique = new Set(), criteria = [];
+    for (const line of lines) {
+      const raw = String(line).trim();
+      if (!raw) continue;
+      if (raw.length > 120) throw Error('Cada criterio debe tener 120 caracteres o menos.');
+      const key = normalize(raw);
+      if (!key || unique.has(key)) continue;
+      unique.add(key);
+      criteria.push(raw);
+      if (criteria.length > 20) throw Error('Se permiten hasta 20 criterios únicos.');
+    }
+    return criteria;
+  }
+  function coverage(response, criteria) {
+    const normalized = ' ' + normalize(response) + ' ';
+    const matched = [], missing = [];
+    for (const criterion of criteria) {
+      const key = normalize(criterion);
+      (normalized.includes(' ' + key + ' ') ? matched : missing).push(criterion);
+    }
+    return {matched, missing, count: matched.length, total: criteria.length,
+      percent: criteria.length ? Math.round(1000 * matched.length / criteria.length) / 10 : null};
+  }
+  function measure(text) {
+    const raw = String(text ?? '');
+    return {characters: [...raw].length, words: words(raw).length, lines: raw ? raw.split(/\r?\n/).length : 0};
+  }
+  function compare(a, b, required = []) {
+    const A = measure(a), B = measure(b);
+    const x = new Set(tokens(a)), y = new Set(tokens(b));
+    const union = new Set([...x, ...y]);
+    const common = [...x].filter(v => y.has(v)).length;
+    const similarity = union.size ? Math.round(1000 * common / union.size) / 10 : 100;
+    const criteria = parseCriteria(required);
+    const coverageA = coverage(a, criteria), coverageB = coverage(b, criteria);
+    return {a: A, b: B, wordDifference: B.words - A.words,
+      lexicalOverlapPercent: similarity, identical: String(a ?? '') === String(b ?? ''),
+      criteria, coverageA, coverageB,
+      coverageDifferencePoints: criteria.length ? Math.round(10 * (coverageB.percent - coverageA.percent)) / 10 : null,
+      explanation: 'Jaccard de palabras únicas y presencia literal de criterios; no miden calidad ni veracidad.'};
+  }
+  return {measure, compare, parseCriteria, coverage, normalize};
+});
+
+</script><script>
+/* MIRA Audit Engine v2.1 — deterministic, offline, explainable structural analysis.
+   This is NOT an LLM, a neural activation reader, or a truth verifier. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;root.MiraAudit=api;})(typeof window!=='undefined'?window:globalThis,function(){'use strict';
+ const keys=['role','objective','context','roles','rules'];
+ const labels={role:'ROL',objective:'OBJETIVO',context:'CONTEXTO',roles:'RESPONSABLES',rules:'REGLAS'};
+ const stop=new Set(('de del la las el los un una unas unos y o e a al en por con para desde como que quien cuando donde como sus se son es ser esta este estos estas este mi tu su lo le les nos ya si no mas muy tan ' +
+ 'and the a an of on for to with as is be from at or if not these those this that we they you your it will can should must than has have by into').split(/\s+/));
+ const accent=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ function tokenize(text){return (accent(String(text||'').toLocaleLowerCase('es')).match(/[a-z0-9ñ]{3,}/g)||[]).filter(t=>!stop.has(t));}
+ function wordCount(text){return (String(text||'').trim().match(/\S+/g)||[]).length;}
+ function evaluate(fields){const f=Object.fromEntries(keys.map(k=>[k,String(fields?.[k]||'').trim()]));const issues=[];
+  const flag=(id,severity,title,advice)=>issues.push({id,severity,title,advice});
+  for(const k of keys){if(!f[k])flag('empty-'+k,'high','Falta '+labels[k].toLowerCase(),`Completa la sección ${labels[k]} antes de ejecutar.`);}
+  if(f.objective&&wordCount(f.objective)<10)flag('objective-short','medium','Objetivo poco detallado','Especifica resultado, público y condición de éxito observable.');
+  if(f.objective&&!/entreg|resultado|archivo|tabla|lista|informe|codigo|código|resumen|document|formato|output|json|ejemplo|respuesta|reporte|plan|modelo|interfaz|funcion|aplicacion|aplicación/i.test(f.objective))flag('deliverable','medium','No se reconoce el entregable','Indica qué artefacto o respuesta exacta debe producir la IA.');
+  const all=Object.values(f).join(' ');
+  if(all&&!/si no|sin datos|cuando falte|no invent|supuest|inciert|limitaci|pregunt|incertid|unknown|uncertain|missing|cannot|no dispong|no tiene|no hay/i.test(all))flag('uncertainty','medium','Falta protocolo de incertidumbre','Añade qué hacer cuando falten datos: preguntar, señalar límites y no inventar.');
+  if(f.rules&&!/verific|prueb|comprob|test|evalu|valid|evidenc|fuente|revis|confirm|control de calidad|auditor/i.test(f.rules))flag('verification','medium','Sin criterio de verificación','Agrega pasos verificables y qué evidencias deben reportarse.');
+  if(all&&/\b(mejor|perfecto|rapido|rápido|impresionante|excelente|espectacular|ideal|optimo|óptimo)\b/i.test(all)&&!/\b(medid|segundo|milisegundo|%|porcentaj|cifras|prueba|metrica|métrica|criterio|tiempo límite)\b/i.test(all))flag('vague','low','Objetivos cualitativos sin métricas','Aporta criterios observables en vez de adjetivos como «mejor».');
+  const sections=keys.map(k=>({id:k,label:labels[k],words:wordCount(f[k]),terms:[...new Set(tokenize(f[k]))]}));
+  let edges=[];for(let i=0;i<sections.length;i++)for(let j=i+1;j<sections.length;j++){
+    const common=sections[i].terms.filter(w=>sections[j].terms.includes(w));if(common.length)edges.push({from:sections[i].id,to:sections[j].id,weight:common.length,terms:common.slice(0,6)});
+  }
+  // Score counts observable structure only; it is not answer quality or model intelligence.
+  const filled=sections.filter(s=>s.words>0).length;
+  const score=Math.max(0,Math.min(100,Math.round(100*(filled/5)-issues.filter(x=>x.severity==='high').length*8-issues.filter(x=>x.severity==='medium').length*9-issues.filter(x=>x.severity==='low').length*4)));
+  return {version:'2.1',score,issues,sections,edges,words:wordCount(all),filled,notes:'Heurística estructural sin llamadas a IA. No mide veracidad ni inteligencia.'};
+ }
+ function improve(fields,report=evaluate(fields)){
+  const f=Object.fromEntries(keys.map(k=>[k,String(fields?.[k]||'').trim()]));
+  const chunks=['# ESPECIFICACIÓN DE LA TAREA'];
+  for(const k of keys){chunks.push('\n## '+labels[k]);chunks.push(f[k]||'[POR DEFINIR: completa '+labels[k].toLowerCase()+']');}
+  chunks.push('\n## CRITERIOS DE ACEPTACIÓN');
+  chunks.push('1. Entrega exactamente el resultado solicitado; separa lo comprobado de lo supuesto.');
+  chunks.push('2. Antes de afirmar que ejecutaste una acción, incluye una prueba o indícalo como pendiente.');
+  chunks.push('3. Si faltan datos esenciales, formula la pregunta mínima necesaria. No inventes hechos.');
+  if(report.issues.length){chunks.push('\n## PUNTOS QUE DEBES PRECISAR (NO SUPONER)');for(const issue of report.issues)chunks.push('- '+issue.advice);}
+  return chunks.join('\n').trim()+'\n';
+ }
+ function exportProject(fields){return {format:'mira-prompt-project',version:2,fields:Object.fromEntries(keys.map(k=>[k,String(fields?.[k]||'')]))};}
+ function importProject(payload){if(!payload||payload.format!=='mira-prompt-project'||!([1,2].includes(payload.version))||!payload.fields||typeof payload.fields!=='object')throw Error('Archivo de proyecto MIRA inválido.');const result={};for(const k of keys){if(typeof payload.fields[k]!=='string'||payload.fields[k].length>50000)throw Error('Sección inválida: '+k);result[k]=payload.fields[k];}return result;}
+ return {keys,tokenize,wordCount,evaluate,improve,exportProject,importProject};
+});
+
+</script><script>
+/* MIRA Particle Atlas — deterministic, independent Canvas 2D renderer; no network dependency.
+   All positions are normalized so the reference composition survives Retina/iPhone scaling. */
+(function(root){'use strict';
+ const TAU=Math.PI*2;
+ function randomSeed(seed){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^(seed>>>15),1|seed);t=t+Math.imul(t^(t>>>7),61|t)^t;return ((t^(t>>>14))>>>0)/4294967296;}}
+ const rand=randomSeed(20261017);
+ const gauss=()=>Math.sqrt(-2*Math.log(Math.max(1e-6,rand())))*Math.cos(TAU*rand());
+ class Atlas{
+  constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d',{alpha:false});this.pan={x:0,y:0};this.zoom=1;this.mouseDown=null;this.active='rules';this.paused=false;this.lowMotion=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);this.particles=[];this.stars=[];this.links=[];this.semanticEdges=[];this.squares=[];this.time=0;this.fps=0;this.lastTick=0;this.count=0;this.seedCloud();this.handleEvents();this.resize();this.animate=this.animate.bind(this);requestAnimationFrame(this.animate);}
+  seedCloud(){
+   const mobile=window.innerWidth<520, qty=mobile?3100:6100;
+   const hubs=[[.20,.16,.17,.24,0],[.67,.12,.23,.20,0],[.82,.40,.24,.29,0],[.46,.43,.16,.19,1],[.48,.57,.12,.18,1],[.33,.50,.12,.16,1],[.52,.69,.09,.09,2]];
+   for(let i=0;i<qty;i++){
+     const c=hubs[Math.floor(rand()*hubs.length)];let x=c[0]+gauss()*c[2],y=c[1]+gauss()*c[3];if(x<-.06||x>1.1||y<-.06||y>1.04)continue;
+     const filament=rand()<.42;
+     if(filament){x=Math.round(x*100)/100 +gauss()*.005;y=Math.round(y*80)/80+gauss()*.006}
+     this.particles.push({x,y,r:rand()<.92?.55+rand()*1.1:1.2+rand()*1.65,a:.25+rand()*.69,phase:rand()*TAU,kind:c[4]});
+   }
+   for(let i=0;i<290;i++)this.stars.push({x:rand(),y:rand(),r:rand()<.92?.4:1.3,a:.15+rand()*.5,p:rand()*TAU});
+   for(let i=0;i<31;i++)this.squares.push({x:.1+rand()*.84,y:.12+rand()*.80,size:2+rand()*5,color:rand()<.83?'#f8e55c':'#fe776e'});
+   for(let i=0;i<88;i++){
+     let a=this.particles[Math.floor(rand()*this.particles.length)];let b=null;
+     for(let j=0;j<18;j++){let v=this.particles[Math.floor(rand()*this.particles.length)];if(Math.hypot(v.x-a.x,v.y-a.y)<.07 && Math.hypot(v.x-a.x,v.y-a.y)>.008){b=v;break}}
+     if(b)this.links.push([a,b]);
+   }
+   for(let i=0;i<75;i++){const x=.23+rand()*.39,y=.26+rand()*.53;this.links.push([{x,y},{x:x+(rand()-.5)*.1,y:y+(rand()-.5)*.15}]);}
+  }
+  handleEvents(){
+   this.canvas.addEventListener('pointerdown',e=>{this.mouseDown={x:e.clientX,y:e.clientY,p:{...this.pan}};this.canvas.setPointerCapture(e.pointerId)});
+   this.canvas.addEventListener('pointermove',e=>{if(!this.mouseDown)return;this.pan.x=Math.max(-.4,Math.min(.4,this.mouseDown.p.x+(e.clientX-this.mouseDown.x)/this.width));this.pan.y=Math.max(-.38,Math.min(.38,this.mouseDown.p.y+(e.clientY-this.mouseDown.y)/this.height));});
+   for(const name of ['pointerup','pointercancel','lostpointercapture'])this.canvas.addEventListener(name,()=>{this.mouseDown=null});
+   this.canvas.addEventListener('wheel',e=>{e.preventDefault();this.changeZoom(e.deltaY<0?.12:-.12)},{passive:false});
+   window.addEventListener('resize',()=>this.resize());
+   document.addEventListener('visibilitychange',()=>{this.lastTick=0;});
+  }
+  resize(){const r=this.canvas.getBoundingClientRect();this.width=Math.max(r.width,1);this.height=Math.max(r.height,1);const dpr=Math.min(window.devicePixelRatio||1,2);this.canvas.width=Math.floor(this.width*dpr);this.canvas.height=Math.floor(this.height*dpr);this.ctx.setTransform(dpr,0,0,dpr,0,0);this.draw();}
+  setSemanticGraph(report){const positions={role:[.34,.35],objective:[.43,.27],context:[.64,.36],roles:[.33,.57],rules:[.58,.52]};this.semanticEdges=(report?.edges||[]).map(e=>({from:positions[e.from],to:positions[e.to],weight:e.weight}));this.draw();}
+  setPhase(id){this.active=id;this.draw();}
+  changeZoom(v){this.zoom=Math.max(.7,Math.min(1.85,this.zoom+v));this.draw();}
+  center(){this.zoom=1;this.pan={x:0,y:0};this.draw();}
+  togglePause(){this.paused=!this.paused;this.draw();return this.paused;}
+  project(x,y){return {x:((x-.5)*this.zoom+.5+this.pan.x)*this.width,y:((y-.5)*this.zoom+.5+this.pan.y)*this.height};}
+  line(x1,y1,x2,y2,color,weight=1){let a=this.project(x1,y1),b=this.project(x2,y2);const c=this.ctx;c.strokeStyle=color;c.lineWidth=weight;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();}
+  bezier(from,cp,to,color,weight=1){const c=this.ctx,a=this.project(...from),m=this.project(...cp),b=this.project(...to);c.strokeStyle=color;c.lineWidth=weight;c.beginPath();c.moveTo(a.x,a.y);c.quadraticCurveTo(m.x,m.y,b.x,b.y);c.stroke();}
+  draw(){if(!this.width)return;let c=this.ctx,W=this.width,H=this.height,t=this.time;
+   c.fillStyle='#03050a';c.fillRect(0,0,W,H);
+   const clouds=[[.22,.17,.45,'89,101,118',.12],[.79,.25,.37,'86,97,117',.12],[.48,.49,.38,'16,150,127',.21],[.53,.67,.22,'12,170,152',.17]];
+   for(const [x,y,r,rgb,a] of clouds){let p=this.project(x,y),radius=r*Math.max(W,H)*this.zoom;let grad=c.createRadialGradient(p.x,p.y,0,p.x,p.y,radius);grad.addColorStop(0,`rgba(${rgb},${a})`);grad.addColorStop(.36,`rgba(${rgb},${a*.5})`);grad.addColorStop(1,`rgba(${rgb},0)`);c.fillStyle=grad;c.fillRect(p.x-radius,p.y-radius,radius*2,radius*2);}
+   for(const s of this.stars){let p=this.project(s.x,s.y);c.fillStyle=`rgba(215,229,232,${s.a*(.8+.18*Math.sin(t*.9+s.p))})`;c.fillRect(p.x,p.y,s.r,s.r);}
+   c.lineWidth=.48;for(const l of this.links)this.line(l[0].x,l[0].y,l[1].x,l[1].y,'rgba(130,198,189,.095)',.55);
+   // Real edges: repeated non-stopword tokens shared between sections (not model neuron activations).
+   for(const e of this.semanticEdges){const mid=[(e.from[0]+e.to[0])/2,(e.from[1]+e.to[1])/2-.055];this.bezier(e.from,mid,e.to,`rgba(124,255,215,${Math.min(.58,.22+e.weight*.07)})`,Math.min(2,0.7+e.weight*.22));}
+   for(let i=0;i<34;i++){let ang=i*2.399;let dist=.02+.008*(i%10);const a=[.5+.01*Math.cos(ang),.67+.008*Math.sin(ang)],b=[.5+Math.cos(ang)*(.13+dist),.67+Math.sin(ang)*(.13+dist)*.69];this.bezier(a,[.5+Math.cos(ang)*(.07+dist/2),.67+Math.sin(ang)*(.05+dist/2)],b,'rgba(110,238,214,.24)',.6+(i%5===0?.45:0));}
+   for(let i=0;i<25;i++){const x=.22+(i%7)*.061,y=.35+Math.floor(i/7)*.086;this.bezier([x,y],[x+.12,y-.03],[.51,.665],'rgba(90,240,196,.10)',.55);}
+   this.bezier([.19,.53],[.52,.58],[1.07,.91],'rgba(120,231,215,.24)',1.2);
+   this.bezier([.06,.73],[.43,.8],[.51,.66],'rgba(130,215,201,.17)',.65);
+   for(const p of this.particles){const q=this.project(p.x+(this.lowMotion?0:Math.sin(t*.32+p.phase)*.0009),p.y+(this.lowMotion?0:Math.cos(t*.3+p.phase)*.0007));let col=p.kind===0?'194,211,216':p.kind===1?'101,238,205':'103,248,224';c.fillStyle=`rgba(${col},${p.a*(.88+.12*Math.sin(t+p.phase))})`;c.fillRect(q.x,q.y,p.r,p.r);}
+   for(const sq of this.squares){let p=this.project(sq.x,sq.y);c.globalAlpha=.75+.2*Math.sin(t*1.4+sq.x*30);c.fillStyle=sq.color;c.fillRect(p.x,p.y,sq.size,sq.size)}c.globalAlpha=1;
+   const hub=this.project(.51,.67);let glow=c.createRadialGradient(hub.x,hub.y,0,hub.x,hub.y,68*this.zoom);glow.addColorStop(0,'rgba(63,252,201,.25)');glow.addColorStop(.45,'rgba(16,180,144,.06)');glow.addColorStop(1,'rgba(12,150,137,0)');c.fillStyle=glow;c.beginPath();c.arc(hub.x,hub.y,68*this.zoom,0,TAU);c.fill();
+   c.strokeStyle='rgba(83,239,209,.54)';c.lineWidth=1; c.beginPath();c.ellipse(hub.x,hub.y,35*this.zoom,43*this.zoom,0,0,TAU);c.stroke();
+   for(let i=0;i<20;i++){const angle=i*TAU/20+t*.045;const a=this.project(.51+Math.cos(angle)*.041,.67+Math.sin(angle)*.081);const b=this.project(.51+Math.cos(angle)*(.066+(i%4)*.014),.67+Math.sin(angle)*(.108+(i%4)*.02));c.strokeStyle=`rgba(120,244,210,${.22+(i%4)*.07})`;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();c.fillStyle='#b6ffee';c.fillRect(b.x-1,b.y-1,2,2)}
+   c.save();c.translate(hub.x,hub.y);c.rotate(Math.PI/4+t*.24);c.shadowColor='#ff71a7';c.shadowBlur=15;c.fillStyle='#fa5c9b';let sz=11*this.zoom;c.fillRect(-sz/2,-sz/2,sz,sz);c.restore();
+  }
+  animate(ms){if(!this.lastTick)this.lastTick=ms;const elapsed=ms-this.lastTick;if(elapsed>=((this.width<600)?34:28)){this.fps=Math.max(1,Math.round(1000/elapsed));this.lastTick=ms;if(!this.paused&&!this.lowMotion&&!document.hidden){this.time+=Math.min(elapsed,65)/1000;this.draw();}this.count++;if(this.count%18===0){let e=document.getElementById('statFPS');if(e)e.textContent=this.paused?'PAUSE':String(this.fps)}}requestAnimationFrame(this.animate);}
+ }
+ root.MiraVisual=Atlas;
+})(window);
+
+</script><script>
+/* MIRA Neural Prompt Studio — v2.4. The visual simulation never claims to measure model IQ. */
+(()=>{'use strict';
+ const $=id=>document.getElementById(id);
+ const keys=['role','objective','context','roles','rules'];
+ const phases=[...keys,'review','start'];
+ const names={role:'ROLE',objective:'OBJECTIVE',context:'CONTEXT',roles:'ROLES',rules:'RULES',review:'REVIEW',start:'START'};
+ const verbs={role:'define · guide · direct',objective:'focus · measure · deliver',context:'ground · cite · understand',roles:'assign · review · verify',rules:'verify · ask · keep · report',review:'audit · compare · improve',start:'launch · observe · report'};
+ const hints={role:'Indica qué función desempeña la IA y sus límites.',objective:'Especifica el resultado esperado y cómo verificarlo.',context:'Da información relevante, audiencia, recursos y restricciones.',roles:'Define responsabilidades de los diferentes revisores o especialistas.',rules:'Escribe reglas de formato, comprobación y cuándo debe preguntar.'};
+ const demo={role:'Actúa como analista y editor responsable de un informe verificable.',objective:'Revisar el borrador, identificar afirmaciones sin evidencia y entregar un reporte con correcciones.',context:'Antes de publicar, el equipo necesita distinguir hechos, opiniones y autorizaciones. Trabaja con documentos proporcionados y no inventes datos.',roles:'Editor: corrige claridad. Verificador: distingue evidencia de suposiciones. Responsable: decide las aprobaciones.',rules:'Verifica cada afirmación antes de reportar. Pregunta cuando falte una aprobación. Conserva referencias importantes. No afirmes que un borrador fue publicado si no sucedió.'};
+ function saved(){try{return JSON.parse(localStorage.getItem('mira-atlas-v2')||'null')}catch{return null}}
+ const old=(()=>{try{return JSON.parse(localStorage.getItem('omega-v1')||'{}')}catch{return {}}})();
+ const persisted=saved();
+ const storedBaseline=(()=>{try{return localStorage.getItem('mira-baseline-v1')||''}catch{return ''}})();
+ const state={phase:'rules',fields:{...demo,...(old.role?Object.fromEntries(keys.filter(k=>old[k]).map(k=>[k,old[k]])):{}) ,...(persisted?.fields||{})},mode:persisted?.mode||'local',model:persisted?.model||'llama3.2',temperature:persisted?.temperature??.4,baseline:storedBaseline,dataset:null,report:null,response:'',lastReport:null,tab:'editor'};
+ const visual=new window.MiraVisual($('cosmos'));
+ let lastAudit=MiraAudit.evaluate(state.fields);
+ const words=s=>String(s||'').trim().match(/\S+/gu)||[];
+ const count=s=>words(s).length;
+ const save=()=>{try{localStorage.setItem('mira-atlas-v2',JSON.stringify({fields:state.fields,mode:state.mode,model:state.model,temperature:state.temperature}))}catch{}}
+ const format=(s,n)=>String(s).padStart(n,'0');
+ const clear=(el)=>{while(el.firstChild)el.removeChild(el.firstChild)};
+ const node=(tag,text,cls)=>{let e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e};
+ const appendText=(where,tag,text,cls)=>{let e=node(tag,text,cls);where.appendChild(e);return e};
+ const hasFields=()=>keys.some(k=>Boolean(state.fields[k]?.trim()));
+ const core=()=>keys.map(k=>`## ${names[k]}\n${state.fields[k]?.trim()||''}`).filter(x=>!x.endsWith('\n')).join('\n\n')+'\n\n## VERIFICACIÓN\nReporta solo resultados comprobados y señala limitaciones.';
+ const metric=()=>{let lens=keys.map(k=>count(state.fields[k]));let coverage=lens.map(v=>Math.min(1,v/12));const flags=keys.filter(k=>count(state.fields[k])<5).length+( !/verific|comprob|prueb|valid|evidenc|fuente/i.test(state.fields.rules)?1:0)+( !/entreg|informe|reporte|formato|archivo|lista|json/i.test(state.fields.objective)?1:0);let score=Math.round(coverage.reduce((v,x)=>v+x,0)*14+(flags===0?22:Math.max(0,22-flags*5))+8);return {lens,coverage,flags,score:Math.min(100,Math.max(0,score))};};
+ let toastHandle=null;
+ let activeAB=null, abRevision=0; // Cambios del usuario invalidan cualquier comparación en curso.
+ function toast(s){const el=$('toast');el.textContent=s;el.classList.add('visible');clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove('visible'),3200)}
+ function compile(){const text=core();$('compiledPrompt').textContent=text;return text;}
+ function setPhase(phase){if(!phases.includes(phase))return;state.phase=phase;visual.setPhase(phase);document.querySelectorAll('.steps button').forEach(btn=>{const yes=btn.dataset.phase===phase;btn.classList.toggle('active',yes);btn.setAttribute('aria-current',yes?'step':'false')});let idx=phases.indexOf(phase)+1;$('stageTitle').textContent=format(idx,2)+' '+names[phase];$('stageTag').textContent=verbs[phase];$('coreMode').textContent=phase;$('drawerTitle').textContent=format(idx,2)+' // '+names[phase];$('fieldLabel').textContent=names[phase]+' / SPECIFICATION';$('fieldHint').textContent=hints[phase]||'Revisa la estructura antes de ejecutar el prompt.';$('fieldEditor').disabled=!keys.includes(phase);$('fieldEditor').value=keys.includes(phase)?state.fields[phase]:phase==='review'?reviewText():'Abre MOTOR IA o LAB A/B para realizar una ejecución.';renderField();renderLabels();}
+ function renderField(){$('fieldWordCount').textContent=count(state.fields[state.phase]||'')+' words';compile();}
+ function reviewText(){const r=MiraAudit.evaluate(state.fields);const lines=[`Índice estructural: ${r.score}/100 (heurística, no calidad).`,`Alertas: ${r.issues.length}`, ...r.sections.map(s=>`${s.label}: ${s.words} palabras.`),...r.issues.map(x=>'- '+x.title+': '+x.advice)];return lines.join('\n');}
+ function renderLabels(){
+  // La disposición sigue la captura; el vocabulario refleja los campos editados.
+  const stop=new Set('como para antes sobre desde entre hasta deben debe eres actúa cada cuando esto esta este estas estos donde solo toda todos pero porque están puede tener debe pueden necesita necesita entregue entregar verifique verificar información resultado siempre nunca redacta sean sean ellos ellas con que los las por del una uno unos unas son que sus más sus los las entre'.split(' '));
+  const original=keys.every(k=>state.fields[k]===demo[k]);
+  const labels=[['role','role'],['objective','Report'],['context','they'],['roles','claims · clear'],['rules','Ask before approval'],['rules','Keep'],['review','publishing · approvals']];
+  document.querySelectorAll('.map-labels [data-focus]').forEach((el,i)=>{
+    const info=labels[i];if(!info)return;
+    el.classList.toggle('selected',info[0]===state.phase);
+    if(original){el.textContent=info[1];return}
+    let source=state.fields[info[0]]||state.fields.rules;
+    const terms=[...new Set((source.toLocaleLowerCase('es').match(/[\p{L}\p{N}]{4,}/gu)||[]).filter(t=>!stop.has(t)))];
+    el.textContent=i===0?names[state.phase].toLowerCase():terms.length?terms.slice((i*2)%terms.length,(i*2)%terms.length+2).join(' · '):info[1];
+  });
+}
+ function render(){const m=metric();lastAudit=MiraAudit.evaluate(state.fields);visual.setSemanticGraph(lastAudit);const wordTotal=count(core()),lin=core().split('\n').length;$('statLines').textContent=lin;$('statLinks').textContent=lastAudit.sections.reduce((n,x)=>n+x.terms.length,0);$('statWords').textContent=format(wordTotal,3);$('statNodeLinks').textContent=lastAudit.edges.reduce((n,x)=>n+x.weight,0);$('statFlags').textContent=lastAudit.issues.length;$('wordHeatTotal').textContent=wordTotal;$('signalLabel').textContent=lastAudit.score+'%';$('gauge').style.setProperty('--gauge',lastAudit.score);$('gaugeNumber').textContent=lastAudit.score;$('gaugeFlags').textContent=lastAudit.issues.length;$('readWords').textContent=wordTotal;$('linkedWords').textContent=lastAudit.edges.reduce((n,x)=>n+x.weight,0);$('flagWords').textContent=lastAudit.issues.length;$('claimCount').textContent=Math.min(99,count(state.fields.objective));$('ownerCount').textContent=Math.min(99,count(state.fields.roles));$('approvalCount').textContent=Math.min(99,count(state.fields.rules));$('teleWordsPerMin').textContent=Math.ceil(wordTotal*60/200);
+  const sections=$('sectionLines');clear(sections);phases.forEach((p,i)=>{const v=keys.includes(p)?count(state.fields[p]):p==='review'?Math.max(0,7-m.flags)*2:state.response?14:0;let color=['#d8d7df','#56d5fc','#ff6c94','#ffd265','#77f6da','#a8adb8','#f68e74'][i];let wrap=appendText(sections,'div',null,'section-line');let top=appendText(wrap,'div',null,'line-top');appendText(top,'span',p);appendText(top,'span',`${v}/${[25,25,35,42,25,17,14][i]}`);let track=appendText(wrap,'div',null,'line-track');let bar=node('i');bar.style.width=Math.min(100,v/[25,25,35,42,25,17,14][i]*100)+'%';bar.style.background=color;bar.style.color=color;track.appendChild(bar)});
+  const log=$('crawlLines');clear(log);const list=core().split(/\s+/).filter(Boolean);const selected=[...list].slice(-16);selected.forEach((w,i)=>{let div=appendText(log,'div',null,(i%9===0?'warn':''));appendText(div,'em','#'+format(Math.max(1,list.length-15+i),3));appendText(div,'span',i%5===0?'link ':'read ');appendText(div,'strong',w.replace(/[.#]/g,'').slice(0,16));});
+  const heat=$('wordHeat');clear(heat);const vals=[m.lens[0],m.lens[1],m.lens[2],m.lens[3],m.lens[4],Math.max(0,7-m.flags),state.response?12:0];let labels=['ROL','OBJ','CTX','TEAM','RULE','REV','STA'];const colors=['#f5f5f5','#6fe1f7','#ff6f93','#ffd365','#76edcf','#90aaa9','#f58d7a'];vals.forEach((v,i)=>{let row=appendText(heat,'div',null,'heat-row');appendText(row,'span',labels[i]);for(let j=0;j<12;j++){let b=node('i');if(j<Math.min(12,Math.ceil(v/3))){b.className='active';b.style.color=colors[i]}row.appendChild(b)}});
+  renderRadar(m.coverage,m.score);$('systemStatus').textContent=state.response?'MODEL // RESULT':'OFFLINE // AUDIT';compile();}
+ function renderRadar(values,score){const grid=$('radarGrid'),lab=$('radarLabels');clear(grid);clear(lab);const svgNS='http://www.w3.org/2000/svg';const ang=i=>-Math.PI/2+i*2*Math.PI/7;const pt=(i,r)=>[115+Math.cos(ang(i))*r,90+Math.sin(ang(i))*r];for(let ring=1;ring<=4;ring++){let poly=document.createElementNS(svgNS,'polygon');poly.setAttribute('points',Array.from({length:7},(_,i)=>pt(i,ring*14).join(',')).join(' '));poly.setAttribute('fill','none');poly.setAttribute('stroke','#1d2d32');grid.appendChild(poly)};for(let i=0;i<7;i++){const [x,y]=pt(i,60);let line=document.createElementNS(svgNS,'line');line.setAttribute('x1',115);line.setAttribute('y1',90);line.setAttribute('x2',x);line.setAttribute('y2',y);line.setAttribute('stroke','#23383a');grid.appendChild(line);let text=document.createElementNS(svgNS,'text');const [xx,yy]=pt(i,76);text.setAttribute('x',xx);text.setAttribute('y',yy);text.setAttribute('text-anchor','middle');text.setAttribute('font-size','8');text.setAttribute('fill','#aab6b7');text.textContent=['ROLE','OBJ','CTX','TEAM','RULES','REV','START'][i];lab.appendChild(text)};const v=[...values,score/100,state.response?1:.18];$('radarPoly').setAttribute('points',v.map((n,i)=>pt(i,Math.max(2,n*55)).join(',')).join(' '));}
+ const open=(tab='editor')=>{$('scrim').hidden=false;$('drawer').classList.add('open');$('drawer').setAttribute('aria-hidden','false');setTab(tab);$('closeDrawer').focus();};
+ const close=()=>{$('drawer').classList.remove('open');$('drawer').setAttribute('aria-hidden','true');$('scrim').hidden=true;};
+ function setTab(tab){state.tab=tab;document.querySelectorAll('.drawer-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));['editor','audit','compare','runtime','training'].forEach(t=>$(t+'Pane').hidden=(t!==tab));}
+ function download(name,data,type){const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);}
+ async function copy(text){try{await navigator.clipboard.writeText(text);toast('Copiado al portapapeles')}catch{toast('Copia no disponible. Usa EXPORTAR TXT.')}}
+ function restoreBaseline(){const b=state.baseline;$('promptAStatus').textContent=b?'Prompt A guardado · '+count(b)+' palabras':'Sin prompt A guardado.';}
+ function invalidateAB(){abRevision++;state.report=null;$('exportAB').disabled=true;$('compareResults').textContent='Cambios detectados. Vuelve a analizar las respuestas para exportar un informe vigente.';}
+ function compareLocal(source='manual',run=null){
+  const a=$('responseA').value,b=$('responseB').value;
+  if(!a.trim()||!b.trim()){toast('Introduce ambas respuestas');return}
+  let result;try{result=MiraCompare.compare(a,b,$('requiredCriteria').value)}catch(e){$('compareResults').textContent='Criterios inválidos: '+e.message;invalidateReportOnly();return}
+  const promptA=run?.promptA??state.baseline??null,promptB=run?.promptB??core();
+  const config=run?.config??{mode:state.mode,model:state.model,temperature:state.temperature};
+  state.report={version:'2.4',created:new Date().toISOString(),source,
+    promptA,promptB,responseA:a,responseB:b,model:config.model,mode:config.mode,temperature:config.temperature,
+    execution:run?{a:run.a,b:run.b}:null,metrics:result};
+  let coverageText='';
+  if(result.criteria.length){
+   const diff=result.coverageDifferencePoints;
+   coverageText=`\nCRITERIOS LITERALES (${result.criteria.length}):\nA: ${result.coverageA.count}/${result.coverageA.total} (${result.coverageA.percent}%)\nB: ${result.coverageB.count}/${result.coverageB.total} (${result.coverageB.percent}%)\nΔ: ${diff>0?'+':''}${diff} puntos porcentuales\nFaltantes A: ${result.coverageA.missing.join(' · ')||'ninguno'}\nFaltantes B: ${result.coverageB.missing.join(' · ')||'ninguno'}\n`;
+  }
+  const runtime=run?`\nEJECUCIÓN COMPROBADA: A ${run.a.elapsedMs} ms · B ${run.b.elapsedMs} ms\nModelos devueltos: ${run.a.model} / ${run.b.model}\n`:'\nORIGEN: respuestas pegadas/manuales; no se verificó su procedencia.\n';
+  $('compareResults').textContent=`A: ${result.a.words} palabras · ${result.a.characters} caracteres\nB: ${result.b.words} palabras · ${result.b.characters} caracteres\nΔ: ${result.wordDifference>0?'+':''}${result.wordDifference} palabras\nSolapamiento léxico: ${result.lexicalOverlapPercent}%\nRespuestas idénticas: ${result.identical?'Sí':'No'}\n${coverageText}${runtime}\nNo mide exactitud ni calidad; la presencia de frases no garantiza cumplimiento.`;
+  $('exportAB').disabled=false;
+ }
+ function invalidateReportOnly(){abRevision++;state.report=null;$('exportAB').disabled=true;}
+ function apiBase(){const url=$('apiBaseUrl').value.trim().replace(/\/+$/,'');if(!url)return '';const parsed=new URL(url);if(parsed.username||parsed.password||parsed.search||parsed.hash||!['https:','http:'].includes(parsed.protocol))throw Error('URL de servidor inválida.');if(parsed.protocol!=='https:'&&!['localhost','127.0.0.1','[::1]'].includes(parsed.hostname))throw Error('Para servidores externos usa HTTPS.');return parsed.origin;}
+ async function api(path,method='GET',data,externalSignal){
+  const headers={'Content-Type':'application/json'};
+  const key=$('accessToken').value.trim();if(key)headers['X-Omega-Token']=key;
+  const ctrl=new AbortController();
+  const relay=()=>ctrl.abort();
+  if(externalSignal?.aborted)ctrl.abort();
+  else externalSignal?.addEventListener('abort',relay,{once:true});
+  const timer=setTimeout(()=>ctrl.abort(),125000);
+  try{
+   const r=await fetch(apiBase()+path,{method,headers,body:data?JSON.stringify(data):undefined,signal:ctrl.signal});
+   if(ctrl.signal.aborted)throw new DOMException('Solicitud cancelada','AbortError');
+   const response=await r.json().catch(()=>({}));
+   if(ctrl.signal.aborted)throw new DOMException('Solicitud cancelada','AbortError');
+   if(!r.ok)throw Error(response.error||`HTTP ${r.status}`);
+   return response;
+  }finally{clearTimeout(timer);externalSignal?.removeEventListener('abort',relay)}
+ }
+ async function infer(prompt,config={mode:state.mode,model:state.model,temperature:state.temperature},signal){return api('/api/generate','POST',{...config,prompt},signal);}
+ async function listModels(){let btn=$('listModels');btn.disabled=true;$('modelListStatus').textContent='Consultando Ollama…';try{const result=await api('/api/models');const dl=$('availableModels');clear(dl);for(const name of result.models||[]){let opt=document.createElement('option');opt.value=name;dl.appendChild(opt)}$('modelListStatus').textContent=result.models.length?result.models.join(' · '):'Ollama responde, pero no hay modelos descargados. Ejecuta ollama pull llama3.2 en la computadora.';if(result.models.length===1){state.model=result.models[0];$('modelName').value=state.model;save();}}catch(e){$('modelListStatus').textContent='Ollama no disponible: '+e.message}finally{btn.disabled=false}}
+ async function runModel(){if(!hasFields())return toast('Falta prompt');let btn=$('runModel');btn.disabled=true;$('runStatus').textContent='Ejecutando con backend…';try{const r=await infer(core());state.response=r.text||'';$('modelOutput').textContent=state.response||'(Sin texto)';$('runStatus').textContent='Recibido del modelo '+r.model;render()}catch(e){$('runStatus').textContent='No se pudo ejecutar: '+e.message+' · Inicia server.py y el modelo autorizado.'}finally{btn.disabled=false}}
+ function cancelAB(){
+  if(!activeAB)return;
+  activeAB.abort();
+  $('compareStatus').textContent='Cancelando ejecución A/B…';
+ }
+ async function runAB(){
+  if(activeAB)return;
+  if(!hasFields())return toast('Completa primero el prompt B');
+  if(!state.baseline)return toast('Guarda primero el prompt A');
+  let criteria;
+  try{criteria=MiraCompare.parseCriteria($('requiredCriteria').value)}
+  catch(e){$('compareStatus').textContent='Corrige los criterios antes de usar el motor: '+e.message;return}
+  const ctrl=new AbortController();activeAB=ctrl;
+  const btn=$('runCompare'),cancel=$('cancelCompare');
+  btn.disabled=true;cancel.disabled=false;
+  $('responseA').readOnly=true;$('responseB').readOnly=true;$('requiredCriteria').readOnly=true;
+  $('analyzeAB').disabled=true;
+  invalidateReportOnly();
+  // Evita mezclar una respuesta antigua con una ejecución nueva o cancelada.
+  $('responseA').value='';$('responseB').value='';
+  const revision=abRevision;
+  const promptA=state.baseline,promptB=core();
+  const config={mode:state.mode,model:state.model,temperature:state.temperature};
+  const run={promptA,promptB,config};
+  $('compareStatus').textContent='Ejecutando A y después B con la misma configuración…';
+  try{
+   const startedA=performance.now();const a=await infer(promptA,config,ctrl.signal);
+   if(ctrl.signal.aborted)throw new DOMException('Cancelado','AbortError');
+   run.a={elapsedMs:Math.round(performance.now()-startedA),model:a.model||config.model};
+   $('responseA').value=a.text||'';
+   $('compareStatus').textContent='Respuesta A recibida; ejecutando B…';
+   const startedB=performance.now();const b=await infer(promptB,config,ctrl.signal);
+   if(ctrl.signal.aborted)throw new DOMException('Cancelado','AbortError');
+   run.b={elapsedMs:Math.round(performance.now()-startedB),model:b.model||config.model};
+   $('responseB').value=b.text||'';
+   if(abRevision!==revision){
+    $('compareStatus').textContent='El prompt o la configuración cambió durante la ejecución. Revisa las respuestas y pulsa ANALIZAR para obtener un informe manual actualizado.';
+    invalidateReportOnly();
+   }else{
+    compareLocal('model',run);
+    $('compareStatus').textContent='A/B completado. Prompts y configuración congelados para esta ejecución; las respuestas pueden variar.';
+   }
+  }catch(e){
+   invalidateReportOnly();
+   $('compareStatus').textContent=ctrl.signal.aborted
+    ?'Ejecución A/B cancelada desde el navegador. El servidor podría seguir procesando; no se exportará un informe incompleto.'
+    :'Error de ejecución: '+e.message+' · Se conservan las respuestas recibidas. Puedes completar y analizar manualmente.';
+  }finally{
+   if(activeAB===ctrl)activeAB=null;
+   btn.disabled=false;cancel.disabled=true;
+   $('responseA').readOnly=false;$('responseB').readOnly=false;$('requiredCriteria').readOnly=false;
+   $('analyzeAB').disabled=false;
+  }
+ }
+ async function train(){if(!state.dataset){toast('Carga un dataset válido primero');return}if(!confirm('El entrenamiento real requiere GPU y puede consumir energía. ¿Enviar los ejemplos al servidor para QLoRA?'))return;let btn=$('startTraining');btn.disabled=true;try{const d=await api('/api/datasets','POST',{samples:state.dataset});const j=await api('/api/jobs','POST',{kind:'lora_train',config:{dataset:d.dataset,model:$('trainingModel').value.trim(),steps:Number($('trainingSteps').value)}});$('trainStatus').textContent='Trabajo '+j.id+' en cola persistente. No se afirma que haya finalizado.';refreshJobs()}catch(e){$('trainStatus').textContent='Error: '+e.message}finally{btn.disabled=false}}
+ async function datasetSelected(file){if(!file)return;try{let raw=(await file.text()).trim(),arr;try{arr=JSON.parse(raw)}catch{arr=raw.split(/\r?\n/).filter(Boolean).map(l=>JSON.parse(l))};if(!Array.isArray(arr)||arr.length<2||arr.length>2000)throw Error('Se necesitan 2–2000 ejemplos.');arr=arr.map(s=>{if(typeof s.instruction==='string'&&typeof s.response==='string'&&s.instruction.trim()&&s.response.trim())return {instruction:s.instruction,response:s.response};if(Array.isArray(s.messages)){const u=s.messages.find(x=>x.role==='user'),a=s.messages.find(x=>x.role==='assistant');if(u&&a&&typeof u.content==='string'&&typeof a.content==='string')return {instruction:u.content,response:a.content}}throw Error('Ejemplo sin instruction/response válidos.')});state.dataset=arr;$('datasetStatus').textContent=`${arr.length} ejemplos validados localmente · ${file.name}`;}catch(e){state.dataset=null;$('datasetStatus').textContent='Error: '+e.message}}
+ async function refreshJobs(){try{const r=await api('/api/jobs');$('trainingJobs').textContent=r.jobs.slice(0,5).map(j=>j.id+' | '+j.kind+' | '+j.status+(j.error?' | '+j.error:'')).join('\n')}catch{}}
+ function audit(){const r=MiraAudit.evaluate(state.fields);lastAudit=r;const issues=r.issues.length?r.issues.map((x,i)=>`${i+1}. [${x.severity.toUpperCase()}] ${x.title}\n   → ${x.advice}`).join('\n\n'):'No se detectaron problemas estructurales con estas reglas.';$('auditResults').textContent=`COBERTURA: ${r.filled}/5 secciones\nÍNDICE ESTRUCTURAL: ${r.score}/100 (no mide inteligencia)\nPALABRAS: ${r.words}\nRELACIONES LÉXICAS: ${r.edges.reduce((a,b)=>a+b.weight,0)}\n\n${issues}`;$('enhancedPrompt').value=MiraAudit.improve(state.fields,r);render();return r;}
+ async function importProject(file){if(!file)return;try{if(file.size>350000)throw Error('Archivo demasiado grande');const project=MiraAudit.importProject(JSON.parse(await file.text()));if(!confirm('¿Reemplazar las cinco secciones actuales con las del archivo?'))return;Object.assign(state.fields,project);invalidateAB();save();setPhase('role');audit();$('projectStatus').textContent='Proyecto importado correctamente.';}catch(e){$('projectStatus').textContent='No se pudo importar: '+e.message}}
+ async function testConnection(){const btn=$('testConnection');btn.disabled=true;$('connectionStatus').textContent='Probando servidor…';try{const health=await api('/api/health');$('connectionStatus').textContent=`Servidor conectado. Modelo online: ${health.online_configured?'configurado':'sin configurar'}. Entrenamiento: ${health.training_enabled?'habilitado':'deshabilitado'}.`;$('systemStatus').textContent='API // READY';}catch(e){$('connectionStatus').textContent='Sin conexión al motor IA: '+e.message+'. La auditoría offline sigue funcionando.';$('systemStatus').textContent='OFFLINE // AUDIT';}finally{btn.disabled=false}}
+ function setup(){
+  document.querySelectorAll('.steps button').forEach(b=>b.addEventListener('click',()=>{setPhase(b.dataset.phase);if(['review','start'].includes(b.dataset.phase))open(b.dataset.phase==='review'?'editor':'runtime')}));
+  document.querySelectorAll('.map-labels button').forEach(b=>b.addEventListener('click',()=>{setPhase(b.dataset.focus);open('editor')}));
+  $('openEditor').onclick=()=>open('editor');$('openAudit').onclick=()=>{open('audit');audit()};$('runAudit').onclick=audit;$('copyEnhanced').onclick=()=>copy($('enhancedPrompt').value);$('exportAudit').onclick=()=>{const r=audit();download('MIRA_AUDITORIA.json',JSON.stringify({audit:r,enhancedPrompt:$('enhancedPrompt').value},null,2),'application/json')};$('exportProject').onclick=()=>download('MIRA_PROYECTO.json',JSON.stringify(MiraAudit.exportProject(state.fields),null,2),'application/json');$('importProjectButton').onclick=()=>$('importProject').click();$('importProject').onchange=e=>importProject(e.target.files?.[0]);$('testConnection').onclick=testConnection;$('listModels').onclick=listModels;$('viewCompare').onclick=()=>open('compare');$('settingsBtn').onclick=()=>open('runtime');$('scrim').onclick=close;$('closeDrawer').onclick=close;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('drawer').classList.contains('open'))close();if(e.key==='ArrowRight'&&!$('drawer').classList.contains('open'))setPhase(phases[(phases.indexOf(state.phase)+1)%phases.length]);if(e.key==='ArrowLeft'&&!$('drawer').classList.contains('open'))setPhase(phases[(phases.indexOf(state.phase)+6)%phases.length]);});
+  document.querySelectorAll('.drawer-tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));$('fieldEditor').addEventListener('input',e=>{if(!keys.includes(state.phase))return;state.fields[state.phase]=e.target.value;invalidateAB();save();renderField();renderLabels();render();});
+  $('zoomIn').onclick=()=>visual.changeZoom(.16);$('zoomOut').onclick=()=>visual.changeZoom(-.16);$('resetView').onclick=()=>visual.center();$('pauseMotion').onclick=()=>{const paused=visual.togglePause();$('pauseMotion').textContent=paused?'▶':'Ⅱ';$('pauseMotion').setAttribute('aria-pressed',String(paused))};$('fullscreenBtn').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>toast('El navegador no permite pantalla completa aquí'))};
+  $('copyPrompt').onclick=()=>copy(core());$('exportPrompt').onclick=()=>download('MIRA_PROMPT.txt',core(),'text/plain;charset=utf-8');$('loadExample').onclick=()=>{Object.assign(state.fields,demo);invalidateAB();save();setPhase(state.phase);render();toast('Demostración restaurada')};$('clearPrompt').onclick=()=>{if(!confirm('¿Borrar los campos?'))return;for(const k of keys)state.fields[k]='';invalidateAB();save();setPhase('role');render();toast('Campos vaciados')};
+  $('savePromptA').onclick=()=>{state.baseline=core();invalidateAB();try{localStorage.setItem('mira-baseline-v1',state.baseline)}catch{}restoreBaseline();toast('Prompt A guardado')};$('analyzeAB').onclick=()=>compareLocal();$('runCompare').onclick=runAB;$('cancelCompare').onclick=cancelAB;$('exportAB').onclick=()=>{if(!state.report)return;if(!confirm('Se exportarán las respuestas y prompts completos. ¿Continuar?'))return;download('MIRA_AB_REPORT.json',JSON.stringify(state.report,null,2),'application/json')};for(const id of ['responseA','responseB','requiredCriteria'])$(id).addEventListener('input',()=>{invalidateReportOnly()});
+  $('modelMode').value=state.mode;$('modelName').value=state.model;$('temperature').value=state.temperature;$('temperatureLabel').textContent=state.temperature;$('modelMode').onchange=e=>{state.mode=e.target.value;invalidateAB();save()};$('modelName').onchange=e=>{state.model=e.target.value.trim();invalidateAB();save()};$('temperature').oninput=e=>{state.temperature=Number(e.target.value);$('temperatureLabel').textContent=state.temperature;invalidateAB();save()};$('runModel').onclick=runModel;$('trainingDataset').onchange=e=>datasetSelected(e.target.files?.[0]);$('startTraining').onclick=train;
+  restoreBaseline();setPhase('rules');render();
+ }
+ setup();
+})();
+
+</script></body></html>

@@ -1,0 +1,12 @@
+'use strict';const a=require('../web/analyzer.js');const assert=require('node:assert/strict');let n=0;
+const test=(name,fn)=>{fn();console.log('OK '+name);n++};
+test('all missing sections detected',()=>{let r=a.evaluate({});assert.equal(r.filled,0);assert.equal(r.issues.filter(x=>x.severity==='high').length,5)});
+test('Spanish accents tokenize correctly',()=>{assert.deepEqual(a.tokenize('Verificación y verificacion'),['verificacion','verificacion'])});
+test('disjoint fields produce no semantic edges',()=>{const r=a.evaluate({role:'gato',objective:'luna',context:'barco',roles:'lima',rules:'marte'});assert.equal(r.edges.length,0)});
+test('shared keywords produce actual edge',()=>{const r=a.evaluate({role:'verificar datos',objective:'entregar datos en tabla',context:'datos históricos',roles:'equipo analista',rules:'verificar pruebas'});assert.ok(r.edges.some(x=>x.from==='role'&&x.to==='objective'&&x.terms.includes('datos')))});
+test('improvement includes placeholders and never fabricates',()=>{let s=a.improve({objective:'Quiero el resultado'});assert.match(s,/\[POR DEFINIR/);assert.match(s,/Quiero el resultado/)});
+test('export import roundtrip',()=>{let f={role:'A',objective:'B',context:'C',roles:'D',rules:'E'};assert.deepEqual(a.importProject(a.exportProject(f)),f)});
+test('untrusted project rejected',()=>assert.throws(()=>a.importProject({format:'other',fields:{}})));
+test('invalid large fields rejected',()=>assert.throws(()=>a.importProject({format:'mira-prompt-project',version:2,fields:{role:'a'.repeat(50001),objective:'B',context:'C',roles:'D',rules:'E'}})));
+test('potentially vague prompt flagged',()=>assert.ok(a.evaluate({objective:'Quiero un programa perfecto'}).issues.some(x=>x.id==='vague')));
+console.log(n+' pruebas de auditoría offline superadas');
