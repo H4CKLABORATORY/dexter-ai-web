@@ -1,0 +1,64 @@
+name: MIRA GitHub Pages — static frontend
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mira/web/**'
+      - 'mira/tests/pages-*.mjs'
+      - 'mira/tests/pages-*.cjs'
+      - '.github/workflows/mira-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare GitHub Pages site without breaking existing root paths
+        run: |
+          mkdir -p "$RUNNER_TEMP/mira-site"
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='node_modules/' --exclude='.env*' --exclude='mira/' ./ "$RUNNER_TEMP/mira-site/"
+          mkdir -p "$RUNNER_TEMP/mira-site/mira"
+          cp -a mira/web/. "$RUNNER_TEMP/mira-site/mira/"
+          touch "$RUNNER_TEMP/mira-site/.nojekyll"
+      - name: Check MIRA assets and nested base paths
+        run: |
+          node mira/tests/pages-static-smoke.mjs "$RUNNER_TEMP/mira-site"
+          for f in "$RUNNER_TEMP"/mira-site/mira/*.js; do node --check "$f"; done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/mira-site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy MIRA to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Install headless browser for post-deployment smoke
+        run: |
+          npm install --no-save --no-package-lock playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Verify live desktop and iPhone-width rendering, console, assets
+        env:
+          PAGES_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node mira/tests/pages-browser-smoke.cjs "${PAGES_ROOT%/}/mira/"
