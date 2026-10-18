@@ -11,7 +11,12 @@ h1{font-size:clamp(32px,7vw,55px);letter-spacing:-.05em;margin:30px 0 15px}
 .card{border:1px solid #3b5873;background:linear-gradient(130deg,#1a2d44,#10172d);padding:22px;border-radius:17px}
 h2{margin:2px 0 10px;font-size:20px}.cta{display:block;text-align:center;border-radius:11px;background:#74ead6;color:#06272e;text-decoration:none;padding:14px 11px;font-weight:850;margin-top:16px;min-height:48px}
 .note{border-left:3px solid #e9be7b;padding:15px;background:#3e32252e;color:#ddcbb5;line-height:1.6}
-@media(max-width:650px){.cards{grid-template-columns:1fr}}
+.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.command{background:#1e344b;border:1px solid #457184;color:#ddfbff;min-height:48px;padding:12px;border-radius:11px;font-size:14px;text-align:left;cursor:pointer;font-family:ui-monospace,Menlo,monospace}
+.command:active{background:#326480}.command:focus-visible,.cta:focus-visible{outline:2px solid #8cffe4;outline-offset:3px}
+code{color:#bfffe9}#copyStatus{color:#90ebd9;min-height:23px}
+@media(max-width:650px){.cards,.quick{grid-template-columns:1fr}}
+
 </style></head><body><main>
 <div class="logo">⬡ DEXTER NEXUS / CLOUD WORKSTATION</div>
 <h1>Tu computadora remota en el iPhone.</h1>
@@ -20,6 +25,33 @@ h2{margin:2px 0 10px;font-size:20px}.cta{display:block;text-align:center;border-
 <section class="card"><h2>▣ PowerShell real</h2><p class="muted">Consola interactiva con comandos y acceso a archivos del contenedor. Úsala desde el navegador del iPhone.</p><a class="cta" href="/shell/">Abrir PowerShell</a></section>
 <section class="card"><h2>⬡ OpenCode web</h2><p class="muted">Interfaz web y servidor OpenCode para programar. Puedes conectar un modelo compatible usando tus propias credenciales.</p><a class="cta" href="/app/">Abrir OpenCode</a></section>
 </div>
+<section class="card" aria-labelledby="quickTitle">
+<h2 id="quickTitle">⚡ Atajos PowerShell para el iPhone</h2>
+<p class="muted">Toca un comando para copiarlo y pégalo en la terminal. No se ejecuta nada automáticamente. Los atajos de perfil están disponibles cuando se inicia la versión actualizada del servidor.</p>
+<div class="quick">
+<button class="command" data-copy="nexus-help">nexus-help · Ayuda</button>
+<button class="command" data-copy="nexus-repo">nexus-repo · Abrir proyecto</button>
+<button class="command" data-copy="nexus-status">nexus-status · Diagnóstico</button>
+<button class="command" data-copy="nexus-recent">nexus-recent · Últimos commits</button>
+<button class="command" data-copy="nexus-files">nexus-files · Archivos</button>
+<button class="command" data-copy="git status --short --branch">git status · Cambios pendientes</button>
+</div>
+<div id="copyStatus" aria-live="polite"></div>
+<p class="muted"><small>Para detener un proceso utiliza Ctrl+C desde el teclado de la terminal. Para guardar trabajo importante, haz commits en GitHub antes de que se suspenda el servidor.</small></p>
+</section>
+<section class="card"><h2>¿Y checkra1n?</h2><p class="muted">checkra1n es un jailbreak para dispositivos antiguos (iPhone 5s a iPhone X), no acelera PowerShell remoto ni funciona en iPhone 14. Esta estación aprovecha un servidor Linux y funciona desde Safari sin hacer jailbreak.</p></section>
 <div class="note"><strong>Persistencia:</strong> los archivos dentro del servidor gratuito desaparecen al reiniciarse. Guarda cambios haciendo commit y push en GitHub. El servicio gratuito también duerme tras estar inactivo; no permite trabajo continuo garantizado. No compartas tu contraseña.</div>
 <p class="muted"><small>Esto no es Windows ni habilita ejecución de .exe o control del sistema iOS. Esta página no configura cuentas ni claves externas automáticamente.</small></p>
+<script>
+document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{
+ const command=button.dataset.copy;
+ const status=document.getElementById('copyStatus');
+ try{
+  await navigator.clipboard.writeText(command);
+  status.textContent='Copiado: '+command;
+ }catch(error){
+  status.textContent='No se pudo copiar automáticamente. Selecciona este comando: '+command;
+ }
+}));
+</script>
 </main></body></html>
