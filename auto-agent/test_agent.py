@@ -17,7 +17,7 @@ class InventoryTests(unittest.TestCase):
             {"name": "fork", "owner": {"login": "someone-else"}},
             {"name": "old", "owner": {"login": "H4CKLABORATORY"}, "archived": True}
         ]
-        def fake_get(path):
+        def fake_get(path, **kwargs):
             if path.startswith("/users/"):
                 return page
             if path.startswith("/repos/"):
@@ -30,10 +30,23 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(result["repositories"][0]["last_action"]["conclusion"], "success")
         self.assertIn("public", result["scope"])
 
+    def test_failed_ci_proposes_review_only(self):
+        repo = {"name": "one", "owner": {"login": "H4CKLABORATORY"},
+                "default_branch": "main", "private": False}
+        def fake_get(path, **kwargs):
+            if path.startswith("/users/"):
+                return [repo]
+            return {"workflow_runs": [{"name": "CI", "status": "completed",
+                                       "conclusion": "failure", "html_url": "https://github.com/example/actions/runs/1"}]}
+        with patch.object(agent, "get", side_effect=fake_get):
+            result = agent.inventory()
+        self.assertEqual(result["next_tasks"][0]["kind"], "review_failed_ci")
+        self.assertTrue(result["next_tasks"][0]["requires_human_review"])
+
     def test_action_failure_is_reported(self):
         repo = {"name": "one", "owner": {"login": "H4CKLABORATORY"},
                 "default_branch": "main", "private": False}
-        def fake_get(path):
+        def fake_get(path, **kwargs):
             if path.startswith("/users/"):
                 return [repo]
             raise PermissionError("forbidden")
