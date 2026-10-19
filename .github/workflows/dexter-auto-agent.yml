@@ -1,0 +1,28 @@
+name: DEXTER AUTO AGENT - read-only audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: dexter-auto-agent-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run offline unit tests
+        run: python3 -m unittest discover -s auto-agent -p 'test_*.py' -v
+      - name: Run repository inventory
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 auto-agent/agent.py
+      - name: Upload inventory report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dexter-auto-agent-report
+          path: auto-agent/reports/latest.json
+          retention-days: 7
