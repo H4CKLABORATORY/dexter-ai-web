@@ -44,8 +44,8 @@ const context=vm.createContext({
   },
   setTimeout,clearTimeout
 });
-vm.runInContext(script.replace(/loadCatalog\\(\\);\\s*$/, ''),context,{filename:'ai-apis/app.js'});
-const table=(header,rows)=>header+'\\n'+rows.map(r=>'| '+r.join(' | ')+' |').join('\\n')+'\\n';
+vm.runInContext(script.replace(/loadCatalog\(\);\s*$/, ''),context,{filename:'ai-apis/app.js'});
+const table=(header,rows)=>header+'\n'+rows.map(r=>'| '+r.join(' | ')+' |').join('\n')+'\n';
 const a=(url,text)=>'<a href="'+url+'">'+text+'</a>';
 const permanent=data.providers.filter(p=>p.category==='permanent');
 const renewable=data.providers.filter(p=>p.category==='renewable');
@@ -59,7 +59,7 @@ const markdown=[
   '<!-- BEGIN_RENEWABLE -->',table('| Provider | Free Models | Credit Model | Max Context | Modalities | Get API Key |',renewable.map(renewableRow)),'<!-- END_RENEWABLE -->',
   '<!-- BEGIN_QUICK_REF -->',table('| Provider | Base URL | Get API Key | Credit Card? |',data.providers.map(quickRow)),'<!-- END_QUICK_REF -->',
   '<!-- BEGIN_BEST_MODELS -->',table('| Provider | Best Free Model | Model ID | Max Context | Rate Limit |',modelRows),'<!-- END_BEST_MODELS -->',
-].join('\\n');
+].join('\n');
 context.fixture=markdown;
 const rebuilt=vm.runInContext('parseRemote(fixture)',context);
 assert.equal(rebuilt.providers.length,data.providers.length,'Remote provider parser');
