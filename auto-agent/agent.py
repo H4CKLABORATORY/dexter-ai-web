@@ -20,13 +20,13 @@ def get(path):
 def inventory():
     repos = []
     for page in range(1, 11):
-        batch = get(f"/user/repos?per_page=100&page={page}&affiliation=owner") if TOKEN else get(f"/users/{OWNER}/repos?per_page=100&page={page}")
+        batch = get(f"/users/{OWNER}/repos?per_page=100&page={page}")
         if not batch:
             break
         repos.extend(r for r in batch if r.get("owner", {}).get("login", "").lower() == OWNER.lower())
         if len(batch) < 100:
             break
-    output = {"generated_at": datetime.now(timezone.utc).isoformat(), "owner": OWNER, "repositories": []}
+    output = {"generated_at": datetime.now(timezone.utc).isoformat(), "owner": OWNER, "scope": "public repositories only; sibling private repositories require separate authorization", "repositories": []}
     for r in repos:
         if r.get("archived") or r.get("disabled"):
             continue
