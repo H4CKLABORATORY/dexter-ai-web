@@ -1,4 +1,3 @@
-import json
 import unittest
 from unittest.mock import patch
 from pathlib import Path
@@ -29,6 +28,14 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual([r["name"] for r in result["repositories"]], ["one"])
         self.assertEqual(result["repositories"][0]["last_action"]["conclusion"], "success")
         self.assertIn("public", result["scope"])
+
+    def test_unauthenticated_public_inventory(self):
+        with patch.object(agent, "TOKEN", "dummy"), patch("urllib.request.urlopen") as urlopen:
+            response = urlopen.return_value.__enter__.return_value
+            response.read.return_value = b'[]'
+            agent.get("/users/H4CKLABORATORY/repos", authenticated=False)
+            request = urlopen.call_args.args[0]
+            self.assertNotIn("Authorization", request.headers)
 
     def test_failed_ci_proposes_review_only(self):
         repo = {"name": "one", "owner": {"login": "H4CKLABORATORY"},
