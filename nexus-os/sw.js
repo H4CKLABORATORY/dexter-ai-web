@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='nexus-shell-v12-vm-lab';
+const VERSION='nexus-shell-v13-ai-hub';
 const SHELL=[
  './','./index.html','./plugin-hub/index.html','./nexus-install/index.html','./vm-lab/index.html','./vm-lab/vm.js','./chatgpt-pc/index.html','./cloud-pc/index.html','./plugin-hub/auto-engine.js','./plugin-hub/panel.js','./app.js','./rom-vault.js','./manifest.webmanifest','./assets/nexus.svg',
  './windows-lite/index.html','./windows-lite/style.css','./windows-lite/desktop.js',
@@ -8,6 +8,8 @@ const SHELL=[
  './roms/pong.gb','./roms/minesweep.gb',
  './roms/dabg.nes','./roms/falling.nes','./roms/table-tennis.nes',
  './jump/index.html','./jump/game.js',
+ './ai-apis/index.html','./ai-apis/app.js','./ai-apis/style.css','./ai-apis/catalog.json',
+ './powershell-mobile/index.html',
  './assets/pc/libv86.js','./assets/pc/v86.wasm','./assets/pc/seabios.bin',
  './assets/pc/vgabios.bin','./assets/pc/freedos722.img'
 ];
@@ -21,8 +23,11 @@ self.addEventListener('fetch',event=>{
  const u=new URL(event.request.url);
  if(event.request.method!=='GET'||u.origin!==self.location.origin)return;
  if(event.request.mode==='navigate'){
-  const fallback=u.pathname.includes('/windows-lite/')?'./windows-lite/index.html':'./index.html';
-  event.respondWith(fetch(event.request).catch(()=>caches.match(fallback)));
+  const fallback=u.pathname.split('/').includes('ai-apis')?'./ai-apis/index.html':
+    u.pathname.split('/').includes('windows-lite')?'./windows-lite/index.html':
+    u.pathname.split('/').includes('powershell-mobile')?'./powershell-mobile/index.html':'./index.html';
+  event.respondWith(fetch(event.request).catch(async()=>
+    (await caches.match(event.request,{ignoreSearch:true})) || caches.match(fallback)));
   return;
  }
  const isShell=SHELL.some(path=>new URL(path,self.registration.scope).pathname===u.pathname);
