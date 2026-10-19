@@ -1,0 +1,39 @@
+name: Verify NEXUS AI API Hub
+on:
+  push:
+    paths:
+      - 'nexus-os/ai-apis/**'
+      - 'nexus-os/index.html'
+      - '.github/workflows/ai-api-hub.yml'
+  pull_request:
+    paths:
+      - 'nexus-os/ai-apis/**'
+      - 'nexus-os/index.html'
+      - '.github/workflows/ai-api-hub.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate catalog and JavaScript
+        run: |
+          node --check nexus-os/ai-apis/app.js
+          node nexus-os/ai-apis/smoke.cjs
+      - name: Ensure no API credentials were committed in catalog
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const data = JSON.parse(fs.readFileSync('nexus-os/ai-apis/catalog.json','utf8'));
+          if (JSON.stringify(data).match(/"api_?key"\s*:\s*"[^"]+"/i)) {
+            throw Error('API keys must never be committed');
+          }
+          NODE
