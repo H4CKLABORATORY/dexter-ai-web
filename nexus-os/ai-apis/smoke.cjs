@@ -6,6 +6,10 @@ const data=JSON.parse(fs.readFileSync('nexus-os/ai-apis/catalog.json','utf8'));
 const ui=fs.readFileSync('nexus-os/ai-apis/index.html','utf8');
 const script=fs.readFileSync('nexus-os/ai-apis/app.js','utf8');
 const home=fs.readFileSync('nexus-os/index.html','utf8');
+const sw=fs.readFileSync('nexus-os/sw.js','utf8');
+assert(sw.includes("'./ai-apis/catalog.json'"),'AI catalog must be cached offline');
+assert(sw.includes("'./ai-apis/index.html'"),'AI page must be cached offline');
+assert(sw.includes("u.pathname.split('/').includes('ai-apis')"),'AI route must have its own offline fallback');
 
 assert.equal(data.schema,1);
 assert(data.providers.length>=20,'Expected public free provider directory');
