@@ -1,0 +1,70 @@
+name: Video Studio unit tests
+on:
+  pull_request:
+    paths:
+      - 'video-studio/**'
+      - '.github/workflows/video-studio-tests.yml'
+  push:
+    paths:
+      - 'video-studio/**'
+      - '.github/workflows/video-studio-tests.yml'
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit tests (no paid providers)
+        run: python -m unittest discover -s video-studio/tests -v
+      - name: Verify Python syntax
+        run: python -m py_compile video-studio/studio.py video-studio/gui.py video-studio/reference_lab.py video-studio/editor.py video-studio/style_report.py video-studio/content_modes.py video-studio/future_tab.py
+      - name: Install free FFmpeg for smoke validation
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+      - name: Check runner FFmpeg
+        run: |
+          command -v ffmpeg
+          ffmpeg -version
+      - name: Smoke fixture
+        run: ffmpeg -hide_banner -loglevel error -f lavfi -i color=c=blue:s=320x180:r=15 -t 2 -c:v mpeg4 -q:v 5 -y /tmp/ffsample.mp4
+      - name: Smoke import
+        run: |
+          python video-studio/studio.py prepare --name "Free Fire Demo" --source /tmp/ffsample.mp4
+          python video-studio/reference_lab.py init
+      - name: Smoke analyze
+        run: python video-studio/reference_lab.py analyze --file /tmp/ffsample.mp4
+      - name: Smoke edit plan
+        run: python video-studio/editor.py plan --job free-fire-demo --platform tiktok --target 1.5
+      - name: Smoke FFmpeg export
+        run: |
+          python video-studio/editor.py render --job free-fire-demo
+          test -s video-studio/jobs/free-fire-demo/exports/edit-tiktok.mp4
+      - name: Create installable source ZIP (no private videos)
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          root = Path('video-studio')
+          archive = Path('dexter-video-studio-v2.zip')
+          with ZipFile(archive, 'w', ZIP_DEFLATED) as z:
+              for path in root.rglob('*'):
+                  if not path.is_file():
+                      continue
+                  relative = path.relative_to(root)
+                  if any(x in ('library', 'jobs', '__pycache__') for x in relative.parts):
+                      continue
+                  if path.suffix == '.pyc':
+                      continue
+                  z.write(path, arcname=path.as_posix())
+          print('Paquete:', archive, 'bytes:', archive.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dexter-video-studio-freefire-v2
+          path: dexter-video-studio-v2.zip
+          if-no-files-found: error
