@@ -69,9 +69,19 @@ footer{margin-top:45px;border-top:1px solid #264a36;padding-top:20px;display:fle
 <div><b>03</b><article><h3>Abre el escáner</h3><p>Pulsa «Abrir escáner Wi‑Fi real» desde la pestaña Conectar para abrir el panel HTTP del módulo en Safari.</p></article></div>
 <div><b>04</b><article><h3>Añade el acceso directo</h3><p>Abre esta página al menos una vez con Internet y espera a que termine de cargar. En Safari pulsa Compartir → Añadir a pantalla de inicio. Después podrás abrir este portal sin Internet mientras te conectas al Wi‑Fi del módulo.</p></article></div>
 </div><div class="notice">Si aparece la página de tu router en 192.168.1.1, comprueba que el iPhone esté conectado al módulo y no al router doméstico.</div></section>
-<section class="view" id="info" hidden><div class="bar"><h2>Compatibilidad y límites</h2><span>SEGURIDAD</span></div><div class="card">
-<div class="details"><span>Firmware identificado</span><b>Familia Realtek RTL8720DN</b></div><div class="details"><span>Interfaz web predeterminada</span><b>192.168.1.1</b></div><div class="details"><span>iPhone compatible</span><b>Safari / pantalla de inicio</b></div><div class="details"><span>Escaneo directo desde iOS</span><b>No disponible</b></div><div class="details"><span>Dispositivo físico</span><b>Obligatorio para resultados reales</b></div>
-</div><div class="notice"><span>ⓘ</span><div>Este portal solo abre una interfaz local. No incluye comandos de interrupción de redes, captura de credenciales ni funciones ofensivas. No flashees el archivo .bin en un dispositivo desconocido.</div></div></section>
+<section class="view" id="info" hidden><div class="bar"><h2>Funciones reales del archivo .bin</h2><span>ANÁLISIS ESTÁTICO</span></div><div class="card">
+<p class="help">Se inspeccionó el archivo recibido (733.184 bytes). Contiene una interfaz llamada «RTL8720dn-Deauther»; que aparezca una función en el firmware no significa que funcione directamente desde iPhone.</p>
+<div class="details"><span>Exploración Wi-Fi 2.4 y 5 GHz</span><b>Placa / AirPort Utility (parcial)</b></div>
+<div class="details"><span>SSID, BSSID, canal, RSSI y redes ocultas</span><b>Placa / app compatible (parcial)</b></div>
+<div class="details"><span>Actualizar lista de redes</span><b>Placa / app compatible</b></div>
+<div class="details"><span>Estado y contador de tramas</span><b>Placa requerida</b></div>
+<div class="details"><span>Control de LED</span><b>Placa requerida</b></div>
+<div class="details"><span>Selección de redes y tramas de desautenticación</span><b>No disponible en iPhone</b></div>
+<div class="details"><span>Ajustes de emisión de tramas</span><b>No disponible en este portal</b></div>
+<div class="details"><span>Archivo recibido</span><b>Firmware .bin, no una app IPA</b></div>
+<p class="help">La verificación se hizo leyendo texto de la imagen de firmware. No se ha ejecutado en hardware ni se ha probado una conexión física. El escáner de Apple es una herramienta diferente.</p>
+<a class="action" href="https://github.com/H4CKLABORATORY/dexter-ai-web/blob/main/wifi-iphone/FIRMWARE-ANALISIS.md" rel="noopener noreferrer">↗ &nbsp; Ver informe técnico completo</a>
+</div><div class="notice"><span>ⓘ</span><div>Para reproducir las funciones de radio propias del firmware hace falta hardware compatible. El portal no incluye controles de interrupción de redes ni captura de credenciales. No flashees un archivo no verificado en placas desconocidas.</div></div></section>
 </main><footer><span>DEXTER LAB</span><span>WiFi Portal para iOS · v1.0</span></footer></div>
 <script>
 (function(){
