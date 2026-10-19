@@ -16,6 +16,7 @@ function nexus-help {
         '  nexus-status   Estado del entorno y Git'
         '  nexus-recent   Últimos cambios del repositorio'
         '  nexus-files    Archivos del directorio actual'
+        '  nexus-ai       Buscar proveedores públicos de IA (ej.: nexus-ai Groq)'
         '  opencode       Abre el cliente de OpenCode (requiere modelo configurado)'
         '  Ctrl+C        Interrumpe la ejecución actual'
         ''
@@ -56,4 +57,33 @@ function nexus-recent {
     }
     & git -C $repo log -5 --pretty=format:'%h %s'
     Write-Output ''
+}
+
+function nexus-ai {
+    param([string]$Buscar = '')
+    $catalogPath = '/workspace/dexter-ai-web/nexus-os/ai-apis/catalog.json'
+    if (-not (Test-Path -LiteralPath $catalogPath -PathType Leaf)) {
+        Write-Warning 'No se encontró el catálogo. Prueba nexus-repo o consulta NEXUS AI API HUB en tu navegador.'
+        return
+    }
+    try {
+        $data = Get-Content -LiteralPath $catalogPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    } catch {
+        Write-Warning 'No se pudo leer el catálogo de proveedores públicos.'
+        return
+    }
+    $providers = @($data.providers)
+    if ($Buscar.Trim()) {
+        $text = [regex]::Escape($Buscar.Trim())
+        $providers = @($providers | Where-Object {
+            $_.name -match $text -or $_.baseURL -match $text
+        })
+    }
+    if (-not $providers.Count) {
+        Write-Output 'No se encontraron proveedores con ese nombre.'
+        return
+    }
+    $providers | Select-Object -Property name, freeModels, baseURL, keyUrl | Format-Table -AutoSize -Wrap
+    Write-Output 'Catálogo público. Necesitas una clave válida del proveedor para ejecutar solicitudes.'
+    Write-Output 'Directorio completo: https://freellm.net/models/'
 }
