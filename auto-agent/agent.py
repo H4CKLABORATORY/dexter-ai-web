@@ -69,7 +69,7 @@ def inventory():
                 }
                 if recent else None
             )
-        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, PermissionError) as exc:
             item["actions_error"] = type(exc).__name__
         output["repositories"].append(item)
         action = item.get("last_action")
