@@ -2,7 +2,7 @@
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07130f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="WiFi Portal">
-<meta name="description" content="Portal de iPhone para abrir un explorador Wi-Fi Realtek local.">
+<meta name="description" content="Herramientas de escaneo Wi-Fi para iPhone con y sin módulo externo.">
 <link rel="manifest" href="./manifest.webmanifest"><title>DEXTER WiFi Portal — iPhone</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,Inter,system-ui,sans-serif;background:#07120e;color:#ebfff4;color-scheme:dark}
@@ -41,9 +41,22 @@ footer{margin-top:45px;border-top:1px solid #264a36;padding-top:20px;display:fle
 </style></head>
 <body><div class="wrapper">
 <header class="top"><div class="brand"><div class="logo">◉</div><div><div class="kicker">DEXTER LAB / NETWORK TOOLS</div><div class="name">WiFi <span>Portal</span></div></div></div><div class="pill">iPhone ready</div></header>
-<main><div class="hero"><div class="hero-text"><span class="chip">PANEL DE ACCESO LOCAL</span><h1>Tu módulo Wi‑Fi,<br><em>desde el iPhone.</em></h1><p>Abre el escáner de redes del dispositivo desde Safari. Sin jailbreak, sin computadora y sin resultados inventados.</p></div><div class="radar" aria-hidden="true"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="radar-icon">◉</div><span class="radar-label">2.4 GHz</span><span class="radar-label second">5 GHz</span></div></div>
-<nav aria-label="Secciones"><button class="active" data-tab="connect" type="button">Conectar</button><button data-tab="iphone" type="button">iPhone</button><button data-tab="info" type="button">Información</button></nav>
-<section class="view active" id="connect"><div class="bar"><h2>Conexión con el módulo</h2><span>RED LOCAL</span></div>
+<main><div class="hero"><div class="hero-text"><span class="chip">REDES WI-FI · IPHONE</span><h1>Analiza tu Wi‑Fi,<br><em>desde el iPhone.</em></h1><p>Sin placa externa puedes usar el escáner gratuito de Apple. Si tienes un módulo Realtek compatible, también puedes abrir su panel local.</p></div><div class="radar" aria-hidden="true"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="radar-icon">◉</div><span class="radar-label">2.4 GHz</span><span class="radar-label second">5 GHz</span></div></div>
+<nav aria-label="Secciones"><button class="active" data-tab="nohardware" type="button">Sin placa</button><button data-tab="connect" type="button">Módulo</button><button data-tab="iphone" type="button">Guía</button><button data-tab="info" type="button">Info</button></nav>
+<section class="view active" id="nohardware"><div class="bar"><h2>Escáner real desde el iPhone</h2><span>SIN HARDWARE EXTRA</span></div>
+<div class="card">
+<div class="device"><div class="device-icon">◉</div><div><strong>AirPort Utility de Apple</strong><div class="sub">Herramienta gratuita con escaneo de redes</div></div><span class="no-check">App externa</span></div>
+<p class="help">Si solo tienes el archivo .bin, esta es la opción práctica: usa la aplicación oficial de Apple para ver redes Wi-Fi cercanas con potencia de señal (RSSI), canal e identificadores. Los resultados aparecen en AirPort Utility, no en esta página.</p>
+<a class="action" href="https://apps.apple.com/us/app/airport-utility/id427276530" rel="noopener noreferrer">↗ &nbsp; Instalar AirPort Utility gratis</a>
+</div>
+<div class="bar"><h2>Activar el escaneo</h2><span>3 PASOS</span></div><div class="card steps">
+<div><b>01</b><article><h3>Instala AirPort Utility</h3><p>Abre el enlace anterior desde el iPhone y descarga la aplicación de Apple.</p></article></div>
+<div><b>02</b><article><h3>Activa Wi-Fi Scanner</h3><p>En Ajustes → Apps → AirPort Utility, activa «Wi-Fi Scanner». Si no ves esa opción, revisa la configuración de la aplicación según tu versión de iOS.</p></article></div>
+<div><b>03</b><article><h3>Escanea las redes</h3><p>Abre AirPort Utility y toca «Wi-Fi Scan». Consulta los canales, los nombres de redes y su intensidad RSSI.</p></article></div>
+</div>
+<div class="notice"><span>ⓘ</span><div><strong>¿Qué pasa con el .bin?</strong> Es firmware para una placa electrónica específica, no una app de iPhone. GitHub Pages no puede ejecutarlo ni acceder al escáner de radio de iOS. Para utilizar ese firmware necesitas hardware compatible.</div></div>
+</section>
+<section class="view" id="connect" hidden><div class="bar"><h2>Conexión con el módulo</h2><span>RED LOCAL</span></div>
 <div class="card"><div class="device"><div class="device-icon">▣</div><div><strong>Panel del dispositivo</strong><div class="sub">Acceso mediante Safari</div></div><span class="no-check">Conexión no verificada</span></div>
 <label for="ip">Dirección IPv4 privada del módulo</label><div class="ip"><span>http://</span><input id="ip" value="192.168.1.1" inputmode="decimal" autocomplete="off" maxlength="15" aria-describedby="hint"><button id="reset" type="button" aria-label="Restablecer dirección">↺</button></div>
 <div id="error" role="alert" class="error"></div><p class="help" id="hint">La dirección inicial es 192.168.1.1. Si tu módulo utiliza otra IP local, cámbiala aquí.</p>
