@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070d16">
+<meta name="description" content="DEXTER NEXUS: biblioteca gratuita de APIs de IA para iPhone, OpenCode y proyectos.">
+<title>DEXTER API HUB — Modelos gratuitos</title>
+<link rel="stylesheet" href="./style.css">
+<script defer src="./app.js"></script>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<a href="../" class="back" aria-label="Volver a NEXUS OS">← <span>NEXUS OS</span></a>
+<div class="brand"><span class="symbol">⬡</span><span>DEXTER <b>API HUB</b></span></div>
+<a class="docs" href="https://github.com/open-free-llm-api/awesome-freellm-apis" target="_blank" rel="noopener noreferrer">Fuente ↗</a>
+</header>
+<main>
+<section class="hero">
+<div>
+<div class="eyebrow"><span class="pulse"></span> CATÁLOGO DE IA / NEXUS</div>
+<h1>Todos tus modelos.<br><em>Una sola biblioteca.</em></h1>
+<p>Explora proveedores gratuitos, compara modelos y prepara su conexión a OpenCode desde el iPhone. Sin contraseñas en GitHub ni claves incrustadas en la página.</p>
+<div class="hero-actions">
+<a class="btn primary" href="https://freellm.net/models/" target="_blank" rel="noopener noreferrer">Ver directorio completo ↗</a>
+<button class="btn secondary" id="refreshBtn" type="button">↻ Actualizar catálogo</button>
+</div>
+</div>
+<div class="stats">
+<div class="stat"><strong id="providerCount">—</strong><span>Proveedores registrados</span></div>
+<div class="stat"><strong id="modelCount">—</strong><span>Modelos destacados</span></div>
+<div class="stat"><strong>0</strong><span>Claves expuestas aquí</span></div>
+</div>
+</section>
+<section class="browser" aria-labelledby="browseTitle">
+<div class="heading"><div><div class="eyebrow">BIBLIOTECA</div><h2 id="browseTitle">Explorar proveedores</h2></div><div class="source-status" id="sourceStatus" aria-live="polite">Cargando catálogo…</div></div>
+<div class="searchbar"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Buscar Groq, Gemini, modelos, API…" aria-label="Buscar modelos y proveedores" autocomplete="off"><button type="button" id="clearSearch" aria-label="Borrar búsqueda" hidden>×</button></div>
+<div class="filters" role="group" aria-label="Filtrar proveedores">
+<button class="chip active" type="button" data-filter="all" aria-pressed="true">Todos</button>
+<button class="chip" type="button" data-filter="permanent" aria-pressed="false">Plan gratuito</button>
+<button class="chip" type="button" data-filter="renewable" aria-pressed="false">Créditos renovables</button>
+<button class="chip" type="button" data-filter="nocard" aria-pressed="false">Sin tarjeta indicada</button>
+<button class="chip" type="button" data-filter="saved" aria-pressed="false">★ Favoritos</button>
+</div>
+<div id="results" class="results" aria-live="polite"></div>
+</section>
+<section class="config" id="setup" aria-labelledby="configTitle">
+<div class="heading"><div><div class="eyebrow">OPEN CODE / CONFIGURACIÓN</div><h2 id="configTitle">Conectar un modelo</h2></div></div>
+<p class="subtext">Selecciona un modelo en el catálogo. Generaremos un archivo <code>opencode.json</code> sin secretos, listo para copiar. La clave privada se añade posteriormente con <code>/connect</code> dentro de OpenCode.</p>
+<div id="selected" class="selected">Selecciona el botón «Configurar» de cualquier modelo para preparar la conexión.</div>
+<div class="editor" id="codePanel" hidden>
+<div class="editorhead"><span>opencode.json</span><span>Solo configuración pública</span></div>
+<pre id="configText"></pre>
+<div class="editoractions"><button class="btn primary" type="button" id="copyConfig">Copiar JSON</button><button class="btn secondary" type="button" id="downloadConfig">Guardar archivo</button><button class="btn secondary" type="button" id="copyConnect">Copiar /connect</button></div>
+<p class="hint">Copia el JSON a la configuración de tu proyecto y conecta una clave válida en OpenCode. Algunos proveedores utilizan formatos de API distintos y requieren configuración específica; verifica las instrucciones antes de utilizar el archivo.</p>
+</div>
+</section>
+<section class="safety">
+<h2>Acceso gratuito no significa clave pública</h2>
+<p>El catálogo enumera endpoints y modelos publicados. Sus límites, requisitos y disponibilidad pueden cambiar. Las llamadas de IA requieren un proveedor activo y, normalmente, credenciales propias; nunca pegues una clave privada en el código público o en comentarios de GitHub.</p>
+<div class="links"><a href="https://docs.opencode.ai/docs/providers/" target="_blank" rel="noopener noreferrer">Documentación OpenCode ↗</a><a href="https://freellm.net/free-llm-api-keys/" target="_blank" rel="noopener noreferrer">Conseguir claves legítimas ↗</a><a href="https://github.com/open-free-llm-api/awesome-freellm-apis" target="_blank" rel="noopener noreferrer">Repositorio original MIT ↗</a></div>
+</section>
+<footer>DEXTER NEXUS · API HUB · Datos públicos atribuidos a awesome-freellm-apis · No incluye claves ni ejecuta llamadas sin autenticación.</footer>
+</main>
+</div>
+</body></html>
