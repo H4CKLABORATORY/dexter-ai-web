@@ -1,6 +1,6 @@
 # DEXTER WiFi Portal — iPhone
 
-Panel web independiente adaptado al iPhone. Abre la interfaz de exploración Wi-Fi de un módulo Realtek compatible, desde Safari y sin jailbreak.
+Portal web independiente para iPhone con dos rutas: escaneo real con AirPort Utility de Apple sin hardware extra, o acceso al panel HTTP de un módulo Realtek compatible, desde Safari y sin jailbreak.
 
 ## Archivo binario examinado
 
@@ -8,7 +8,13 @@ Panel web independiente adaptado al iPhone. Abre la interfaz de exploración Wi-
 - Firma de cabecera `81958711`, empleada en imágenes Realtek Ameba. El archivo incluye texto `RTL8720dn-Deauther` y una interfaz HTML para 2.4 y 5 GHz.
 - No se publica el binario, no se replica su funcionalidad disruptiva y no se ha probado en hardware físico. No debe instalarse en placas de modelo desconocido.
 
-## Usar en iPhone
+## Sin hardware: solo el archivo .bin
+
+El archivo .bin no puede ejecutarse en iOS. Para realizar un escaneo de redes cercanas sin comprar una placa, abre la pestaña **Sin placa**. Instala la herramienta oficial de Apple [AirPort Utility](https://apps.apple.com/us/app/airport-utility/id427276530), activa **Ajustes → Apps → AirPort Utility → Wi-Fi Scanner** y usa **Wi-Fi Scan** desde la app. Allí se muestran redes cercanas, canal e intensidad RSSI. Esta funcionalidad pertenece a AirPort Utility y no se integra ni se simula dentro del portal.
+
+Apple indica que iOS no ofrece una API genérica de escaneo Wi-Fi a páginas web ni aplicaciones ordinarias: https://developer.apple.com/documentation/technotes/tn3111-ios-wifi-api-overview
+
+## Usar con el módulo Realtek
 
 1. Utiliza una placa Realtek RTL8720DN con firmware compatible ya instalado. El iPhone por sí solo no hace el escaneo.
 2. Conecta Ajustes → Wi-Fi a la red que emite el módulo. Introduce la contraseña real configurada en él.
